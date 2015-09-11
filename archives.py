@@ -75,17 +75,6 @@ def stock_history(stock, start, end, output):
 def date_to_str(d):    
     return str(d.day).zfill(2) + '-' + str(d.month).zfill(2) + '-' + str(d.year).zfill(2)
 
-end = datetime.date.today() - datetime.timedelta(1)
-dt = datetime.timedelta(6)
-
-start = end - dt
-
-from nselist import nse_to_icici
-count_success = 0
-count_fail = 0
-count_unknown = 0
-ok = 0
-
-
-get_price_history_raw(stock = 'JINDALSTEL',start = '01-01-2014', end = '10-01-2014', 
+if __name__ == "__main__":
+    get_price_history_raw(stock = 'JINDALSTEL',start = '01-01-2014', end = '10-01-2014', 
                           proxies = {'http':'proxy1.wipro.com:8080'})
