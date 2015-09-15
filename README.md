@@ -13,5 +13,12 @@ with open('sbin.csv','w') as fp:
 with open('LT.csv','w') as fp:
     get_price_history_csv(fp, 'LT', start = '01-01-2014', end = '20-01-2014')
 ```
+You can get output in pandas dataframe directly, ready for analysis
+```python
+from archives import get_price_history
+d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014', 
+                          proxies = {'http': 'proxy1.wipro.com:8080'})
+d[['high_price', 'vwap', 'low_price']].plot()
+```
 
 [Visit my blog to explore other projects](http://www.xerxys.in)
