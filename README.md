@@ -7,7 +7,8 @@ Python Library to get publicly available data on NSE website ie. stock quotes, h
 - numpy 
 - scipy
 - pandas
---For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
+
+For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 ##Usage
 Store data directly to csv using simple functions
 ```python
