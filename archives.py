@@ -21,7 +21,7 @@ def __get_archive_data_raw(stock, start, end):
     resp = req.get(url)
     #print resp.request.url
     if resp.status_code == 404:
-        raise ValueError, 'NSE denied data, try after sometime\n' + resp.request.url
+        raise ValueError('NSE denied data, try after sometime\n' + resp.request.url)
     return resp.text
 
 def __get_html_data_raw(symbol, period = '+', start = '', end = '', proxies = {}):
@@ -239,6 +239,5 @@ def str_to_date(d):
     return np.datetime64(k[2] + '-' + str(lookup[k[1]]).zfill(2) + '-' + k[0])
         
 if __name__ == "__main__":
-    d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014', 
-                          proxies = {'http': 'proxy1.wipro.com:8080'})
-    print d
+    d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014')
+    print (d)
