@@ -8,12 +8,13 @@ Created on Wed Sep 02 09:07:27 2015
 import requests as req
 import datetime
 from bs4 import BeautifulSoup
+from io import StringIO, BytesIO
 NSE_URL = 'http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=sbin&segmentLink=3&symbolCount=1&series=EQ&dateRange=+&fromDate=01-08-2015&toDate=30-09-2015&dataType=PRICEVOLUMEDELIVERABLE'
 NSE_CSV = 'http://www.nseindia.com/content/equities/scripvol/datafiles/'
 NSE_SYMBOL_COUNT_URL = 'http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp?symbol='
 NSE_HTML_DATA_URL = 'http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp' #symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
 NSE_HTML_DATA_URL_NEXT = 'http://www.nseindia.com/products/dynaContent/equities/equities/histscrip.jsp' #symbolCode=238&symbol=SBIN&symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
-
+EQ_DAILY_PRICE_LIST = 'http://www.nseindia.com/content/historical/EQUITIES/2015/SEP/cm%sbhav.csv.zip'
 
 
 def __get_archive_data_raw(stock, start, end):
@@ -196,13 +197,13 @@ def get_price_history(stock, period = '+', start = '', end = '',
             if cell_cnt == TOTAL_Q:
                 total_q[row_cnt] = float(cell.replace(',',''))
             if cell_cnt == TURNOVER:
-                turnover[row_cnt] = float(cell.replace(',','')) * 100000
+                turnover[row_cnt] = float(cell.replace(',','')) * 100000.0
             if cell_cnt == TRADES:
                 trades[row_cnt] = float(cell.replace(',',''))
             if cell_cnt == DELIVERABLE_Q:
                 deliverable_q[row_cnt] = float(cell.replace(',',''))
             if cell_cnt == PERC_DELIVERABLE:
-                perc_deliverable[row_cnt] = float(cell.replace(',',''))
+                perc_deliverable[row_cnt] = float(cell.replace(',','')) / 100.0
             cell_cnt += 1
         cell_cnt = 0
         row_cnt += 1
@@ -227,9 +228,31 @@ def stock_history(stock, start, end, output):
     text = __get_archive_data_raw(stock, start, end)
     with open(output, 'w') as f:
         f.write(text)
-    
-def date_to_str(d):    
-    return str(d.day).zfill(2) + '-' + str(d.month).zfill(2) + '-' + str(d.year).zfill(2)
+
+def get_price_list(dt, proxies = {}):
+    dt_text = date_to_str(dt, style = 'ddMMMyyyy').upper()
+    url = EQ_DAILY_PRICE_LIST%dt_text
+    resp = req.get(url, stream = True, proxies = proxies)
+    return pd.read_csv(
+                        StringIO(
+                        unicode(__raw_zip_data_to_str(resp.content)
+                        )
+                        )
+                        )
+
+def __raw_zip_data_to_str(data):
+    fp = BytesIO(data)
+    import zipfile
+    zipfile = zipfile.ZipFile(fp)
+    name = zipfile.filelist[0].filename
+    return zipfile.read(name)
+        
+def date_to_str(d, style = 'dd-mm-yyyy'):
+    if style == 'dd-mm-yyyy':
+        return str(d.day).zfill(2) + '-' + str(d.month).zfill(2) + '-' + str(d.year).zfill(2)
+    elif style == 'ddMMMyyyy':
+        lookup = dict((k,v) for k,v in enumerate(calendar.month_abbr))
+        return str(d.day).zfill(2) + lookup[d.month] + str(d.year)
 
 def str_to_date(d):
     k = d.split('-')
@@ -239,6 +262,4 @@ def str_to_date(d):
     return np.datetime64(k[2] + '-' + str(lookup[k[1]]).zfill(2) + '-' + k[0])
         
 if __name__ == "__main__":
-    d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014', 
-                          proxies = {'http': 'proxy1.wipro.com:8080'})
-    print d
+    d = get_price_list(date(2015, 9, 16), proxies = {'http':'proxy1.wipro.com;8080'})
