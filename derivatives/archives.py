@@ -9,7 +9,7 @@ except:
 from bs4 import BeautifulSoup
 from io import StringIO, BytesIO
 
-from nsepy.archives import date_to_str
+from nsepy.archives import date_to_str, __raw_zip_data_to_str
 
 PRICE_LIST_URL = 'http://www.nseindia.com/content/historical/DERIVATIVES/%s/%s/fo%sbhav.csv.zip'
 
@@ -18,6 +18,10 @@ def get_price_list(dt , proxies = {}):
     yy = dt_str[5:9]
     mm = dt_str[2:5].upper()
     url = PRICE_LIST_URL%(yy, mm, dt_str.upper())
-    print url
     resp = req.get(url = url, proxies = proxies)
-    return resp
+    
+    df = pd.read_csv(StringIO(
+                        unicode(__raw_zip_data_to_str(resp.content))))
+    del df['Unnamed: 15']
+    
+    return df

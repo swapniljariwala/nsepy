@@ -24,7 +24,7 @@ def get_price_history(index, start, end, proxies = {}):
     url = PRICE_HISTORY%(index.upper().replace(' ','%20'), start, end)
     resp = req.get(url = url, proxies = proxies)
     df = pd.read_csv(StringIO(unicode(resp.text))).set_index(['Date'])
-    df['Turnover (Rs. Cr)'] = df['Turnover (Rs. Cr)'] * 10000000.0
+    df['Turnover (Rs. Cr)'] = df['Turnover (Rs. Cr)'] 
     return df
     
 def get_index_pe(index, start, end, proxies = {}):
