@@ -7,6 +7,12 @@ Created on Wed Sep 02 09:07:27 2015
 #import numpy as np
 import requests as req
 import datetime
+try:
+    import numpy as np
+    import pandas as pd
+except:
+    pass
+
 from bs4 import BeautifulSoup
 from io import StringIO, BytesIO
 NSE_URL = 'http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=sbin&segmentLink=3&symbolCount=1&series=EQ&dateRange=+&fromDate=01-08-2015&toDate=30-09-2015&dataType=PRICEVOLUMEDELIVERABLE'
@@ -20,7 +26,6 @@ EQ_DAILY_PRICE_LIST = 'http://www.nseindia.com/content/historical/EQUITIES/2015/
 def __get_archive_data_raw(stock, start, end):
     url = NSE_CSV + date_to_str(start) + "-TO-" + date_to_str(end) + stock + "EQN.csv"
     resp = req.get(url)
-    #print resp.request.url
     if resp.status_code == 404:
         raise ValueError('NSE denied data, try after sometime\n' + resp.request.url)
     return resp.text
@@ -134,8 +139,7 @@ def get_price_history_raw(stock, period = '+', start = '', end = '',
 
 def get_price_history(stock, period = '+', start = '', end = '', 
                           proxies = {}):
-    import numpy as np
-    import pandas as pd
+    
     cell_cnt = 0
     row_cnt = 0
     
@@ -230,6 +234,7 @@ def stock_history(stock, start, end, output):
         f.write(text)
 
 def get_price_list(dt, proxies = {}):
+    
     dt_text = date_to_str(dt, style = 'ddMMMyyyy').upper()
     url = EQ_DAILY_PRICE_LIST%dt_text
     resp = req.get(url, stream = True, proxies = proxies)
@@ -251,17 +256,18 @@ def date_to_str(d, style = 'dd-mm-yyyy'):
     if style == 'dd-mm-yyyy':
         return str(d.day).zfill(2) + '-' + str(d.month).zfill(2) + '-' + str(d.year).zfill(2)
     elif style == 'ddMMMyyyy':
+        import calendar
         lookup = dict((k,v) for k,v in enumerate(calendar.month_abbr))
         return str(d.day).zfill(2) + lookup[d.month] + str(d.year)
 
 def str_to_date(d):
     k = d.split('-')
     import calendar
-    import numpy as np
+    
     lookup = dict((v,k) for k,v in enumerate(calendar.month_abbr))
     return np.datetime64(k[2] + '-' + str(lookup[k[1]]).zfill(2) + '-' + k[0])
         
 if __name__ == "__main__":
-
+    from datetime import date
     d = get_price_list(date(2015, 9, 16), proxies = {'http':'proxy1.wipro.com;8080'})
     print (d)
