@@ -140,6 +140,11 @@ def get_price_history_raw(stock, period = '+', start = '', end = '',
 def get_price_history(stock, period = '+', start = '', end = '', 
                           proxies = {}):
     
+    if type(start) == type(datetime.date(2000,1,1)):
+        start = date_to_str(start)
+    if type(end) == type(datetime.date(2000,1,1)):
+        end = date_to_str(end)
+    
     cell_cnt = 0
     row_cnt = 0
     
@@ -238,12 +243,11 @@ def get_price_list(dt, proxies = {}):
     dt_text = date_to_str(dt, style = 'ddMMMyyyy').upper()
     url = EQ_DAILY_PRICE_LIST%dt_text
     resp = req.get(url, stream = True, proxies = proxies)
-    return pd.read_csv(
-                        StringIO(
-                        unicode(__raw_zip_data_to_str(resp.content)
-                        )
-                        )
-                        )
+    df = pd.read_csv(StringIO(
+                        unicode(__raw_zip_data_to_str(resp.content))))
+    del df['Unnamed: 13']
+    
+    return df.set_index(keys = ['SYMBOL', 'SERIES'])
 
 def __raw_zip_data_to_str(data):
     fp = BytesIO(data)
