@@ -27,7 +27,8 @@ def get_price_history(index, start, end, proxies = {}):
     df['Turnover (Rs. Cr)'] = df['Turnover (Rs. Cr)'] 
     return df
     
-def get_index_pe(index, start, end, proxies = {}):
+def get_pe_history(index, start, end, proxies = {}):
+    
     if type(start) == type(datetime.date(2000,1,1)):
         start = date_to_str(start)
     if type(end) == type(datetime.date(2000,1,1)):
