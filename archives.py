@@ -15,6 +15,9 @@ except:
 
 from bs4 import BeautifulSoup
 from io import StringIO, BytesIO
+import sys
+import threading
+
 NSE_URL = 'http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=sbin&segmentLink=3&symbolCount=1&series=EQ&dateRange=+&fromDate=01-08-2015&toDate=30-09-2015&dataType=PRICEVOLUMEDELIVERABLE'
 NSE_CSV = 'http://www.nseindia.com/content/equities/scripvol/datafiles/'
 NSE_SYMBOL_COUNT_URL = 'http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp?symbol='
@@ -137,7 +140,44 @@ def get_price_history_raw(stock, period = '+', start = '', end = '',
             vwap, total_q, turnover, trades,
             deliverable_q, perc_deliverable)
 
+
+
+class ThreadReturns(threading.Thread):
+    
+    def run(self):
+        if sys.version_info[0] == 2:
+            self.result = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
+        else: # assuming v3
+            self.result = self._target(*self._args, **self._kwargs)
+
+
 def get_price_history(stock, period = '+', start = '', end = '', 
+                          proxies = {}):
+    if period != '+':
+        return get_price_history_small(stock = stock, period = period)
+    
+    if (end - start) > datetime.timedelta(100):
+        #print 'Thread:', start, end
+        dt = (end - start) / 2
+        end_1 = start + dt
+        start_2 = end_1 + datetime.timedelta(1)
+        arg1 = {'stock':stock, 'start': start, 'end': end_1, 'proxies': proxies}
+        arg2 = {'stock':stock, 'start': start_2, 'end': end, 'proxies': proxies}
+        t1 = ThreadReturns(target = get_price_history, 
+                              kwargs = arg1)
+        
+        t2 = ThreadReturns(target = get_price_history, 
+                              kwargs = arg2)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        return pd.concat([t1.result, t2.result])
+    else:
+        return get_price_history_small(stock, start = start,end = end,proxies = proxies)
+
+
+def get_price_history_small(stock, period = '+', start = '', end = '', 
                           proxies = {}):
     
     if type(start) == type(datetime.date(2000,1,1)):
@@ -187,32 +227,36 @@ def get_price_history(stock, period = '+', start = '', end = '',
         if row.get_text().find('Symbol') >= 0:
             continue        
         for cell in row.get_text().split('\n'):
+            try:
+                cell_val = float(cell.replace(',',''))
+            except:
+                cell_val = np.NaN
             if cell_cnt == DATE:
                 dates[row_cnt] =  str_to_date(cell)
             if cell_cnt == PREV_CLOSE:
-                prev_close[row_cnt] = float(cell.replace(',',''))
+                prev_close[row_cnt] = cell_val
             if cell_cnt == OPEN_PRICE:
-                open_price[row_cnt] = float(cell.replace(',',''))
+                open_price[row_cnt] = cell_val
             if cell_cnt == HIGH_PRICE:
-                high_price[row_cnt] = float(cell.replace(',',''))
+                high_price[row_cnt] = cell_val
             if cell_cnt == LOW_PRICE:
-                low_price[row_cnt] = float(cell.replace(',',''))
+                low_price[row_cnt] = cell_val
             if cell_cnt == LAST_PRICE:
-                last_price[row_cnt] = float(cell.replace(',',''))
+                last_price[row_cnt] = cell_val
             if cell_cnt == CLOSE_PRICE:
-                close_price[row_cnt] = float(cell.replace(',',''))
+                close_price[row_cnt] = cell_val
             if cell_cnt == VWAP:
-                vwap[row_cnt] = float(cell.replace(',',''))
+                vwap[row_cnt] = cell_val
             if cell_cnt == TOTAL_Q:
-                total_q[row_cnt] = float(cell.replace(',',''))
+                total_q[row_cnt] = cell_val
             if cell_cnt == TURNOVER:
-                turnover[row_cnt] = float(cell.replace(',','')) * 100000.0
+                turnover[row_cnt] = cell_val * 100000.0
             if cell_cnt == TRADES:
-                trades[row_cnt] = float(cell.replace(',',''))
+                trades[row_cnt] = cell_val
             if cell_cnt == DELIVERABLE_Q:
-                deliverable_q[row_cnt] = float(cell.replace(',',''))
+                deliverable_q[row_cnt] = cell_val
             if cell_cnt == PERC_DELIVERABLE:
-                perc_deliverable[row_cnt] = float(cell.replace(',','')) / 100.0
+                perc_deliverable[row_cnt] = cell_val / 100.0
             cell_cnt += 1
         cell_cnt = 0
         row_cnt += 1
