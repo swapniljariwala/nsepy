@@ -33,12 +33,12 @@ def __get_archive_data_raw(stock, start, end):
         raise ValueError('NSE denied data, try after sometime\n' + resp.request.url)
     return resp.text
 
-def __get_html_data_raw(symbol, period = '+', start = '', end = '', proxies = {}):
+def __get_html_data_raw(symbol, symbol_count, period = '+', start = '', end = '', proxies = {}):
     base = NSE_HTML_DATA_URL
     url = base + \
             '?symbol=%s&segmentLink=3&symbolCount=%s&series=EQ&dateRange=%s\
             &fromDate=%s&toDate=%s&dataType=PRICEVOLUMEDELIVERABLE'%(symbol,
-            __get_symbol_count(symbol, proxies), period, start, end)
+            symbol_count, period, start, end)
     resp = req.get(url,  proxies = proxies)
     if resp.status_code == 200:
         return resp.text
@@ -51,8 +51,10 @@ def __get_symbol_count(symbol, proxies = {}):
     return resp.text.replace('\n','')
 
 def get_price_history_csv(fp, stock, period = '+', start = '', end = '', proxies = {}):
+    symbol_count = __get_symbol_count(stock, proxies)
     text = __get_html_data_raw(symbol = stock, period = period, 
-                               start = start, end = end, proxies = proxies)
+                               start = start, end = end,
+                               symbol_count = symbol_count, proxies = proxies)
     soup = BeautifulSoup(text, 'html.parser')
     for td in soup.find_all(name = 'tr'):
         if td.get_text().find('Symbol') >= 0:
@@ -62,7 +64,7 @@ def get_price_history_csv(fp, stock, period = '+', start = '', end = '', proxies
                 fp.write(t.replace(',','') + ',')
         fp.write('\n')
 
-def get_price_history_raw(stock, period = '+', start = '', end = '', 
+def get_price_history_raw(stock, symbol_count, period = '+', start = '', end = '',
                           proxies = {}):
     import numpy as np
     cell_cnt = 0
@@ -83,7 +85,9 @@ def get_price_history_raw(stock, period = '+', start = '', end = '',
     PERC_DELIVERABLE = 15
     
     text = __get_html_data_raw(symbol = stock, period = period, 
-                               start = start, end = end, proxies = proxies)
+                               start = start, end = end, 
+                               symbol_count = symbol_count,
+                               proxies = proxies)
     soup = BeautifulSoup(text, 'html.parser')
     table_rows = soup.find_all(name = 'tr')
     arr_len = len(table_rows) - 1
@@ -151,18 +155,25 @@ class ThreadReturns(threading.Thread):
             self.result = self._target(*self._args, **self._kwargs)
 
 
-def get_price_history(stock, period = '+', start = '', end = '', 
-                          proxies = {}):
+def get_price_history(stock, period = '+', start = '', end = '',
+                      symbol_count = '',
+                      proxies = {}):
+    if symbol_count == '':
+        symbol_count = __get_symbol_count(stock, proxies)
     if period != '+':
-        return get_price_history_small(stock = stock, period = period)
+        return get_price_history_small(stock = stock, period = period,
+                                       symbol_count = symbol_count)
     
     if (end - start) > datetime.timedelta(100):
         #print 'Thread:', start, end
         dt = (end - start) / 2
         end_1 = start + dt
         start_2 = end_1 + datetime.timedelta(1)
-        arg1 = {'stock':stock, 'start': start, 'end': end_1, 'proxies': proxies}
-        arg2 = {'stock':stock, 'start': start_2, 'end': end, 'proxies': proxies}
+        arg1 = {'stock':stock, 'start': start, 'end': end_1,
+                'symbol_count': symbol_count, 'proxies': proxies}
+        arg2 = {'stock':stock, 'start': start_2, 'end': end,
+                'symbol_count': symbol_count, 'proxies': proxies}
+                
         t1 = ThreadReturns(target = get_price_history, 
                               kwargs = arg1)
         
@@ -174,11 +185,14 @@ def get_price_history(stock, period = '+', start = '', end = '',
         t2.join()
         return pd.concat([t1.result, t2.result])
     else:
-        return get_price_history_small(stock, start = start,end = end,proxies = proxies)
+        return get_price_history_small(stock, start = start,end = end,
+                                       symbol_count = symbol_count,
+                                       proxies = proxies)
 
 
-def get_price_history_small(stock, period = '+', start = '', end = '', 
-                          proxies = {}):
+def get_price_history_small(stock, period = '+', start = '', end = '',
+                        symbol_count = '',
+                        proxies = {}):
     
     if type(start) == type(datetime.date(2000,1,1)):
         start = date_to_str(start)
@@ -203,7 +217,8 @@ def get_price_history_small(stock, period = '+', start = '', end = '',
     PERC_DELIVERABLE = 15
     
     text = __get_html_data_raw(symbol = stock, period = period, 
-                               start = start, end = end, proxies = proxies)
+                               start = start, end = end,
+                               symbol_count = symbol_count, proxies = proxies)
     soup = BeautifulSoup(text, 'html.parser')
     table_rows = soup.find_all(name = 'tr')
     arr_len = len(table_rows) - 1
