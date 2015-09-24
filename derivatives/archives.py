@@ -11,6 +11,7 @@ from io import StringIO, BytesIO
 
 from nsepy.archives import date_to_str, __raw_zip_data_to_str
 
+
 PRICE_LIST_URL = 'http://www.nseindia.com/content/historical/DERIVATIVES/%s/%s/fo%sbhav.csv.zip'
 
 def get_price_list(dt , proxies = {}):
@@ -23,5 +24,5 @@ def get_price_list(dt , proxies = {}):
     df = pd.read_csv(StringIO(
                         unicode(__raw_zip_data_to_str(resp.content))))
     del df['Unnamed: 15']
-    
     return df
+
