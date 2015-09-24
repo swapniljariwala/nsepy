@@ -147,12 +147,13 @@ def get_price_history_raw(stock, symbol_count, period = '+', start = '', end = '
 
 
 class ThreadReturns(threading.Thread):
-    
     def run(self):
         if sys.version_info[0] == 2:
+            
             self.result = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
         else: # assuming v3
             self.result = self._target(*self._args, **self._kwargs)
+            
 
 
 def get_price_history(stock, period = '+', start = '', end = '',
@@ -329,6 +330,13 @@ def str_to_date(d):
     
     lookup = dict((v,k) for k,v in enumerate(calendar.month_abbr))
     return np.datetime64(k[2] + '-' + str(lookup[k[1]]).zfill(2) + '-' + k[0])
+
+def html_to_rows(text):
+    soup = BeautifulSoup(text)
+    ts = soup.find_all('table')
+    tables = []
+    if len(ts) == 1:
+        return ts[0].find_all('tr')
         
 if __name__ == "__main__":
     from datetime import date
