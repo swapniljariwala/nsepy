@@ -278,18 +278,18 @@ def get_price_history_small(stock, period = '+', start = '', end = '',
         row_cnt += 1
         
     df = pd.DataFrame(prev_close)
-    df.columns = ['prev_close']
-    df['open_price'] = open_price
-    df['high_price'] = high_price
-    df['low_price'] = low_price
-    df['last_price'] = last_price
-    df['close_price'] = close_price
-    df['vwap'] = vwap
-    df['total_q'] = total_q
-    df['turnover'] = turnover
-    df['trades'] = trades
-    df['deliverable_q'] = deliverable_q
-    df['perc_deliverable'] = perc_deliverable
+    df.columns = ['Previous']
+    df['Open'] = open_price
+    df['High'] = high_price
+    df['Low'] = low_price
+    df['Last'] = last_price
+    df['Close'] = close_price
+    df['VWAP'] = vwap
+    df['Volume'] = total_q
+    df['Turnover'] = turnover
+    df['Trades'] = trades
+    df['Deliverable Volume'] = deliverable_q
+    df['Percentage Deliverables'] = perc_deliverable
     df.index = dates
     return df
     
