@@ -11,9 +11,22 @@ Python Library to get publicly available data on NSE website ie. stock quotes, h
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 ##Usage
 Store data directly to csv using simple functions
+Until I package this as library, this tool can be used with below directory structure-
+-->Code_Directory/
+    |
+    -->nsepy/
+    |   |
+    |   -->archives.py
+    |   |
+    |   -->derivatives/
+    |   |
+    |   -->indices/
+    |
+    -->explot.py, excsv.py
+    
 ```python
 
-from archives import get_price_history_csv
+from nsepy.archives import get_price_history_csv
 
 with open('sbin.csv','w') as fp:
     #options for period '1month', '3months', '1week'
@@ -25,7 +38,7 @@ with open('LT.csv','w') as fp:
 ```
 You can get output in pandas dataframe directly, ready for analysis
 ```python
-from archives import get_price_history
+from nsepy.archives import get_price_history
 d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014', 
                           proxies = {'http': 'proxy.domain:port'})
 d[['high_price', 'vwap', 'low_price']].plot()
