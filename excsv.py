@@ -5,7 +5,7 @@ Created on Fri Sep 11 12:30:19 2015
 @author: SW274998
 """
 
-from archives import get_price_history_csv
+from nsepy.archives import get_price_history_csv
 
 with open('sbin.csv','w') as fp:
     get_price_history_csv(fp, 'SBIN', '1month')
