@@ -9,6 +9,9 @@ Python Library to get publicly available data on NSE website ie. stock quotes, h
 - pandas
 
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
+
+##Installation
+'''$pip install nsepy'''
 ##Usage
 Store data directly to csv using simple functions
 Until I package this as library, this tool can be used with below directory structure-
