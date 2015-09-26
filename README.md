@@ -33,15 +33,16 @@ with open('sbin.csv','w') as fp:
     get_price_history_csv(fp, 'SBIN', period = '1month') 
 
 with open('LT.csv','w') as fp:
-    get_price_history_csv(fp, 'LT', start = '01-01-2014', end = '20-01-2014',
-        proxies = {'http': 'proxy.domain:port'})
+    get_price_history_csv(fp, 'LT', start = '01-01-2014', end = '20-01-2014')
 ```
 You can get output in pandas dataframe directly, ready for analysis
 ```python
 from nsepy.archives import get_price_history
-d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014', 
-                          proxies = {'http': 'proxy.domain:port'})
-d[['high_price', 'vwap', 'low_price']].plot()
+from datetime import date
+d = get_price_history(stock = 'SBIN',
+                        start = date(2015,1,1), 
+                        end = date(2015,1,1))
+d[['High', 'VWAP', 'Low']].plot()
 ```
 
 [Visit my blog to explore other projects](http://www.xerxys.in)
