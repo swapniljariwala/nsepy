@@ -10,16 +10,16 @@ import matplotlib.dates as mdates
 
 # example from - http://matplotlib.org/examples/pylab_examples/finance_demo.html
 
-start = date(2015,9,1)
+start = date(2012,9,1)
 end = date(2015,9,21)
 
 mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
 alldays = DayLocator()              # minor ticks on the days
 weekFormatter = DateFormatter('%b %d')  # e.g., Jan 12
 dayFormatter = DateFormatter('%d')      # e.g., 12
-proxies = {'http':'proxy1.wipro.com:8080'}
-
-df = get_price_history(stock = 'SBIN', start = start, 
+#proxies = {'http':'proxy1.wipro.com:8080'}
+proxies = {}
+df = get_price_history(stock = 'RELIANCE', start = start, 
                       end = end, proxies = proxies)
                       
 df["Date"] = pd.to_datetime(df.index)

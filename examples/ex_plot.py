@@ -5,7 +5,12 @@ Created on Tue Sep 15 19:33:20 2015
 @author: SW274998
 """
 from nsepy.archives import get_price_history
+from datetime import date
+import numpy
+start = date(2010,6,1)
+end = date(2015,9,1)
 
-d = get_price_history(stock = 'LT',start = '01-01-2014', end = '20-01-2014', 
-                          proxies = {'http': 'proxy1.wipro.com:8080'})
-d[['high_price', 'vwap', 'low_price']].plot()
+d = get_price_history(stock = 'RELIANCE',start = start, end = end)
+d['VLog'] = numpy.log10(d['Volume'])
+d['Ratio'] = d['High'] /d['Low'] - 1
+d[[ 'Ratio','VLog']].plot(secondary_y = 'VLog')
