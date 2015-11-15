@@ -303,8 +303,13 @@ def get_price_list(dt, proxies = {}):
     dt_text = date_to_str(dt, style = 'ddMMMyyyy').upper()
     url = EQ_DAILY_PRICE_LIST%dt_text
     resp = req.get(url, stream = True, proxies = proxies)
-    df = pd.read_csv(StringIO(
+    try:
+        df = pd.read_csv(StringIO(
                         unicode(__raw_zip_data_to_str(resp.content))))
+    except:
+        df = pd.read_csv(StringIO(
+                        str(__raw_zip_data_to_str(resp.content))))
+        
     del df['Unnamed: 13']
     
     return df.set_index(keys = ['SYMBOL', 'SERIES'])
@@ -340,5 +345,6 @@ def html_to_rows(text):
         
 if __name__ == "__main__":
     from datetime import date
-    d = get_price_list(date(2015, 9, 16), proxies = {'http':'proxy1.wipro.com;8080'})
+    proxies = {'http':'proxy1.wipro.com;8080'}
+    d = get_price_list(date(2015, 9, 16))
     print (d)
