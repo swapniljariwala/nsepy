@@ -17,10 +17,10 @@ mondays = WeekdayLocator(MONDAY)        # major ticks on the mondays
 alldays = DayLocator()              # minor ticks on the days
 weekFormatter = DateFormatter('%b %d')  # e.g., Jan 12
 dayFormatter = DateFormatter('%d')      # e.g., 12
-proxies = {'http':'proxy1.wipro.com:8080'}
+#proxies = {'http':'proxy1.wipro.com:8080'}
 
-df = get_price_history(stock = 'SBIN', start = start, 
-                      end = end, proxies = proxies)
+df = get_price_history(stock='SBIN', start=start, 
+                      end = end)
                       
 df["Date"] = pd.to_datetime(df.index)
 df.Date = mdates.date2num(df.Date.dt.to_pydatetime())
