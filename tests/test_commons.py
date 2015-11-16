@@ -6,6 +6,23 @@ import datetime
 import unittest
 from bs4 import BeautifulSoup
 from tests import htmls
+
+def text_to_list(text, schema):
+    rows = text.split('\n')
+    lists = []
+    for row in rows:
+        if not row:
+            continue
+        cols = row.split(',')
+        i = 0
+        for cell in cols:
+            try:
+                lists[i].append(cell)
+            except:
+                lists.append([])
+                lists[i].append(cell)
+            i += 1
+    return lists  
 class TestCommons(unittest.TestCase):
     def setUp(self):
         pass
@@ -24,6 +41,9 @@ class TestCommons(unittest.TestCase):
                   float, float, float, float,
                   float, float, float, int, float,
                   int, int, float ]
+        bs = BeautifulSoup(htmls.html_equity)
+        t = ParseTables(soup=bs,
+                        schema = schema)
         
         
         
