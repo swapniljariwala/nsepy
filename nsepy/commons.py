@@ -50,23 +50,21 @@ class ParseTables:
         self.schema = kwargs.get('schema')
         self.bs = kwargs.get('soup')
         self.headers = kwargs.get('headers')
-    
+
     def get_tables(self):
         trs = self.bs.find_all('tr')
         lists = []
         schema = self.schema
-        #r_cnt = 0
         for tr in trs:
             tds = tr.find_all('td')
             if len(tds) == len(schema):
+                lst = []
                 for i in range(0, len(tds)):
                     txt = tds[i].text.replace('\n','').replace(' ','').replace(',','')
-                    try:
-                        lists[i].append(schema[i](txt))
-                    except:
-                        lists.append([])
-                        lists[i].append(schema[i](txt))
-        
+                    val = schema[i](txt)
+                    lst.append(val)
+                lists.append(lst)
+                    
         return lists
                     
             
