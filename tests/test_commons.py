@@ -1,6 +1,7 @@
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVE,
-                           ParseTables, StrDate, unzip_str)
+                           ParseTables, StrDate, unzip_str,
+                           ThreadReturns)
 import datetime
 import unittest
 from bs4 import BeautifulSoup
@@ -84,6 +85,9 @@ class TestCommons(unittest.TestCase):
     
     def test_unzip_str(self):
         self.assertAlmostEqual(htmls.unzipped, unzip_str(htmls.zipped))
+    
+    def test_ThreadReturns(self):
+        t1 = ThredReturns()
 
 if __name__ == '__main__':
     unittest.main()

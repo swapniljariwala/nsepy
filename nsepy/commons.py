@@ -11,7 +11,9 @@ from functools import partial
 import pandas as pd
 import StringIO
 import zipfile
-
+import threading
+import six
+import sys
 def is_index(index):
     return index in NSE_INDICES
 
@@ -85,6 +87,12 @@ def unzip_str(zipped_str, file_name = None):
     if not file_name:
         file_name = zf.namelist()[0]
     return zf.read(file_name)
-                    
+
+class ThreadReturns(threading.Thread):
+    def run(self):
+        if sys.version_info[0] == 2:
+            self.result = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
+        else: # assuming v3
+            self.result = self._target(*self._args, **self._kwargs)
             
         
