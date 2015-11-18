@@ -5,14 +5,20 @@ Created on Sun Nov 15 23:12:26 2015
 @author: jerry
 """
 import requests
-from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVE
+from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVE, DERIVATIVE_TO_INDEX
 import datetime
 from functools import partial
+import pandas as pd
+import StringIO
+import zipfile
+
 def is_index(index):
     return index in NSE_INDICES
 
+
 def is_index_derivative(index):
-    return index in INDEX_DERIVATIVE.keys()
+    return index in INDEX_DERIVATIVES
+
 
 
 class StrDate(datetime.date):
@@ -50,8 +56,9 @@ class ParseTables:
         self.schema = kwargs.get('schema')
         self.bs = kwargs.get('soup')
         self.headers = kwargs.get('headers')
+        self._parse()
 
-    def get_tables(self):
+    def _parse(self):
         trs = self.bs.find_all('tr')
         lists = []
         schema = self.schema
@@ -64,8 +71,20 @@ class ParseTables:
                     val = schema[i](txt)
                     lst.append(val)
                 lists.append(lst)
-                    
-        return lists
+        self.lists = lists
+    
+    def get_tables(self):
+        return self.lists
+    
+    def get_df(self):
+        return pd.DataFrame(self.lists)
+
+def unzip_str(zipped_str, file_name = None):
+    fp = StringIO.StringIO(zipped_str)
+    zf = zipfile.ZipFile(file = fp)
+    if not file_name:
+        file_name = zf.namelist()[0]
+    return zf.read(file_name)
                     
             
         

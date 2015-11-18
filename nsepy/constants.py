@@ -50,10 +50,14 @@ NSE_INDICES = ["NIFTY 50",
                "NIFTY50 TR 1X INV",               
                ]
 
-INDEX_DERIVATIVE = {"NIFTY": "NIFTY 50",
+DERIVATIVE_TO_INDEX = {"NIFTY": "NIFTY 50",
                "BANKNIFTY": "NIFTY BANK",
                "NIFTYINFRA": "NIFTY INFRA",
                "NIFTYIT": "NIFTY IT",
                "NIFTYMID50": "NIFTY MIDCAP 50",
                "NIFTYPSE": "NIFTY PSE"}
-               
+
+INDEX_DERIVATIVES = DERIVATIVE_TO_INDEX.keys()
+INDEX_DERIVATIVES.append('S&P500')
+INDEX_DERIVATIVES.append('DJIA')
+INDEX_DERIVATIVES.append('FTSE100')

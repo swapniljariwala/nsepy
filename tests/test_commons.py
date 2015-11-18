@@ -1,6 +1,6 @@
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVE,
-                           ParseTables, StrDate)
+                           ParseTables, StrDate, unzip_str)
 import datetime
 import unittest
 from bs4 import BeautifulSoup
@@ -24,8 +24,9 @@ def text_to_list(text, schema):
     for i in range(0, len(lists)):
         for j in range(0, len(lists[i])):
             lists[i][j] = schema[i](lists[i][j])
-    return lists
     """
+    return lists
+
 
 class TestCommons(unittest.TestCase):
     def setUp(self):
@@ -80,6 +81,9 @@ class TestCommons(unittest.TestCase):
         dt1 = dd_mmm_yyyy(string="12-Nov-2012")
         dt2 = datetime.date(2012, 11, 12)
         self.assertEqual(dt1, dt2)
+    
+    def test_unzip_str(self):
+        self.assertAlmostEqual(htmls.unzipped, unzip_str(htmls.zipped))
 
 if __name__ == '__main__':
     unittest.main()

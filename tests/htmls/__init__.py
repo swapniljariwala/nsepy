@@ -1,5 +1,210 @@
-from .equity_html import html_equity
-from .equity_csv import csv_equity
+html_equity = """      
+	<div class="historic-bar" style="width:950px; margin-bottom:5px;"><span><nobr>Data for SBIN - EQ from Nov 07, 2015 to Nov 13, 2015</nobr></span> <span class="download-data-link"><a href="/content/equities/scripvol/datafiles/07-11-2015-TO-13-11-2015SBINEQN.csv" target="_blank" style="text:align:right;">Download file in csv format</a></span></div>
+
+		  <table border="0" cellpadding="4" cellspacing="1" bgcolor="#969696" width="950">
+		  <tr style="height:20">	  
+		  <th nowrap>Symbol</th>
+		  <th nowrap>Series</th>
+		  <th nowrap>Date</td>
+		  <th nowrap>Prev Close</th>
+		  <th nowrap>Open Price</th>
+		  <th nowrap>High Price</th>
+		  <th nowrap>Low Price</th>
+		  <th nowrap>Last Price</th>
+		  <th nowrap>Close Price</th>
+		  <th nowrap>VWAP</th>
+		  <th nowrap>Total Traded<br /> Quantity</th>
+		  <th nowrap>Turnover<br /><img src="/images/rup_t1.gif" alt="Rs." border="0"/> in Lacs</th>
+		  <th nowrap>No. of <br />Trades</th>
+		  <th nowrap>Deliverable<br />Qty</th>
+		  <th nowrap>% Dly Qt to<br />Traded Qty</th>
+		  </tr>	  
+			  
+			  <tr>
+			  
+							  <td class="normalText" nowrap>SBIN</td>
+
+
+			  <td class="normalText" nowrap>EQ</td>
+
+			 
+				<td class="date" nowrap>09-Nov-2015</td>		
+				
+
+
+				 
+
+		
+
+			   
+			  <td class="number" nowrap>243.00</td>
+			  
+			  <td class="number" nowrap>236.00</td>
+			  
+			  <td class="number" nowrap>248.30</td>
+			  
+			  <td class="number" nowrap>235.60</td>
+			  
+			  <td class="number" nowrap>245.65</td>
+			  
+			  <td class="number" nowrap>246.10</td>
+			  
+			  <td class="number" nowrap>244.83</td>
+			  
+			  <td class="number" nowrap>2,28,06,485</td>
+			  
+			  <td class="number" nowrap>55,838.06</td>
+			  
+			  <td class="number" nowrap>1,69,076</td>
+			  
+			  <td class="number" nowrap>86,69,018</td>
+			  
+			  <td class="number" nowrap>38.01</td>
+			  
+			  </tr>
+			  
+			  <tr>
+			  
+							  <td class="normalText" nowrap>SBIN</td>
+
+
+			  <td class="normalText" nowrap>EQ</td>
+
+			 
+				<td class="date" nowrap>10-Nov-2015</td>		
+				
+
+
+				 
+
+		
+
+			   
+			  <td class="number" nowrap>246.10</td>
+			  
+			  <td class="number" nowrap>244.90</td>
+			  
+			  <td class="number" nowrap>247.25</td>
+			  
+			  <td class="number" nowrap>240.10</td>
+			  
+			  <td class="number" nowrap>241.30</td>
+			  
+			  <td class="number" nowrap>241.20</td>
+			  
+			  <td class="number" nowrap>243.15</td>
+			  
+			  <td class="number" nowrap>1,17,67,845</td>
+			  
+			  <td class="number" nowrap>28,613.54</td>
+			  
+			  <td class="number" nowrap>81,141</td>
+			  
+			  <td class="number" nowrap>28,45,909</td>
+			  
+			  <td class="number" nowrap>24.18</td>
+			  
+			  </tr>
+			  
+			  <tr>
+			  
+							  <td class="normalText" nowrap>SBIN</td>
+
+
+			  <td class="normalText" nowrap>EQ</td>
+
+			 
+				<td class="date" nowrap>11-Nov-2015</td>		
+				
+
+
+				 
+
+		
+
+			   
+			  <td class="number" nowrap>241.20</td>
+			  
+			  <td class="number" nowrap>243.00</td>
+			  
+			  <td class="number" nowrap>244.25</td>
+			  
+			  <td class="number" nowrap>242.55</td>
+			  
+			  <td class="number" nowrap>243.20</td>
+			  
+			  <td class="number" nowrap>243.15</td>
+			  
+			  <td class="number" nowrap>243.28</td>
+			  
+			  <td class="number" nowrap>20,61,681</td>
+			  
+			  <td class="number" nowrap>5,015.68</td>
+			  
+			  <td class="number" nowrap>24,738</td>
+			  
+			  <td class="number" nowrap>8,30,764</td>
+			  
+			  <td class="number" nowrap>40.30</td>
+			  
+			  </tr>
+			  
+			  <tr>
+			  
+							  <td class="normalText" nowrap>SBIN</td>
+
+
+			  <td class="normalText" nowrap>EQ</td>
+
+			 
+				<td class="date" nowrap>13-Nov-2015</td>		
+				
+
+
+				 
+
+		
+
+			   
+			  <td class="number" nowrap>243.15</td>
+			  
+			  <td class="number" nowrap>241.50</td>
+			  
+			  <td class="number" nowrap>241.80</td>
+			  
+			  <td class="number" nowrap>237.70</td>
+			  
+			  <td class="number" nowrap>240.30</td>
+			  
+			  <td class="number" nowrap>240.25</td>
+			  
+			  <td class="number" nowrap>239.92</td>
+			  
+			  <td class="number" nowrap>90,82,062</td>
+			  
+			  <td class="number" nowrap>21,789.37</td>
+			  
+			  <td class="number" nowrap>68,168</td>
+			  
+			  <td class="number" nowrap>27,16,416</td>
+			  
+			  <td class="number" nowrap>29.91</td>
+			  
+			  </tr>
+		  
+		  </table>	 
+
+		<!-- <tr><td class="smalllinks" style="text-align:right" > <br /> -->
+		<!-- <a href="/content/equities/scripvol/datafiles/07-11-2015-TO-13-11-2015SBINEQN.csv" target="_blank">Download file in csv format</a></td></tr> -->	
+
+	<!--Content Area Ends Here-->
+	"""
+csv_equity = """
+SBIN,EQ,09-Nov-2015,243,236,248.3,235.6,245.65,246.1,244.83,22806485,55838.06,169076,8669018,38.01
+SBIN,EQ,10-Nov-2015,246.1,244.9,247.25,240.1,241.3,241.2,243.15,11767845,28613.54,81141,2845909,24.18
+SBIN,EQ,11-Nov-2015,241.2,243,244.25,242.55,243.2,243.15,243.28,2061681,5015.68,24738,830764,40.3
+SBIN,EQ,13-Nov-2015,243.15,241.5,241.8,237.7,240.3,240.25,239.92,9082062,21789.37,68168,2716416,29.91
+"""
 csv_index = """
 02-Nov-2015,8054.55,8060.7,7995.6,8050.8,140323983,6552.67
 03-Nov-2015,8086.35,8100.35,8031.75,8060.7,136625382,5955.64
@@ -331,3 +536,12 @@ html_derivative = """
      
 
 """
+
+unzipped = "'Quantum mechanics was developed in the 1920s and 1930s because classical physics could not explain  the stability of atoms.  In particular, classical electromagnetic theory predicted that if negatively charged electrons were orbiting a positively charged nucleus, the electrons would continuously emit electromagnetic radiation (light) and would quickly fall into the nucleus.  There was also no explanation about why atoms emitted light at discrete frequencies.  Quantum theory could explain the stability of atoms and could explain many other fact that classical physics could not explain, such as the black body spectrum and the photoelectric effect.'"
+zipped = 'PK\x03\x04\x14\x00\x00\x00\x08\x00=\trGa\x95|\x06M\x01\x00\x00\x8f\x02\x00\x00\x07\x00\x00\x00zip.txt\x8dQKN\xc3@\x0c\xbd\x8aw\x80TU|V\x1c\x81%\x12\x17pf\x9c\xc4\xead\x9c\x8e=\x94\xdc\x1eO\x12\xa4\xaa\x08\x89\x9de\xfb}\xfc|\xf7^1[\x9d`\xa20b\xe6\xa0pA\x85H\x9f\x94d\xa6\x08\x9c\xc1F\x82\xa7\xd7\xe7G\x05\xcc\xd1\xab\x17\xaf:\nX\x95 $T\xe5\x80\t\xe6q\xd1\x06\x0fRS\x84,\x06\xf45\'t\xfcJ\xa0\x86\x1d\'\xb6\x05\xa4\x074\x99\xf4\x08\xf0\x96a\xc6b\x1cj\xc2r\xb8"\xa3D\xc1\x8aL8d\xf2qc\x90\xb2\xc0\\(r0\x8a\xde@\x03\xee!\xd3\x80\xc6nv\x01\xf7_\x06\x1f\xed\xd8\xec\x97P!\x90\xd2\xb1q\x1e\x00a\x16\xe5\x9b\xe5\\C\xa2\xaa\x87\xa6p\x8dlG\xf8)\xd9\x91U\xaa:\x82&\xb6_\xbe\nFv}\xc9p\x9fx\x18\xed\xa1E\xb4\xa3\xcf\x95\xc3\xc9\x81=\xa6\xe41\x9a4\x8d]\xb0\x1d\xff1\xba\xbd5mL*\x9e\xd8\x16X\xde\xf8\xb0\x93jp\x19\x97-\xacU\xbe\x1d\xbe\xcax\x0f"k(d\x04}\xa1s\xa5\x1c\x98\x1a\xeb\xfe\xcf=\xb1\xed\x1b?\x9f\xf8\xe3\x11\xcd\xf3\xcd\xe2\x84\xd9\xe7\xbe^\xdc~\xb05\xee\xff\xfc\xfa\x00Z\xc3\x08\xa8\xabT\x970\x9c\xa0\x93\xb8\x80\xce-\xb8:5\xad6s\n1\xd9\xe2\xf4\x1c\xa9\xef\xbd:\xde}\x03PK\x01\x02?\x00\x14\x00\x00\x00\x08\x00=\trGa\x95|\x06M\x01\x00\x00\x8f\x02\x00\x00\x07\x00$\x00\x00\x00\x00\x00\x00\x00 \x00\x00\x00\x00\x00\x00\x00zip.txt\n\x00 \x00\x00\x00\x00\x00\x01\x00\x18\x00Y\xd8\xfb\xbco!\xd1\x01Z\xb3\xb0\xb7o!\xd1\x01Z\xb3\xb0\xb7o!\xd1\x01PK\x05\x06\x00\x00\x00\x00\x01\x00\x01\x00Y\x00\x00\x00r\x01\x00\x00\x00\x00'
+fp = open('zip.zip','wb')
+fp.write(zipped)
+fp.close()
+
+
+        
