@@ -5,7 +5,7 @@ Created on Sun Nov 15 23:12:26 2015
 @author: jerry
 """
 import requests
-from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVE, DERIVATIVE_TO_INDEX
+from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVES, DERIVATIVE_TO_INDEX
 import datetime
 from functools import partial
 import pandas as pd
@@ -14,6 +14,7 @@ import zipfile
 import threading
 import six
 import sys
+from urlparse import urlparse
 def is_index(index):
     return index in NSE_INDICES
 
@@ -29,10 +30,15 @@ class StrDate(datetime.date):
         https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
         
     """
-    def __new__(cls, string, format):
-        dt = datetime.datetime.strptime(string, format)        
-        return datetime.date.__new__(datetime.date, dt.year, dt.month, dt.day)
-    
+    def __new__(cls, date, format):
+        
+        if(isinstance(date,datetime.date)):
+            return datetime.date.__new__(datetime.date, date.year,
+                                         date.month, date.day)
+        dt = datetime.datetime.strptime(date, format)
+        return datetime.date.__new__(datetime.date, dt.year,
+                                     dt.month, dt.day)
+
     @classmethod
     def default_format(cls, format):
         """
@@ -45,13 +51,6 @@ class StrDate(datetime.date):
         Date_Formatted.__new__ = partial(cls.__new__, format = format)
         return Date_Formatted
         
-        
-        
-
-class URLFetch(requests.Session):
-    def __init__(self):
-        super.__init__(self)
-
 
 class ParseTables:
     def __init__(self, *args, **kwargs):
@@ -95,4 +94,47 @@ class ThreadReturns(threading.Thread):
         else: # assuming v3
             self.result = self._target(*self._args, **self._kwargs)
             
+class URLFetch:
+    def __init__(self, url, method='get', json=False, session=None,
+                 headers = None, proxy = None):
+        self.url = url
+        self.method = method
+        self.json = json
         
+        if not session:
+            self.session = requests.Session()
+        else:
+            self.session = session        
+        
+        if headers:
+            self.session.headers.update(headers)
+        if proxy:
+            self.update_proxy(proxy)
+        else:
+            self.update_proxy('')
+
+    def set_session(self, session):
+        self.session = session
+        return self
+    
+    def get_session(self, session):
+        self.session = session
+        return self
+        
+    def __call__(self, *args, **kwargs):
+        u = urlparse(self.url)
+        self.session.headers.update({'Host': u.hostname})
+        if self.method == 'get':
+            return self.session.get(self.url, params=kwargs, proxies = self.proxy )
+        elif self.method == 'post':
+            if self.json:
+                return self.session.post(self.url, json=kwargs, proxies = self.proxy )
+            else:
+                return self.session.post(self.url, data=kwargs, proxies = self.proxy )
+    
+    def update_proxy(self, proxy):
+        self.proxy = proxy
+        self.session.proxies.update(self.proxy)
+        
+    def update_headers(self, headers):
+        self.session.headers.update(headers)

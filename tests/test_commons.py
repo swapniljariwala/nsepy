@@ -1,12 +1,13 @@
 from nsepy.commons import (is_index, is_index_derivative,
-                           NSE_INDICES, INDEX_DERIVATIVE,
+                           NSE_INDICES, INDEX_DERIVATIVES,
                            ParseTables, StrDate, unzip_str,
-                           ThreadReturns)
+                           ThreadReturns, URLFetch)
 import datetime
 import unittest
 from bs4 import BeautifulSoup
 from tests import htmls
-
+import json
+import requests
 
 def text_to_list(text, schema):
     rows = text.split('\n')
@@ -38,7 +39,7 @@ class TestCommons(unittest.TestCase):
             self.assertTrue(is_index(i))
 
     def test_is_index_derivative(self):
-        for i in INDEX_DERIVATIVE.keys():
+        for i in INDEX_DERIVATIVES:
             self.assertTrue(is_index_derivative(i))
 
     def test_ParseTables_equity(self):
@@ -79,15 +80,99 @@ class TestCommons(unittest.TestCase):
     
     def test_StrDate(self):
         dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
-        dt1 = dd_mmm_yyyy(string="12-Nov-2012")
+        dt1 = dd_mmm_yyyy(date= "12-Nov-2012")
         dt2 = datetime.date(2012, 11, 12)
         self.assertEqual(dt1, dt2)
     
     def test_unzip_str(self):
-        self.assertAlmostEqual(htmls.unzipped, unzip_str(htmls.zipped))
+        self.assertEqual(htmls.unzipped, unzip_str(htmls.zipped))
     
     def test_ThreadReturns(self):
-        t1 = ThredReturns()
+        def square(ip):
+            return ip**2
+        t1 = ThreadReturns(target = square, kwargs = {'ip':2})
+        t1.start()
+        t1.join()
+        self.assertEquals(t1.result, 4)
+    
+   
+class TestURLFetch(unittest.TestCase):
+    def setUp(self):
+        self.proxy_on = False
+        self.session = requests.Session()
+        if self.proxy_on:
+            self.session.proxies.update({'http':'proxy1.wipro.com:8080', 'https':'proxy.wipro.com:8080'})        
+        self.session.headers.update({'User-Agent' : 'Testing'})
+    
+    def test_get(self):
+        url = 'http://httpbin.org/get'
+        http_get = URLFetch(url=url, session=self.session)
+        try:
+            resp = http_get(key1='val1', key2='val2')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        json = resp.json()
+        self.assertEqual(json['args']['key1'], 'val1')
+        self.assertEqual(json['args']['key2'], 'val2')
+                
+    def test_post(self):
+        url = 'http://httpbin.org/post'
+        http_post = URLFetch(url=url, method='post', session=self.session)
+        try:
+            resp = http_post(key1='val1', key2='val2')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        rjson = resp.json()
+        self.assertEqual(rjson['form']['key1'], 'val1')
+        self.assertEqual(rjson['form']['key2'], 'val2')
 
+    def test_json(self):
+        url = 'http://httpbin.org/post'
+        http_get = URLFetch(url=url, method='post', json=True, session=self.session)
+        try:
+            resp = http_get(key1='val1', key2='val2')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        rjson = resp.json()
+        
+        self.assertEqual(json.loads(rjson['data']), {u'key1':u'val1',
+                                                             u'key2':u'val2'} )
+        
+    def test_cookies(self):
+        url = 'http://httpbin.org/cookies/set'
+        http_cookie = URLFetch(url=url, session=self.session)
+        try:
+            resp = http_cookie(var1=1,var2='a')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        rjson = resp.json()
+        ok_cookie = 0
+        for cookie in self.session.cookies:
+            if cookie.name == 'var1' and cookie.value == '1':
+                ok_cookie += 1
+            if cookie.name == 'var2' and cookie.value == 'a':
+                ok_cookie += 1
+        self.assertEqual(ok_cookie, 2)
+
+        url = 'http://httpbin.org/get'
+        http_get = URLFetch(url=url, session=self.session)
+        try:
+            resp = http_get(key1='val1', key2='val2')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        rjson = resp.json()
+        self.assertGreaterEqual(rjson['headers']['Cookie'].find('var1=1'),0)
+        
+    def test_headers(self):
+        url = 'http://httpbin.org/get'
+        http_get = URLFetch(url=url, session=self.session)
+        try:
+            resp = http_get(key1='val1', key2='val2')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        json = resp.json()
+        self.assertEqual(json['headers']['Host'], 'httpbin.org')
+        self.assertEqual(json['headers']['User-Agent'], 'Testing')
+        
 if __name__ == '__main__':
     unittest.main()
