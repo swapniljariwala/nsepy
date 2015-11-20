@@ -124,13 +124,14 @@ class URLFetch:
     def __call__(self, *args, **kwargs):
         u = urlparse(self.url)
         self.session.headers.update({'Host': u.hostname})
+        url = self.url%(args)
         if self.method == 'get':
-            return self.session.get(self.url, params=kwargs, proxies = self.proxy )
+            return self.session.get(url, params=kwargs, proxies = self.proxy )
         elif self.method == 'post':
             if self.json:
-                return self.session.post(self.url, json=kwargs, proxies = self.proxy )
+                return self.session.post(url, json=kwargs, proxies = self.proxy )
             else:
-                return self.session.post(self.url, data=kwargs, proxies = self.proxy )
+                return self.session.post(url, data=kwargs, proxies = self.proxy )
     
     def update_proxy(self, proxy):
         self.proxy = proxy

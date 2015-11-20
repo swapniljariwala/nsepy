@@ -13,16 +13,70 @@ session = Session()
 proxy = {'http':'proxy1.wipro.com:8080'}
 NSE_SYMBOL_COUNT_URL = 'http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp'
 
-symbol_count_url = URLFetch(url='http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp',
-                            session=session)
+URLFetchSession = partial(URLFetch, session=session)
+
+"""
+---------------------------------EQUITY--------------------------------------
+"""
+symbol_count_url = URLFetchSession(url='http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp')
+
 def get_symbol_count(symbol):
     return symbol_count_url(symbol=symbol).text.lstrip().rstrip()
     
 #symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
-equity_history_url_full = URLFetch(url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp',
-                              session=session)
+equity_history_url_full = URLFetchSession(url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp')
                               
 
 equity_history_url = partial(equity_history_url_full,
                              dataType='PRICEVOLUMEDELIVERABLE',
                              segmentLink=3)
+
+"""
+1. YYY
+2. MMM
+3. ddMMMyyyy
+"""
+price_list_url = URLFetchSession(url = 'http://www.nseindia.com/content/historical/EQUITIES/%s/%s/cm%sbhav.csv.zip')
+
+"""
+1. ddmmyyyy
+"""
+daily_volatility_url = URLFetchSession(url = 'http://www.nseindia.com/archives/nsccl/volt/CMVOLT_%s.CSV')
+
+"""
+1. ddmmyy
+"""
+pr_price_list_zipped_url = URLFetchSession(url = 'http://www.nseindia.com/archives/equities/bhavcopy/pr/PR%s.zip')
+
+
+"""
+--------------------------INDICES---------------------------------------
+"""
+"""
+1. URL encoded Index Name
+2. from date string dd-mm-yyyy
+3. to date string dd-mm-yyyy
+"""
+index_history_url = URLFetchSession(url = 'http://www.nseindia.com/products/dynaContent/equities/indices/historicalindices.jsp')
+
+"""
+1. ddmmyyyy
+"""
+index_daily_snapshot_url = URLFetchSession(url='http://www.nseindia.com/content/indices/ind_close_all_%s.csv')
+"""
+indexName=NIFTY%2050&fromDate=02-11-2015&toDate=19-11-2015&yield1=undefined&yield2=undefined&yield3=undefined&yield4=all
+indexName = Index name
+fromDate = from date dd-mm-yyyy
+toDate = to Date dd-mm-yyyy
+"""
+index_pe_history_url = partial(
+                            URLFetchSession(url='http://www.nseindia.com/products/dynaContent/equities/indices/historical_pepb.jsp?'),
+                            yield1="undefined",
+                            yield2="undefined",
+                            yield3="undefined",
+                            yield4="all")
+
+
+
+
+

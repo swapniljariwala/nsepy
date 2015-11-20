@@ -98,7 +98,7 @@ class TestCommons(unittest.TestCase):
    
 class TestURLFetch(unittest.TestCase):
     def setUp(self):
-        self.proxy_on = False
+        self.proxy_on = True
         self.session = requests.Session()
         if self.proxy_on:
             self.session.proxies.update({'http':'proxy1.wipro.com:8080', 'https':'proxy.wipro.com:8080'})        
@@ -114,7 +114,18 @@ class TestURLFetch(unittest.TestCase):
         json = resp.json()
         self.assertEqual(json['args']['key1'], 'val1')
         self.assertEqual(json['args']['key2'], 'val2')
-                
+    
+    def test_urls_with_args_and_data(self):
+        url = 'http://httpbin.org/%s'
+        http_post = URLFetch(url=url, method='post', session=self.session)
+        try:
+            resp = http_post('post', key1='val1', key2='val2')
+        except requests.exceptions.ConnectionError as e:
+            raise requests.exceptions.ConnectionError('Error fetching (check proxy settings):',url)
+        rjson = resp.json()
+        self.assertEqual(rjson['form']['key1'], 'val1')
+        self.assertEqual(rjson['form']['key2'], 'val2')
+
     def test_post(self):
         url = 'http://httpbin.org/post'
         http_post = URLFetch(url=url, method='post', session=self.session)
