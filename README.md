@@ -37,7 +37,7 @@ nifty_pe['Index'] = nifty['Close']
 nifty_pe[['Index', 'P/E']].plot(secondary_y='P/E')
 ```
 To do-
-1. Adding tests
-2. Unifying get_price_history for all segments (stock, indices, derivative)
-3. Support for live data
+* Unifying get_price_history for all segments (stock, indices, derivative)
+* Support for live data
+* Tests and Python compatibility between 3 and 2
 [Visit my blog to explore other projects](http://www.xerxys.in)
