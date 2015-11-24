@@ -14,14 +14,9 @@ import zipfile
 import threading
 import six
 import sys
-if six.PY2:
-    from urlparse import urlparse
-else:
-    from urllib.parse import urlparse
-if six.PY2:
-    import StringIO
-else:
-    from io import StringIO
+
+
+from six.moves.urllib.parse import urlparse
 
 
 def is_index(index):
