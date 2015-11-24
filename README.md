@@ -30,7 +30,7 @@ nifty = indices.archives.get_price_history(index = "NIFTY 50",
                                             end = date(2015,9,24))
 nifty[['Close', 'Turnover']].plot(secondary_y='Turnover')
 #Index P/E ratio history
-nifty_pe = indices.archives.get_price_history(index = "NIFTY 50", 
+nifty_pe = indices.archives.get_pe_history(index = "NIFTY 50", 
                                             start = date(2015,9,1), 
                                             end = date(2015,9,24))
 nifty_pe['Index'] = nifty['Close']
