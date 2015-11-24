@@ -40,4 +40,6 @@ To do-
 * Unifying get_price_history for all segments (stock, indices, derivative)
 * Support for live data
 * Tests and Python compatibility between 3 and 2
+* 
+
 [Visit my blog to explore other projects](http://www.xerxys.in)
