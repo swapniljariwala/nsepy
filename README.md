@@ -13,39 +13,31 @@ For Windows systems you can install Anaconda, this will cover many dependancies 
 ##Installation
 ```$pip install nsepy```
 ##Usage
-Store data directly to csv using simple functions
-Until I package this as library, this tool can be used with below directory structure-
--->Code_Directory/
-    |
-    -->nsepy/
-    |   |
-    |   -->archives.py
-    |   |
-    |   -->derivatives/
-    |   |
-    |   -->indices/
-    |
-    -->explot.py, excsv.py
-    
-```python
 
-from nsepy.archives import get_price_history_csv
-
-with open('sbin.csv','w') as fp:
-    #options for period '1month', '3months', '1week'
-    get_price_history_csv(fp, 'SBIN', period = '1month') 
-
-with open('LT.csv','w') as fp:
-    get_price_history_csv(fp, 'LT', start = '01-01-2014', end = '20-01-2014')
-```
-You can get output in pandas dataframe directly, ready for analysis
+Get the price history of stocks and NSE indices directly in pandas dataframe-
 ```python
 from nsepy.archives import get_price_history
+from nsepy import indices
 from datetime import date
-d = get_price_history(stock = 'SBIN',
+#Stock price history
+sbin = get_price_history(stock = 'SBIN',
                         start = date(2015,1,1), 
-                        end = date(2015,1,1))
-d[['High', 'VWAP', 'Low']].plot()
+                        end = date(2015,1,10))
+sbin[[ 'VWAP', 'Turnover']].plot(secondary_y='Turnover')
+#Index price history
+nifty = indices.archives.get_price_history(index = "NIFTY 50", 
+                                            start = date(2015,9,1), 
+                                            end = date(2015,9,24))
+nifty[['Close', 'Turnover']].plot(secondary_y='Turnover')
+#Index P/E ratio history
+nifty_pe = indices.archives.get_price_history(index = "NIFTY 50", 
+                                            start = date(2015,9,1), 
+                                            end = date(2015,9,24))
+nifty_pe['Index'] = nifty['Close']
+nifty_pe[['Index', 'P/E']].plot(secondary_y='P/E')
 ```
-
+To do-
+1. Adding tests
+2. Unifying get_price_history for all segments (stock, indices, derivative)
+3. Support for live data
 [Visit my blog to explore other projects](http://www.xerxys.in)
