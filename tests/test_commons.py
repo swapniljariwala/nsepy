@@ -98,7 +98,7 @@ class TestCommons(unittest.TestCase):
    
 class TestURLFetch(unittest.TestCase):
     def setUp(self):
-        self.proxy_on = True
+        self.proxy_on = False
         self.session = requests.Session()
         if self.proxy_on:
             self.session.proxies.update({'http':'proxy1.wipro.com:8080', 'https':'proxy.wipro.com:8080'})        
@@ -186,4 +186,21 @@ class TestURLFetch(unittest.TestCase):
         self.assertEqual(json['headers']['User-Agent'], 'Testing')
         
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCommons)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    if six.PY2:
+            
+        if result.wasSuccessful():
+            print("tests OK")
+        for (test, error) in result.errors:
+            print("=========Error in: %s==========="%test)
+            print(error)
+            print("======================================")
+        
+        for (test, failures) in result.failures:
+            print("=========Error in: %s==========="%test)
+            print(failures)
+            print("======================================")
+        
