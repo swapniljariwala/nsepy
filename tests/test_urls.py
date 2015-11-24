@@ -15,14 +15,14 @@ from bs4 import BeautifulSoup
 from tests import htmls
 import json
 import requests
-
+import six
 from nsepy.urls import *
 import nsepy.urls as urls
 
 
 class TestUrls(unittest.TestCase):
     def setUp(self):
-        proxy_on = True
+        proxy_on = False
         if proxy_on:
             urls.session.proxies.update({'http':'proxy1.wipro.com:8080'})
     
@@ -79,14 +79,15 @@ if __name__ == '__main__':
     
     suite = unittest.TestLoader().loadTestsFromTestCase(TestUrls)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
-    if result.wasSuccessful():
-        print("tests OK")
-    for (test, error) in result.errors:
-        print("=========Error in: %s==========="%test)
-        print(error)
-        print("======================================")
-    
-    for (test, failures) in result.failures:
-        print("=========Error in: %s==========="%test)
-        print(failures)
-        print("======================================")
+    if six.PY2:
+        if result.wasSuccessful():
+            print("tests OK")
+        for (test, error) in result.errors:
+            print("=========Error in: %s==========="%test)
+            print(error)
+            print("======================================")
+        
+        for (test, failures) in result.failures:
+            print("=========Error in: %s==========="%test)
+            print(failures)
+            print("======================================")
