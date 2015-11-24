@@ -9,15 +9,23 @@ from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVES, DERIVATIVE_TO_INDEX
 import datetime
 from functools import partial
 import pandas as pd
-import StringIO
+
 import zipfile
 import threading
 import six
 import sys
-from urlparse import urlparse
+if six.PY2:
+    from urlparse import urlparse
+else:
+    from urllib.parse import urlparse
+if six.PY2:
+    import StringIO
+else:
+    from io import StringIO
+
+
 def is_index(index):
     return index in NSE_INDICES
-
 
 def is_index_derivative(index):
     return index in INDEX_DERIVATIVES
@@ -81,11 +89,15 @@ class ParseTables:
         return pd.DataFrame(self.lists)
 
 def unzip_str(zipped_str, file_name = None):
-    fp = StringIO.StringIO(zipped_str)
-    zf = zipfile.ZipFile(file = fp)
+    if isinstance(zipped_str, six.binary_type):
+        fp = six.BytesIO(zipped_str)
+    else:
+        fp = six.BytesIO(six.b(zipped_str))
+
+    zf = zipfile.ZipFile(file=fp)
     if not file_name:
         file_name = zf.namelist()[0]
-    return zf.read(file_name)
+    return zf.read(file_name).decode('utf-8')
 
 class ThreadReturns(threading.Thread):
     def run(self):
