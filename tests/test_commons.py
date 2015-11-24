@@ -8,7 +8,8 @@ from bs4 import BeautifulSoup
 from tests import htmls
 import json
 import requests
-
+import urlparse
+import nsepy.urls
 def text_to_list(text, schema):
     rows = text.split('\n')
     lists = []

@@ -75,6 +75,45 @@ index_pe_history_url = partial(
                             yield2="undefined",
                             yield3="undefined",
                             yield4="all")
+"""
+http://www.nseindia.com/products/dynaContent/equities/indices/hist_vix_data.jsp?&fromDate=01-Nov-2015&toDate=19-Nov-2015
+fromDate = 'dd-Mmm-yyyy'
+toDate = 'dd-Mmm-yyyy'
+"""
+index_vix_history_url = URLFetchSession(url='http://www.nseindia.com/products/dynaContent/equities/indices/hist_vix_data.jsp')
+
+"""
+--------------------------DERIVATIVES---------------------------------------
+"""
+
+derivative_expiry_dates_url = URLFetchSession(url='http://www.nseindia.com/products/resources/js/foExp.js')
+
+
+"""
+instrumentType=FUTIDX
+symbol=NIFTY
+expiryDate=26-11-2015
+optionType=select
+strikePrice=
+dateRange=15days
+fromDate= 01-Nov-2015
+toDate=19-Nov-2015
+segmentLink=9&
+symbolCount=
+"""
+derivative_history_url = partial(
+                            URLFetchSession(url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?'),
+                            segmentLink=9,
+                            symbolCount='')
+"""
+http://www.nseindia.com/content/historical/DERIVATIVES/2015/NOV/fo18NOV2015bhav.csv.zip
+1.year yyyy
+2.Month MMM
+3.date ddMMMyyyy
+
+"""
+derivative_price_list_url = URLFetchSession(url="http://www.nseindia.com/content/historical/DERIVATIVES/%s/%s/fo%sbhav.csv.zip")
+
 
 
 

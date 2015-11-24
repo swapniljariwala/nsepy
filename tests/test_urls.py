@@ -18,7 +18,7 @@ import requests
 import six
 from nsepy.urls import *
 import nsepy.urls as urls
-
+import urlparse
 
 class TestUrls(unittest.TestCase):
     def setUp(self):
@@ -73,8 +73,35 @@ class TestUrls(unittest.TestCase):
                                     indexName="NIFTY 50")
         self.assertGreaterEqual(resp.text.find('<th>P/E'),0)
         self.assertGreaterEqual(resp.text.find('<th>P/B'),0)
+    
+    def test_index_vix_history_url(self):
+        resp = index_vix_history_url(fromDate="01-Jan-2015",
+                                    toDate="10-Jan-2015",
+                                    )
+        self.assertGreaterEqual(resp.text.find('VIX'),0)
+        self.assertGreaterEqual(resp.text.find('Change'),0)
+    
+    def test_derivative_derivative_expiry_dates_url(self):
+        resp = derivative_expiry_dates_url()
+        self.assertGreaterEqual(resp.text.find('vixExpryDt'),0)
+    
+    def test_derivative_history_url(self):
+        resp = derivative_history_url(instrumentType="FUTIDX",
+                                      symbol="NIFTY",
+                                      expiryDate="26-11-2015",
+                                      optionType="select",
+                                      strikePrice='',
+                                      dateRange='',
+                                      fromDate='01-Nov-2015',
+                                      toDate="19-Nov-2015")
+        self.assertGreaterEqual(resp.text.find('NIFTY'),0)
+        self.assertGreaterEqual(resp.text.find('Expiry'),0)
+    
+    def test_derivative_price_list_url(self):
+        resp = derivative_price_list_url('2015','NOV','19NOV2015')
+        csv = unzip_str(resp.content)
         
-        
+
 if __name__ == '__main__':
     
     suite = unittest.TestLoader().loadTestsFromTestCase(TestUrls)
