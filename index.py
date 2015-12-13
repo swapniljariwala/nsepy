@@ -48,7 +48,7 @@ if __name__ == '__main__':
     t3.join()
     e = time.clock()
     print (e - s)
-    #ind = indices.archives.get_price_history(**kwarg1)
+    ind = indices.archives.get_price_history(**kwarg1)
     #lt = get_price_history(**kwarg2)    
     
     ind = t1.result

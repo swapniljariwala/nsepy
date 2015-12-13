@@ -14,6 +14,7 @@ import zipfile
 import threading
 import six
 import sys
+import numpy as np
 
 
 from six.moves.urllib.parse import urlparse
@@ -60,6 +61,7 @@ class ParseTables:
         self.schema = kwargs.get('schema')
         self.bs = kwargs.get('soup')
         self.headers = kwargs.get('headers')
+        self.index = kwargs.get('index')
         self._parse()
 
     def _parse(self):
@@ -72,7 +74,14 @@ class ParseTables:
                 lst = []
                 for i in range(0, len(tds)):
                     txt = tds[i].text.replace('\n','').replace(' ','').replace(',','')
-                    val = schema[i](txt)
+                    try:
+                        val = schema[i](txt)
+                    except:
+                        if schema[i]==float or schema[i]==int:
+                            val = np.nan
+                        else:
+                            val = ''
+                            #raise ValueError("Error in %d. %s(%s)"%(i, str(schema[i]), txt))
                     lst.append(val)
                 lists.append(lst)
         self.lists = lists
@@ -81,7 +90,10 @@ class ParseTables:
         return self.lists
     
     def get_df(self):
-        return pd.DataFrame(self.lists)
+        if self.index:
+            return pd.DataFrame(self.lists, columns=self.headers).set_index(self.index)
+        else:
+            return pd.DataFrame(self.lists, columns=self.headers)
 
 def unzip_str(zipped_str, file_name = None):
     if isinstance(zipped_str, six.binary_type):

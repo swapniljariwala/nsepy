@@ -2,6 +2,7 @@ from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
                            ParseTables, StrDate, unzip_str,
                            ThreadReturns, URLFetch)
+
 import datetime
 import unittest
 from bs4 import BeautifulSoup
@@ -10,6 +11,7 @@ import json
 import requests
 import urlparse
 import nsepy.urls
+import six
 def text_to_list(text, schema):
     rows = text.split('\n')
     lists = []
@@ -43,10 +45,10 @@ class TestCommons(unittest.TestCase):
         for i in INDEX_DERIVATIVES:
             self.assertTrue(is_index_derivative(i))
 
-    def test_ParseTables_equity(self):
+    def test_ParseTables(self):
         # test equity tables
+        
         dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
-        # schema for equity history values
         schema = [str, str,
                   dd_mmm_yyyy,
                   float, float, float, float,
@@ -55,7 +57,7 @@ class TestCommons(unittest.TestCase):
         bs = BeautifulSoup(htmls.html_equity)
         t = ParseTables(soup=bs,
                         schema=schema)
-        lst = text_to_list(htmls.csv_equity, schema)
+        lst = text_to_list(htmls.csv_equity, schema=schema)
         self.assertEqual(lst, t.get_tables())
         
         #test derivative tables
@@ -79,6 +81,26 @@ class TestCommons(unittest.TestCase):
         lst = text_to_list(htmls.csv_index, schema)
         self.assertEqual(lst, t.get_tables())
     
+    def test_ParseTables_headers(self):
+        # test equity tables
+        dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
+        # schema for equity history values
+        schema = [str, str,
+                  dd_mmm_yyyy,
+                  float, float, float, float,
+                  float, float, float, int, float,
+                  int, int, float]
+        headers = ["Symbol", "Series", "Date", "Prev Close", 
+                  "Open", "High", "Low","Last", "Close", "VWAP",
+                  "Volume", "Turnover", "Trades", "Deliverable Volume",
+                  "%Deliverble"]
+        bs = BeautifulSoup(htmls.html_equity)
+        t = ParseTables(soup=bs,
+                        schema=schema, headers=headers,index='Date')
+        lst = text_to_list(htmls.csv_equity, schema)
+        df = t.get_df()
+        self.assertIn("Symbol",df.columns, str(df.columns))
+        
     def test_StrDate(self):
         dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
         dt1 = dd_mmm_yyyy(date= "12-Nov-2012")
@@ -188,6 +210,7 @@ class TestURLFetch(unittest.TestCase):
         
 if __name__ == '__main__':
     #unittest.main()
+
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCommons)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     

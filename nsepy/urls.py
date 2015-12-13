@@ -8,6 +8,7 @@ Created on Thu Nov 19 20:35:13 2015
 from nsepy.commons import URLFetch
 from requests import Session
 from functools import partial
+from nsepy.constants import symbol_count, symbol_list
 
 session = Session()
 proxy = {'http':'proxy1.wipro.com:8080'}
@@ -21,15 +22,29 @@ URLFetchSession = partial(URLFetch, session=session)
 symbol_count_url = URLFetchSession(url='http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp')
 
 def get_symbol_count(symbol):
-    return symbol_count_url(symbol=symbol).text.lstrip().rstrip()
-    
+    try:
+        return symbol_count[symbol]
+    except:
+        cnt = symbol_count_url(symbol=symbol).text.lstrip().rstrip()
+        symbol_count[symbol] = cnt
+        return cnt
+        
+
+"""
 #symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
+"""
 equity_history_url_full = URLFetchSession(url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp')
                               
-
+"""
+symbol="SBIN"
+symbolCount=get_symbol_count(SBIN)
+series="EQ"
+fromDate="dd-mm-yyyy"
+toDate="dd-mm-yyyy"
+"""
 equity_history_url = partial(equity_history_url_full,
                              dataType='PRICEVOLUMEDELIVERABLE',
-                             segmentLink=3)
+                             segmentLink=3,dateRange="")
 
 """
 1. YYY
@@ -53,9 +68,9 @@ pr_price_list_zipped_url = URLFetchSession(url = 'http://www.nseindia.com/archiv
 --------------------------INDICES---------------------------------------
 """
 """
-1. URL encoded Index Name
-2. from date string dd-mm-yyyy
-3. to date string dd-mm-yyyy
+1. indexType=index name
+2. fromDate string dd-mm-yyyy
+3. toDate string dd-mm-yyyy
 """
 index_history_url = URLFetchSession(url = 'http://www.nseindia.com/products/dynaContent/equities/indices/historicalindices.jsp')
 
@@ -113,9 +128,5 @@ http://www.nseindia.com/content/historical/DERIVATIVES/2015/NOV/fo18NOV2015bhav.
 
 """
 derivative_price_list_url = URLFetchSession(url="http://www.nseindia.com/content/historical/DERIVATIVES/%s/%s/fo%sbhav.csv.zip")
-
-
-
-
 
 
