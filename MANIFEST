@@ -3,4 +3,8 @@ setup.cfg
 setup.py
 nsepy\__init__.py
 nsepy\archives.py
+nsepy\commons.py
+nsepy\constants.py
+nsepy\history.py
 nsepy\nselist.py
+nsepy\urls.py
