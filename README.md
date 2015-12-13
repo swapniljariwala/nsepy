@@ -28,7 +28,7 @@ from datetime import date
 			symbol (str): Symbol for stock (SBIN, RELIANCE etc.), index (NIFTY, BANKNIFTY etc) or any security (Index names "NIFTY 50", "INDIAVIX" etc.
 			start (datetime.date): start date 
             end (datetime.date): end date
-            index (boolean): False by default, True if its a index, index futures or options and also for INDIAVIX
+            index (boolean): False by default, True if its an index, index futures or options and also for INDIAVIX
             futures (boolean): False by default, True for index and stock futures only (should not be set to True with option_type specified)
             expiry_date (datetime.date): Expiry date for derivatives, Compulsory parameter for futures and options
             option_type (str): It takes "CE", "PE", "CA", "PA" for European and American calls and puts
