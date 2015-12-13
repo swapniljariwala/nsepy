@@ -18,15 +18,15 @@ Get the price history of stocks and NSE indices directly in pandas dataframe-
 ```python
 from nsepy import get_history, get_index_pe_history
 from datetime import date
-sbin = get_history(symbol = 'SBIN',
-                    start = date(2015,1,1), 
-                    end = date(2015,1,10))
+sbin = get_history(symbol='SBIN',
+                    start=date(2015,1,1), 
+                    end=date(2015,1,10))
 sbin[[ 'VWAP', 'Turnover']].plot(secondary_y='Turnover')
 
 #Index price history
-nifty = get_history(symbol = "NIFTY", 
-                    start = date(2015,1,1), 
-                    end = date(2015,1,10),
+nifty = get_history(symbol="NIFTY", 
+                    start=date(2015,1,1), 
+                    end=date(2015,1,10),
 					index=True)
 nifty[['Close', 'Turnover']].plot(secondary_y='Turnover')
 
