@@ -1,5 +1,10 @@
-# nsepy
+# nsepy 0.3
 Python Library to get publicly available data on NSE website ie. stock quotes, historical data, live indices 
+
+Release Notes
+* Added support for derivative data. (Probably only API for indian derivative and India VIX data as Yahoo API has no support for derivatives)
+* Unified and simplified API for all (Equity, Index, Derivative, Volatility Indexes-INDIAVIX)
+* Compatible and Tested with Python 2.7 and 3.4
 
 ##Libraries Required
 - requests
@@ -107,9 +112,7 @@ nifty_pe['Index'] = nifty['Close']
 nifty_pe[['Index', 'P/E']].plot(secondary_y='P/E')
 ```
 To do-
-* Unifying get_price_history for all segments (stock, indices, derivative)
 * Support for live data
-* Tests and Python compatibility between 3 and 2
 
 
 [Visit my blog to explore other projects](http://www.xerxys.in)
