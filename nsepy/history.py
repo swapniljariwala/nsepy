@@ -12,8 +12,9 @@ from nsepy.constants import *
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import pandas as pd
-
+import six
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
+dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
 EQUITY_SCHEMA = [str, str,
           dd_mmm_yyyy,
           float, float, float, float,
@@ -85,6 +86,7 @@ def get_history(**kwargs):
         kwargs2 = dict(kwargs)
         kwargs1['end'] = start + timedelta(130)
         kwargs2['start'] = kwargs1['end'] + timedelta(1)
+        print kwargs1['end']
         t1 = ThreadReturns(target=get_history, kwargs=kwargs1)
         t2 = ThreadReturns(target=get_history, kwargs=kwargs2)
         t1.start()
@@ -102,7 +104,7 @@ def get_history_quanta(**kwargs):
     df = url_to_df(url=url,
                    params=params,
                    schema=schema,
-                   headers=headers)
+                   headers=headers, scaling=scaling)
     return df
 
 
@@ -113,7 +115,9 @@ def url_to_df(url, params, schema, headers, scaling):
                      schema=schema,
                      headers=headers, index="Date")
     df = tp.get_df()
-    
+    for key, val in six.iteritems(scaling):
+        df[key] = val * df[key]
+    return df
                     
 """
     symbol = "SBIN" (stock name, index name and VIX)

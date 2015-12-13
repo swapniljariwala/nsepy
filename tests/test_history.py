@@ -14,17 +14,9 @@ class TestCommons(unittest.TestCase):
     def setUp(self):
         self.start = date(2015,1,1)
         self.end = date(2015,1,10)
-    '''
-    def test_equity_to_df(self):
-        df = equity_to_df(symbol="SBIN",
-                      fromDate=self.start.strftime("%d-%m-%Y"),
-                      toDate=self.end.strftime("%d-%m-%Y"),
-                      series="EQ",
-                      symbolCount="1")
-        #self.assertIn("Symbol",df.columns)
-    '''
-    def test_get_history_equity(self):
-        pass
+    
+    
+    
     def test_validate_params(self):
         #test stock history param validation
         validate_params(symbol='SBIN',
