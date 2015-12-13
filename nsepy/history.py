@@ -83,11 +83,26 @@ def get_history(symbol, start, end, index=False, futures=False, option_type="",
                     expiry_date = None, strike_price="", series='EQ'):
     """This is the function to get the historical prices of any security (index,
         stocks, derviatives, VIX) etc.
+        
         Args:
             symbol (str): Symbol for stock, index or any security
             start (datetime.date): start date
             end (datetime.date): end date
             index (boolean): False by default, True if its a index
+            futures (boolean): False by default, True for index and stock futures
+            expiry_date (datetime.date): Expiry date for derivatives, Compulsory for futures and options
+            option_type (str): It takes "CE", "PE", "CA", "PA" for European and American calls and puts
+            strike_price (int): Strike price, Compulsory for options
+            series (str): Defaults to "EQ", but can be "BE" etc (refer NSE website for details)
+        
+        Returns:
+            pandas.DataFrame : A pandas dataframe object 
+            
+        Raises:
+            ValueError: 
+                        1. strike_price argument missing or not of type int when options_type is provided
+                        2. If there's an Invalid value in option_type, valid values-'CE' or 'PE' or 'CA' or 'CE'
+                        3. If both futures='True' and option_type='CE' or 'PE'
     """
     frame = inspect.currentframe()
     args, _, _, kwargs = inspect.getargvalues(frame)
