@@ -9,9 +9,9 @@ from nsepy.urls import *
 import six
 from nsepy.commons import *
 from nsepy.constants import *
-from datetime import date
+from datetime import date, timedelta
 from bs4 import BeautifulSoup
-
+import pandas as pd
 
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 EQUITY_SCHEMA = [str, str,
@@ -70,7 +70,25 @@ VIX_INDEX_HEADERS = ['Date',
     expiry_date = date(yyyy,mm,dd)
 
 """
-
+def get_history(**kwargs):
+    start = kwargs['start']
+    end = kwargs['end']
+    if (end - start) > timedelta(130):
+        kwargs1 = dict(kwargs)
+        kwargs2 = dict(kwargs)
+        kwargs1['end'] = start + timedelta(130)
+        kwargs2['start'] = kwargs1['end'] + timedelta(1)
+        t1 = ThreadReturns(target=get_history, kwargs=kwargs1)
+        t2 = ThreadReturns(target=get_history, kwargs=kwargs2)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        return pd.concat((t1.result, t2.result))
+    else:
+        return get_history_quanta(**kwargs) 
+        
+    
     
 def get_history_quanta(**kwargs):
     url, params, schema, headers = validate_params(**kwargs)
