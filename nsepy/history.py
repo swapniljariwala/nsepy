@@ -261,6 +261,16 @@ def get_index_pe_history(symbol, start, end):
         return get_index_pe_history_quanta(**kwargs)
 
 def get_index_pe_history_quanta(symbol, start, end):
+    """This function will fetch the P/E, P/B and dividend yield for a given index
+        
+        Args:
+            symbol (str): Symbol for stock, index or any security
+            start (datetime.date): start date
+            end (datetime.date): end date
+        
+        Returns:
+            pandas.DataFrame : A pandas dataframe object 
+    """
     if symbol in DERIVATIVE_TO_INDEX:
         index_name = DERIVATIVE_TO_INDEX[symbol]
     else:
