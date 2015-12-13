@@ -23,7 +23,9 @@ EQUITY_HEADERS = ["Symbol", "Series", "Date", "Prev Close",
           "Open", "High", "Low","Last", "Close", "VWAP",
           "Volume", "Turnover", "Trades", "Deliverable Volume",
           "%Deliverble"]
-
+EQUITY_SCALING = {"Turnover": 100000,
+                  "%Deliverble": 0.01}
+                  
 FUTURES_SCHEMA = [str, dd_mmm_yyyy, dd_mmm_yyyy,
                   float, float, float, float,
                   float, float, int, float,
@@ -33,17 +35,19 @@ FUTURES_HEADERS = ['Symbol', 'Date', 'Expiry',
                    'Open', 'High', 'Low', 'Close',
                    'Last', 'Settle Price', 'Number of Contracts', 'Turnover',
                    'Open Interest', 'Change in OI', 'Underlying']
+FUTURES_SCALING = {"Turnover": 100000}
 
 OPTION_SCHEMA = [str, dd_mmm_yyyy, dd_mmm_yyyy, str, float,
                  float, float, float, float,
                  float, float, int, float,
                  float, int, int, float]
-               
-
 OPTION_HEADERS = ['Symbol', 'Date', 'Expiry', 'Option Type', 'Strike Price',
                   'Open', 'High', 'Low', 'Close',
                   'Last', 'Settle Price', 'Number of Contracts', 'Turnover',
                   'Premium Turnover', 'Open Interest', 'Change in OI', 'Underlying']
+OPTION_SCALING = {"Turnover": 100000,
+                   "Premium Turnover": 100000}
+                   
 
 INDEX_SCHEMA = [dd_mmm_yyyy,
                 float, float, float, float,
@@ -51,12 +55,15 @@ INDEX_SCHEMA = [dd_mmm_yyyy,
 INDEX_HEADERS = ['Date',
                  'Open', 'High', 'Low', 'Close',
                  'Volume', 'Turnover']
+INDEX_SCALING = {'Turnover': 10000000}
+
 VIX_INDEX_SCHEMA = [dd_mmm_yyyy,
                     float, float, float, float, 
                     float, float, float]
 VIX_INDEX_HEADERS = ['Date',
                      'Open', 'High', 'Low', 'Close',
                      'Previous', 'Change', '%Change']
+VIX_SCALING = {'%Change': 0.01}        
 
 """
     symbol = "SBIN" (stock name, index name and VIX)
@@ -147,6 +154,7 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
             params['optionType'] = option_type
             schema = OPTION_SCHEMA
             headers = OPTION_HEADERS
+            scaling = OPTION_SCALING
         elif option_type: 
             #this means that there's an invalid value in option_type
             raise ValueError("Invalid value in option_type, valid values-'CE' or 'PE' or 'CA' or 'CE'")
@@ -158,6 +166,7 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
             else: params['instrumentType'] = 'FUTSTK'            
             schema = FUTURES_SCHEMA
             headers = FUTURES_HEADERS
+            scaling = FUTURES_SCALING
     elif futures and option_type: 
         raise ValueError("select either futures='True' or option_type='CE' or 'PE' not both")
     else: # its a normal request
@@ -169,6 +178,7 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
                 url = index_vix_history_url
                 schema = VIX_INDEX_SCHEMA
                 headers = VIX_INDEX_HEADERS
+                scaling = VIX_SCALING
             else: 
                 params['indexType'] = symbol
                 params['fromDate'] = start.strftime('%d-%m-%Y')
@@ -176,6 +186,7 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
                 url = index_history_url
                 schema = INDEX_SCHEMA
                 headers = INDEX_HEADERS
+                scaling = INDEX_SCALING
         else:
             params['symbol'] = symbol
             params['series'] = series
@@ -183,7 +194,8 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
             url = equity_history_url
             schema = EQUITY_SCHEMA
             headers = EQUITY_HEADERS
+            scaling = EQUITY_SCALING
     
-    return url, params, schema, headers
+    return url, params, schema, headers, scaling
             
         
