@@ -98,7 +98,7 @@ def get_history(**kwargs):
     
     
 def get_history_quanta(**kwargs):
-    url, params, schema, headers = validate_params(**kwargs)
+    url, params, schema, headers, scaling = validate_params(**kwargs)
     df = url_to_df(url=url,
                    params=params,
                    schema=schema,
@@ -106,13 +106,14 @@ def get_history_quanta(**kwargs):
     return df
 
 
-def url_to_df(url, params, schema, headers):
+def url_to_df(url, params, schema, headers, scaling):
     resp = url(**params)
     bs = BeautifulSoup(resp.text)
     tp = ParseTables(soup=bs,
                      schema=schema,
                      headers=headers, index="Date")
-    return tp.get_df()
+    df = tp.get_df()
+    
                     
 """
     symbol = "SBIN" (stock name, index name and VIX)
