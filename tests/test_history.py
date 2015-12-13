@@ -4,8 +4,10 @@ Created on Tue Nov 24 21:57:53 2015
 
 @author: Swapnil Jariwala
 """
-from nsepy.history import equity_to_df, derivative_to_df, index_to_df, validate_params
+from nsepy.history import validate_params
 from nsepy.urls import get_symbol_count
+from nsepy import urls
+from nsepy import history
 from nsepy.nselist import nse_to_icici
 import unittest
 from datetime import date
@@ -19,17 +21,17 @@ class TestCommons(unittest.TestCase):
     
     def test_validate_params(self):
         #test stock history param validation
-        validate_params(symbol='SBIN',
-                                start=date(2014,1,1),
-                                end=date(2014,1,10))
-                                
-        params = {"symbol":"SBIN", "symbolCount":'1',
+        url, params, schema, headers, scaling = validate_params(
+                                                    symbol='SBIN',
+                                                    start=date(2014,1,1),
+                                                    end=date(2014,1,10))
+                                                    
+        params_ref = {"symbol":"SBIN", "symbolCount":'1',
                   "series":"EQ", "fromDate":"01-01-2014",
                   "toDate":"10-01-2014"}
-        self.assertEqual(params, validate_params(symbol='SBIN',
-                                start=date(2014,1,1),
-                                end=date(2014,1,10))[1])
-        
+        self.assertEqual(params, params_ref)
+        self.assertEqual(url, urls.equity_history_url)
+        self.assertEqual(schema, history.EQUITY_SCHEMA)
         
         #test index history params
         """

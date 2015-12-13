@@ -13,6 +13,7 @@ from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import pandas as pd
 import six
+import inspect
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
 EQUITY_SCHEMA = [str, str,
@@ -78,7 +79,19 @@ VIX_SCALING = {'%Change': 0.01}
     expiry_date = date(yyyy,mm,dd)
 
 """
-def get_history(**kwargs):
+def get_history(symbol, start, end, index=False, futures=False, option_type="",
+                    expiry_date = None, strike_price="", series='EQ'):
+    """This is the function to get the historical prices of any security (index,
+        stocks, derviatives, VIX) etc.
+        Args:
+            symbol (str): Symbol for stock, index or any security
+            start (datetime.date): start date
+            end (datetime.date): end date
+            index (boolean): False by default, True if its a index
+    """
+    frame = inspect.currentframe()
+    args, _, _, kwargs = inspect.getargvalues(frame)
+    del(kwargs['frame'])
     start = kwargs['start']
     end = kwargs['end']
     if (end - start) > timedelta(130):
@@ -86,7 +99,6 @@ def get_history(**kwargs):
         kwargs2 = dict(kwargs)
         kwargs1['end'] = start + timedelta(130)
         kwargs2['start'] = kwargs1['end'] + timedelta(1)
-        print kwargs1['end']
         t1 = ThreadReturns(target=get_history, kwargs=kwargs1)
         t2 = ThreadReturns(target=get_history, kwargs=kwargs2)
         t1.start()
@@ -108,7 +120,7 @@ def get_history_quanta(**kwargs):
     return df
 
 
-def url_to_df(url, params, schema, headers, scaling):
+def url_to_df(url, params, schema, headers, scaling={}):
     resp = url(**params)
     bs = BeautifulSoup(resp.text)
     tp = ParseTables(soup=bs,
@@ -184,8 +196,11 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
                 schema = VIX_INDEX_SCHEMA
                 headers = VIX_INDEX_HEADERS
                 scaling = VIX_SCALING
-            else: 
-                params['indexType'] = symbol
+            else:
+                if symbol in DERIVATIVE_TO_INDEX:
+                    params['indexType'] = DERIVATIVE_TO_INDEX[symbol]
+                else:
+                    params['indexType'] = symbol
                 params['fromDate'] = start.strftime('%d-%m-%Y')
                 params['toDate'] = end.strftime('%d-%m-%Y')
                 url = index_history_url
@@ -196,6 +211,8 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
             params['symbol'] = symbol
             params['series'] = series
             params['symbolCount'] = get_symbol_count(symbol)
+            params['fromDate'] = start.strftime('%d-%m-%Y')
+            params['toDate'] = end.strftime('%d-%m-%Y')
             url = equity_history_url
             schema = EQUITY_SCHEMA
             headers = EQUITY_HEADERS
