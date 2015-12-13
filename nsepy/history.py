@@ -67,6 +67,10 @@ VIX_INDEX_HEADERS = ['Date',
                      'Previous', 'Change', '%Change']
 VIX_SCALING = {'%Change': 0.01}        
 
+INDEX_PE_SCHEMA = [dd_mmm_yyyy,
+                   float, float, float]
+INDEX_PE_HEADERS = ['Date', 'P/E', 'P/B', 'Div Yield']
+
 """
     symbol = "SBIN" (stock name, index name and VIX)
     start = date(yyyy,mm,dd)
@@ -234,5 +238,40 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
             scaling = EQUITY_SCALING
     
     return url, params, schema, headers, scaling
-            
-        
+    
+def get_index_pe_history(symbol, start, end):
+    frame = inspect.currentframe()
+    args, _, _, kwargs = inspect.getargvalues(frame)
+    del(kwargs['frame'])
+    start = kwargs['start']
+    end = kwargs['end']
+    if (end - start) > timedelta(130):
+        kwargs1 = dict(kwargs)
+        kwargs2 = dict(kwargs)
+        kwargs1['end'] = start + timedelta(130)
+        kwargs2['start'] = kwargs1['end'] + timedelta(1)
+        t1 = ThreadReturns(target=get_index_pe_history, kwargs=kwargs1)
+        t2 = ThreadReturns(target=get_index_pe_history, kwargs=kwargs2)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        return pd.concat((t1.result, t2.result))
+    else:
+        return get_index_pe_history_quanta(**kwargs)
+
+def get_index_pe_history_quanta(symbol, start, end):
+    if symbol in DERIVATIVE_TO_INDEX:
+        index_name = DERIVATIVE_TO_INDEX[symbol]
+    else:
+        index_name = symbol
+    resp = index_pe_history_url(indexName=index_name, 
+                                fromDate=start.strftime('%d-%m-%Y'),
+                                toDate=end.strftime('%d-%m-%Y'))
+    
+    bs = BeautifulSoup(resp.text)
+    tp = ParseTables(soup=bs,
+                     schema=INDEX_PE_SCHEMA,
+                     headers=INDEX_PE_HEADERS, index="Date")
+    df = tp.get_df()
+    return df
