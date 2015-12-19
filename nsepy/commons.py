@@ -8,14 +8,19 @@ import requests
 from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVES, DERIVATIVE_TO_INDEX
 import datetime
 from functools import partial
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:
+    pass
 
 import zipfile
 import threading
 import six
 import sys
 import numpy as np
-
+import six
+import re
+import sys
 
 from six.moves.urllib.parse import urlparse
 
@@ -114,6 +119,7 @@ class ThreadReturns(threading.Thread):
             self.result = self._target(*self._args, **self._kwargs)
             
 class URLFetch:
+    
     def __init__(self, url, method='get', json=False, session=None,
                  headers = None, proxy = None):
         self.url = url
@@ -158,3 +164,35 @@ class URLFetch:
         
     def update_headers(self, headers):
         self.session.headers.update(headers)
+        
+
+
+def byte_adaptor(fbuffer):
+    """ provides py3 compatibility by converting byte based
+    file stream to string based file stream
+    Arguments:
+        fbuffer: file like objects containing bytes
+    Returns:
+        string buffer
+    """
+    if six.PY3:
+        strings = fbuffer.read().decode('utf-8')
+        fbuffer = six.StringIO(strings)
+        return fbuffer
+    else:
+        return fbuffer
+
+
+def js_adaptor(buffer):
+    """ convert javascript objects like true, none, NaN etc. to
+    quoted word.
+    Arguments:
+        buffer: string to be converted
+    Returns:
+        string after conversion
+    """
+    buffer = re.sub('true', 'True', buffer)
+    buffer = re.sub('false', 'False', buffer)
+    buffer = re.sub('none', 'None', buffer)
+    buffer = re.sub('NaN', '"NaN"', buffer)
+    return buffer
