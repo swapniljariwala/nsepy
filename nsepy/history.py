@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import six
 import inspect
+
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
 EQUITY_SCHEMA = [str, str,
@@ -118,6 +119,7 @@ def get_history(symbol, start, end, index=False, futures=False, option_type="",
         kwargs2 = dict(kwargs)
         kwargs1['end'] = start + timedelta(130)
         kwargs2['start'] = kwargs1['end'] + timedelta(1)
+
         t1 = ThreadReturns(target=get_history, kwargs=kwargs1)
         t2 = ThreadReturns(target=get_history, kwargs=kwargs2)
         t1.start()
@@ -125,6 +127,7 @@ def get_history(symbol, start, end, index=False, futures=False, option_type="",
         t1.join()
         t2.join()
         return pd.concat((t1.result, t2.result))
+        
     else:
         return get_history_quanta(**kwargs) 
         
@@ -139,6 +142,8 @@ def get_history_quanta(**kwargs):
     return df
 
 
+    
+
 def url_to_df(url, params, schema, headers, scaling={}):
     resp = url(**params)
     bs = BeautifulSoup(resp.text)
@@ -150,22 +155,25 @@ def url_to_df(url, params, schema, headers, scaling={}):
         df[key] = val * df[key]
     return df
                     
-"""
-    symbol = "SBIN" (stock name, index name and VIX)
-    start = date(yyyy,mm,dd)
-    end = date(yyyy,mm,dd)
-    index = True, False (True even for VIX)
-    ---------------
-    futures = True, False
-    option_type = "CE", "PE", "CA", "PA"
-    strike_price = integer number
-    expiry_date = date(yyyy,mm,dd)
-
-    
-"""
 def validate_params(symbol, start, end, index=False, futures=False, option_type="",
                     expiry_date = None, strike_price="", series='EQ'):
+					
+    """
+		symbol = "SBIN" (stock name, index name and VIX)
+		start = date(yyyy,mm,dd)
+		end = date(yyyy,mm,dd)
+		index = True, False (True even for VIX)
+		---------------
+		futures = True, False
+		option_type = "CE", "PE", "CA", "PA"
+		strike_price = integer number
+		expiry_date = date(yyyy,mm,dd)
+    """
+
     params = {}
+
+    if start > end:
+        raise ValueError('Please check start and end dates')
     
     
     if (futures and not option_type) or (not futures and option_type): #EXOR
@@ -177,8 +185,11 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
         params['toDate'] = end.strftime('%d-%b-%Y')
         url = derivative_history_url
 
-       
-        params['expiryDate'] = expiry_date.strftime("%d-%m-%Y")
+        try:
+            params['expiryDate'] = expiry_date.strftime("%d-%m-%Y")
+        except AttributeError as e:
+            raise ValueError('Derivative contracts must have expiry_date as datetime.date')
+            
         option_type = option_type.upper()
         if option_type in ("CE", "PE", "CA", "PA"):
             if not isinstance(strike_price,int):
