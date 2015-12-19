@@ -82,7 +82,8 @@ Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)-
 ```
 In[6]: nifty_fut
 Out[6]: 
-           Symbol      Expiry     Open    High      Low    Close     Last  Date                                                                        
+           Symbol      Expiry     Open    High      Low    Close     Last  
+Date                                                                        
 2015-01-01  NIFTY  2015-01-29  8320.00  8356.0  8295.20  8343.80  8347.05   
 2015-01-02  NIFTY  2015-01-29  8352.25  8470.9  8352.25  8458.40  8468.00   
 2015-01-05  NIFTY  2015-01-29  8452.35  8492.0  8406.00  8422.85  8423.85   
@@ -91,7 +92,8 @@ Out[6]:
 2015-01-08  NIFTY  2015-01-29  8209.00  8274.9  8193.10  8257.25  8255.00   
 2015-01-09  NIFTY  2015-01-29  8306.35  8334.0  8205.00  8315.50  8311.60   
 
-            Settle Price  Number of Contracts      Turnover  Open Interest  Date                                                                         
+            Settle Price  Number of Contracts      Turnover  Open Interest  
+Date                                                                         
 2015-01-01       8343.80               152053  3.165350e+10       21140550   
 2015-01-02       8458.40               384440  8.105711e+10       21427925   
 2015-01-05       8422.85               362889  7.661895e+10       20698500   
