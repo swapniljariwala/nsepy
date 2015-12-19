@@ -12,19 +12,17 @@ from nsepy.nselist import nse_to_icici
 import unittest
 from datetime import date
 import six
-class TestCommons(unittest.TestCase):
+class TestHistory(unittest.TestCase):
     def setUp(self):
         self.start = date(2015,1,1)
         self.end = date(2015,1,10)
-    
-    
-    
+
     def test_validate_params(self):
         #test stock history param validation
-        url, params, schema, headers, scaling = validate_params(
-                                                    symbol='SBIN',
-                                                    start=date(2014,1,1),
-                                                    end=date(2014,1,10))
+        (url, params, schema,
+         headers, scaling) = validate_params(symbol='SBIN',
+                                             start=date(2014,1,1),
+                                             end=date(2014,1,10))
                                                     
         params_ref = {"symbol":"SBIN", "symbolCount":'1',
                   "series":"EQ", "fromDate":"01-01-2014",
@@ -75,10 +73,32 @@ class TestCommons(unittest.TestCase):
                                                 start=date(2015,11,1),
                                                 end=date(2015,11,19),
                                                 strike_price=7800)[1])
+        
+        negative_args = []
+        #start>end
+        negative_args.append({'symbol':'SBIN', 'start': date(2014,1,10),
+                              'end':date(2014,1,1)})
+        #expiry date missing for future contract
+        negative_args.append({'symbol':'SBIN', 'start': date(2014,1,1),
+                              'end':date(2014,1,11), 'futures':True})
+        #Strike price missing for options
+        negative_args.append({'symbol':'SBIN', 'start': date(2014,1,1),
+                              'end':date(2014,1,11), 'option_type':'CE'})
+        #option_type!=None and futures=True
+        negative_args.append({'symbol':'SBIN', 'start': date(2014,1,1),
+                              'end':date(2014,1,11), 
+                              'option_type':'CE', 'futures':True})
+        #test for exceptions
+        for n_arg in negative_args:
+            with self.assertRaises(ValueError):
+                validate_params(**n_arg)
+        
+        
+            
 
 if __name__ == '__main__':
     
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCommons)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestHistory)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     if six.PY2:
         if result.wasSuccessful():
