@@ -27,7 +27,7 @@ Here's a simple example to get historical stock data for the month of January 20
 >> end = date(2015,1,31)
 >> data = get_history(symbol="SBIN", start=start, end=end)
 >> data[['Close']].plot()
-
+>>
 Contents:
 
 .. toctree::

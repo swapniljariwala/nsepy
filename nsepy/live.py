@@ -7,7 +7,7 @@ Created on Fri Dec 18 21:51:41 2015
 from nsepy.commons import *
 import ast
 import json
-from liveurls import *
+from nsepy.liveurls import *
 
 def _parse_get_quote(text):
     
@@ -16,17 +16,15 @@ def _parse_get_quote(text):
                         text, re.S
                     )
             # ast can raise SyntaxError, let's catch only this error
-            try:
-                buffer = match.group(1)
-                buffer = js_adaptor(buffer)
-                response = _clean_server_response(ast.literal_eval(buffer)['data'][0])
-            except SyntaxError as err:
-                raise Exception('ill formatted response')
-            else:
-                return _render_response(response, as_json)
-        else:
-            return None
-
+    try:
+        buffer = match.group(1)
+        buffer = js_adaptor(buffer)
+        response = _clean_server_response(ast.literal_eval(buffer)['data'][0])
+    except SyntaxError as err:
+        raise Exception('ill formatted response')
+    else:
+        return _render_response(response, as_json)
+    
 def _render_response(self, data, as_json=False):
         if as_json is True:
             return json.dumps(data)
