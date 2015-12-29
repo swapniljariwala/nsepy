@@ -47,7 +47,7 @@ equity_history_url = partial(equity_history_url_full,
                              segmentLink=3,dateRange="")
 
 """
-1. YYY
+1. YYYY
 2. MMM
 3. ddMMMyyyy
 """

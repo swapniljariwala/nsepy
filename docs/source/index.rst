@@ -21,13 +21,14 @@ Quick Hand-On
 ~~~~~~~~~~~~~
 Here's a simple example to get historical stock data for the month of January 2015.
 
->> from nsepy import get_history
->> from datetime import date
->> start = date(2015,1,1)
->> end = date(2015,1,31)
->> data = get_history(symbol="SBIN", start=start, end=end)
->> data[['Close']].plot()
->>
+>>> from nsepy import get_history
+>>> from datetime import date
+>>> start = date(2015,1,1)
+>>> end = date(2015,1,31)
+>>> data = get_history(symbol="SBIN", start=start, end=end)
+>>> data[['Close']].plot()
+
+
 Contents:
 
 .. toctree::

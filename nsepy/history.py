@@ -15,6 +15,7 @@ import pandas as pd
 import six
 import inspect
 
+
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
 EQUITY_SCHEMA = [str, str,
@@ -295,4 +296,20 @@ def get_index_pe_history_quanta(symbol, start, end):
                      schema=INDEX_PE_SCHEMA,
                      headers=INDEX_PE_HEADERS, index="Date")
     df = tp.get_df()
+    return df
+
+def get_price_list(dt, segment='EQ'):
+    MMM = dt.strftime("%b").upper()
+    yyyy = dt.strftime("%Y")
+    
+    """
+    1. YYYY
+    2. MMM
+    3. ddMMMyyyy
+    """
+    res = price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper() )
+    txt =  unzip_str(res.content)
+    fp = six.StringIO(txt)
+    df = pd.read_csv(fp)
+    del df['Unnamed: 13']
     return df
