@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 27 17:35:16 2015
-
-@author: jerry
-"""
-
 import requests
 from nsepy.archives import html_to_rows
 from bs4 import BeautifulSoup
@@ -13,8 +6,8 @@ import numpy as np
 FII_YEARLY_URL = 'https://www.fpi.nsdl.co.in/web/Reports/Yearwise.aspx?RptType=5'
 
 def fii_yearly():
-    resp = requests.get(FII_YEARLY_URL, verify = False, proxies = {'https':'proxy1.wipro.com:8080'})
-    soup = BeautifulSoup(resp.text)
+    resp = requests.get(FII_YEARLY_URL, verify = False)
+    soup = BeautifulSoup(resp.text, "lxml")
     ts = soup.find_all('table')
     trs = ts[1].find_all('tr')
     del trs[0]
@@ -37,12 +30,12 @@ def fii_yearly():
         r_cnt += 1           
     df = pd.DataFrame()
     #df.index = index
-    df['Equity'] = d[0]
-    #df['Debt'] = d[1]
+    df['Equity'] = arr[0]
+    df['Debt'] = arr[1]
     #df['Total'] = d[2]
-    return index, df
-    
+    #df.set_index(index)
+    return  df
+
 if __name__ == "__main__":
     d = fii_yearly()
-    
-
+    d.plot()
