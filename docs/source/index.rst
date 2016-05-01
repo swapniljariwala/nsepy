@@ -29,7 +29,9 @@ Here's a simple example to get historical stock data for the month of January 20
 >>> data[['Close']].plot()
 
 
-Get the price history of stocks and NSE indices directly in pandas dataframe- ::
+Get the price history of stocks and NSE indices directly in pandas dataframe::
+
+
 	from nsepy import get_history, get_index_pe_history
 	from datetime import date
 	"""
@@ -86,9 +88,8 @@ Get the price history of stocks and NSE indices directly in pandas dataframe- ::
 	nifty_pe = get_index_pe_history(symbol="NIFTY",
 									start=date(2015,1,1), 
 									end=date(2015,1,10))
-	```
-	Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)-
-	```
+
+Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)::
 	In[6]: nifty_fut
 	Out[6]: 
 	           Symbol      Expiry     Open    High      Low    Close     Last  
