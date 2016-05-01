@@ -91,8 +91,8 @@ Get the price history of stocks and NSE indices directly in pandas dataframe::
 
 Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)
 
->> nifty_fut
->>            Symbol      Expiry     Open    High      Low    Close     Last  
+>>> nifty_fut
+>>>            Symbol      Expiry     Open    High      Low    Close     Last  
 	Date                                                                        
 	2015-01-01  NIFTY  2015-01-29  8320.00  8356.0  8295.20  8343.80  8347.05   
 	2015-01-02  NIFTY  2015-01-29  8352.25  8470.9  8352.25  8458.40  8468.00   
