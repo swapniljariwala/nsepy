@@ -30,7 +30,7 @@ Here's a simple example to get historical stock data for the month of January 20
 
 
 Get the price history of stocks and NSE indices directly in pandas dataframe-
-..code::python
+.. code-block:: python
 	from nsepy import get_history, get_index_pe_history
 	from datetime import date
 	"""
