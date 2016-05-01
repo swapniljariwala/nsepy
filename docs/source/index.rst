@@ -92,7 +92,7 @@ Get the price history of stocks and NSE indices directly in pandas dataframe::
 Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)
 
 >>> nifty_fut
->>>            Symbol      Expiry     Open    High      Low    Close     Last  
+>>>     	Symbol      Expiry     Open    High      Low    Close     Last  
 	Date                                                                        
 	2015-01-01  NIFTY  2015-01-29  8320.00  8356.0  8295.20  8343.80  8347.05   
 	2015-01-02  NIFTY  2015-01-29  8352.25  8470.9  8352.25  8458.40  8468.00   
@@ -101,7 +101,6 @@ Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)
 	2015-01-07  NIFTY  2015-01-29  8150.00  8184.0  8096.00  8141.85  8154.00   
 	2015-01-08  NIFTY  2015-01-29  8209.00  8274.9  8193.10  8257.25  8255.00   
 	2015-01-09  NIFTY  2015-01-29  8306.35  8334.0  8205.00  8315.50  8311.60   
-	
 	            Settle Price  Number of Contracts      Turnover  Open Interest  
 	Date                                                                         
 	2015-01-01       8343.80               152053  3.165350e+10       21140550   
@@ -111,7 +110,6 @@ Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)
 	2015-01-07       8141.85               513814  1.046381e+11       18716025   
 	2015-01-08       8257.25               409705  8.433153e+10       17798500   
 	2015-01-09       8315.50               596384  1.234251e+11       17111350   
-	
 	            Change in OI  Underlying  
 	Date                                  
 	2015-01-01        -28675     8284.00  
