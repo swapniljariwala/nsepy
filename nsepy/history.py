@@ -147,7 +147,7 @@ def get_history_quanta(**kwargs):
 
 def url_to_df(url, params, schema, headers, scaling={}):
     resp = url(**params)
-    bs = BeautifulSoup(resp.text)
+    bs = BeautifulSoup(resp.text, 'html.parser')
     tp = ParseTables(soup=bs,
                      schema=schema,
                      headers=headers, index="Date")
@@ -291,7 +291,7 @@ def get_index_pe_history_quanta(symbol, start, end):
                                 fromDate=start.strftime('%d-%m-%Y'),
                                 toDate=end.strftime('%d-%m-%Y'))
     
-    bs = BeautifulSoup(resp.text)
+    bs = BeautifulSoup(resp.text, 'html.parser')
     tp = ParseTables(soup=bs,
                      schema=INDEX_PE_SCHEMA,
                      headers=INDEX_PE_HEADERS, index="Date")
