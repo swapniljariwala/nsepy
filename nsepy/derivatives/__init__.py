@@ -1,4 +1,4 @@
-import archives
+
 
 import datetime
 from datetime import date
@@ -12,11 +12,11 @@ vix_exp = {}
 stk_exp = {}
 
 def add_dt(instru, dt):
-	try:
-		instru[dt.year][dt.month] = dt
-	except:
-		instru[dt.year]={}
-		instru[dt.year][dt.month] = dt
+    try:
+        instru[dt.year][dt.month] = dt
+    except:
+        instru[dt.year]={}
+        instru[dt.year][dt.month] = dt
 
 class ExpiryDateError(Exception):
     def __init__(self, message):
@@ -24,44 +24,78 @@ class ExpiryDateError(Exception):
         # Call the base class constructor with the parameters it needs
         super(ExpiryDateError, self).__init__(message)
 
-		
+        
 def build_dt_dict():
-	lines = urls.derivative_expiry_dates_url().text
-	print('Building dictionary')
-	for line in lines.split('\n'):
-		s =  re_date.search(line)
-		if s:
-			dt = datetime.datetime.strptime(s.group(1), "%d-%m-%Y").date()
-			if line.find('indxExpryDt')>-1:
-				add_dt(idx_exp, dt)
-			if line.find('stk')>-1:
-				add_dt(stk_exp, dt)
-			if line.find('vix')>-1:
-				add_dt(vix_exp, dt)
-		
-def get_expiry_date(year, month, index=True, stock=False, vix=False):
-	
-	try:
-		
-		if vix and vix_exp:
-			return vix_exp[year][month]
-		
-		if stock and stk_exp:
-			return stk_exp[year][month]
+    lines = urls.derivative_expiry_dates_url().text
+    
+    for line in lines.split('\n'):
+        s =  re_date.search(line)
+        
+        if s:
+            dt = datetime.datetime.strptime(s.group(1), "%d-%m-%Y").date()
+            
+            if line.find('indxExpryDt')>-1 :
+                try:
+                    
+                    existing_date = try_to_get_expiry_date(dt.year, dt.month, index=True)
+                    if existing_date < dt:
+                        add_dt(idx_exp, dt)
+                except:
+                    add_dt(idx_exp, dt)
+                    
+            if line.find('stk')>-1 :
+                try:
+                    existing_date = try_to_get_expiry_date(dt.year, dt.month, index=True)
+                    if existing_date < dt:
+                        add_dt(stk_exp, dt)
+                except:
+                    add_dt(stk_exp, dt)
 
-		
-		if index and idx_exp:
-			return idx_exp[year][month]
-	except:
-		print 'except'
-		if index:
-			name = 'index derivatives'
-		if stock:
-			name = 'stock derivatives'
-		else:
-			name = 'vix derivatives'
-		raise ExpiryDateError('No expiry date found in the month of {}-{} for {}'.format(year, month, name))
-	print("building dict")
+            if line.find('vix')>-1:
+                add_dt(vix_exp, dt)
 
-	build_dt_dict()
-	return get_expiry_date(year, month, index, stock, vix)
+def is_valid_expiry(dt):
+    # not a perfect logic :P
+    if (dt.month!=2 and dt.day>=23) or (dt.month==2 and dt.day>=21):
+        return True
+        
+        
+def try_to_get_expiry_date(year, month,index=True, stock=False, vix=False):
+    
+    try:
+        if vix and vix_exp:
+            return vix_exp[year][month]
+        
+        if stock and stk_exp:
+            return stk_exp[year][month]
+
+        if index and idx_exp:
+            return idx_exp[year][month]
+        
+        raise Exception
+    except:
+    
+        if index:
+            name = 'index derivatives'
+        if stock:
+            name = 'stock derivatives'
+        else:
+            name = 'vix derivatives'
+        raise ExpiryDateError('No expiry date found in the month of {}-{} for {}'.format(year, month, name))
+        
+        
+def get_expiry_date(year, month, index=True, stock=False, vix=False, recursion=0):
+    
+    try:
+        return try_to_get_expiry_date(year, month, index, stock, vix)
+    except:
+        
+        if recursion>1:
+            raise
+            
+        else: pass
+    
+    print("building dictionary")
+
+    build_dt_dict()
+    return get_expiry_date(year, month, index, stock, vix, recursion=recursion+1)
