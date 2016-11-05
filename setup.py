@@ -8,7 +8,7 @@ This is a temporary script file.
 from distutils.core import setup
 setup(
   name = 'nsepy',
-  packages = ['nsepy'], # this must be the same as the name above
+  packages = ['nsepy', 'nsepy.derivatives', 'nsepy.indices', 'nsepy.debt'], # this must be the same as the name above
   version = '0.3',
   description = 'Library to download financial data in pandas dataframe',
   author = 'Swapnil Jariwala',
