@@ -27,7 +27,7 @@ class ExpiryDateError(Exception):
 		
 def build_dt_dict():
 	lines = urls.derivative_expiry_dates_url().text
-	
+	print('Building dictionary')
 	for line in lines.split('\n'):
 		s =  re_date.search(line)
 		if s:
@@ -42,7 +42,7 @@ def build_dt_dict():
 def get_expiry_date(year, month, index=True, stock=False, vix=False):
 	
 	try:
-		raise Exception
+		
 		if vix and vix_exp:
 			return vix_exp[year][month]
 		
