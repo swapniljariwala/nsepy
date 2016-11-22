@@ -23,7 +23,7 @@ NSE_CSV = 'http://www.nseindia.com/content/equities/scripvol/datafiles/'
 NSE_SYMBOL_COUNT_URL = 'http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp?symbol='
 NSE_HTML_DATA_URL = 'http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp' #symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
 NSE_HTML_DATA_URL_NEXT = 'http://www.nseindia.com/products/dynaContent/equities/equities/histscrip.jsp' #symbolCode=238&symbol=SBIN&symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
-EQ_DAILY_PRICE_LIST = 'http://www.nseindia.com/content/historical/EQUITIES/2015/SEP/cm%sbhav.csv.zip'
+EQ_DAILY_PRICE_LIST = 'http://www.nseindia.com/content/historical/EQUITIES/{0}/{1}/cm{2}bhav.csv.zip' # Akash: Edit for removing hard coded month and year
 
 
 def __get_archive_data_raw(stock, start, end):
@@ -301,15 +301,16 @@ def stock_history(stock, start, end, output):
 def get_price_list(dt, proxies = {}):
     
     dt_text = date_to_str(dt, style = 'ddMMMyyyy').upper()
-    url = EQ_DAILY_PRICE_LIST%dt_text
+    url = EQ_DAILY_PRICE_LIST.format(dt.year, dt.strftime('%B')[0:3].upper(), dt_text)  # Akash: Edit for removing hardcoded dates
     resp = req.get(url, stream = True, proxies = proxies)
+
     try:
         df = pd.read_csv(StringIO(
-                        unicode(__raw_zip_data_to_str(resp.content))))
+                         __raw_zip_data_to_str(resp.content).decode('utf-8')))  # Akash: edit for decoding the recived byte file to unicode
     except:
         df = pd.read_csv(StringIO(
-                        str(__raw_zip_data_to_str(resp.content))))
-        
+                        unicode(__raw_zip_data_to_str(resp.content))))
+
     del df['Unnamed: 13']
     
     return df.set_index(keys = ['SYMBOL', 'SERIES'])
