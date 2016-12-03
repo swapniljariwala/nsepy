@@ -28,13 +28,13 @@ def get_symbol_count(symbol):
         cnt = symbol_count_url(symbol=symbol).text.lstrip().rstrip()
         symbol_count[symbol] = cnt
         return cnt
-        
+
 
 """
 #symbol=SBIN&segmentLink=3&symbolCount=1&series=EQ&dateRange=1month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
 """
 equity_history_url_full = URLFetchSession(url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp')
-                              
+
 """
 symbol="SBIN"
 symbolCount=get_symbol_count(SBIN)
@@ -51,7 +51,7 @@ equity_history_url = partial(equity_history_url_full,
 2. MMM
 3. ddMMMyyyy
 """
-price_list_url = URLFetchSession(url = 'http://www.nseindia.com/content/historical/EQUITIES/%s/%s/cm%sbhav.csv.zip')
+price_list_url = URLFetchSession(url='https://www.nseindia.com/content/historical/EQUITIES/%s/%s/cm%sbhav.csv.zip')
 
 """
 1. ddmmyyyy
