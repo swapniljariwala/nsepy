@@ -1,17 +1,19 @@
+import datetime
+import unittest
+import urlparse
+import json
+import requests
+import six
+
+from bs4 import BeautifulSoup
+
+from tests import htmls
+from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
+import nsepy.urls as urls
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
                            ParseTables, StrDate, unzip_str,
                            ThreadReturns, URLFetch)
-import datetime
-import unittest
-from bs4 import BeautifulSoup
-from tests import htmls
-import json
-import requests
-import six
-from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
-import nsepy.urls as urls
-import urlparse
 
 class TestLiveUrls(unittest.TestCase):
     def setUp(self):
@@ -30,7 +32,7 @@ class TestLiveUrls(unittest.TestCase):
         self.assertEqual(d['data'][0]['symbol'], 'SBIN')
 
     def test_quote_derivative_url(self):
-        resp = quote_derivative_url("NIFTY", "FUTIDX", "24NOV2016", '-', '-')
+        resp = quote_derivative_url("NIFTY", "FUTIDX", "29DEC2016", '-', '-')
         d = json.loads(resp.content)
         self.assertEqual(d['data'][0]['underlying'], 'NIFTY')
 
