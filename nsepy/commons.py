@@ -31,16 +31,29 @@ def is_index(index):
 def is_index_derivative(index):
     return index in INDEX_DERIVATIVES
 
+months = ["Unknown",
+    "January",
+    "Febuary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"]
 
 
 class StrDate(datetime.date):
     """
     for pattern-
         https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
-        
+
     """
     def __new__(cls, date, format):
-        
+
         if(isinstance(date,datetime.date)):
             return datetime.date.__new__(datetime.date, date.year,
                                          date.month, date.day)
@@ -59,7 +72,7 @@ class StrDate(datetime.date):
             pass
         Date_Formatted.__new__ = partial(cls.__new__, format = format)
         return Date_Formatted
-        
+
 
 class ParseTables:
     def __init__(self, *args, **kwargs):
@@ -90,10 +103,10 @@ class ParseTables:
                     lst.append(val)
                 lists.append(lst)
         self.lists = lists
-    
+
     def get_tables(self):
         return self.lists
-    
+
     def get_df(self):
         if self.index:
             return pd.DataFrame(self.lists, columns=self.headers).set_index(self.index)
@@ -117,20 +130,20 @@ class ThreadReturns(threading.Thread):
             self.result = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
         else: # assuming v3
             self.result = self._target(*self._args, **self._kwargs)
-            
+
 class URLFetch:
-    
+
     def __init__(self, url, method='get', json=False, session=None,
                  headers = None, proxy = None):
         self.url = url
         self.method = method
         self.json = json
-        
+
         if not session:
             self.session = requests.Session()
         else:
-            self.session = session        
-        
+            self.session = session
+
         if headers:
             self.session.headers.update(headers)
         if proxy:
@@ -141,11 +154,11 @@ class URLFetch:
     def set_session(self, session):
         self.session = session
         return self
-    
+
     def get_session(self, session):
         self.session = session
         return self
-        
+
     def __call__(self, *args, **kwargs):
         u = urlparse(self.url)
         self.session.headers.update({'Host': u.hostname})
@@ -157,14 +170,14 @@ class URLFetch:
                 return self.session.post(url, json=kwargs, proxies = self.proxy )
             else:
                 return self.session.post(url, data=kwargs, proxies = self.proxy )
-    
+
     def update_proxy(self, proxy):
         self.proxy = proxy
         self.session.proxies.update(self.proxy)
-        
+
     def update_headers(self, headers):
         self.session.headers.update(headers)
-        
+
 
 
 def byte_adaptor(fbuffer):
