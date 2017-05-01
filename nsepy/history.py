@@ -193,8 +193,8 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
             
         option_type = option_type.upper()
         if option_type in ("CE", "PE", "CA", "PA"):
-            if not isinstance(strike_price,int):
-                raise ValueError("strike_price argument missing or not of type int")
+            if not isinstance(strike_price,int) and  not isinstance(strike_price, float):
+                raise ValueError("strike_price argument missing or not of type int or float")
             #option specific
             if index: params['instrumentType'] = 'OPTIDX'
             else: params['instrumentType'] = 'OPTSTK'
