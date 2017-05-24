@@ -6,7 +6,7 @@ Release Notes
 * Unified and simplified API for all (Equity, Index, Derivative, Volatility Indexes-INDIAVIX)
 * Compatible and Tested with Python 2.7 and 3.4
 
-##Libraries Required
+## Libraries Required
 - requests
 - beautifulsoup
 - numpy 
@@ -15,11 +15,11 @@ Release Notes
 
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 
-##Installation
+## Installation
 
 ```$pip install nsepy```
 
-##Usage
+## Usage
 
 Get the price history of stocks and NSE indices directly in pandas dataframe-
 ```python
