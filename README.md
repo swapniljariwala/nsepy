@@ -16,7 +16,9 @@ Release Notes
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 
 ##Installation
+
 ```$pip install nsepy```
+
 ##Usage
 
 Get the price history of stocks and NSE indices directly in pandas dataframe-
