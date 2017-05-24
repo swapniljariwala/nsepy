@@ -10,11 +10,17 @@ from requests import Session
 from functools import partial
 from nsepy.constants import symbol_count, symbol_list
 
+
 session = Session()
-proxy = {'http':'proxy1.wipro.com:8080'}
+headers = {
+			'Host': 'www.nseindia.com',
+			'Referer': 'https://www.nseindia.com/products/content/equities/equities/eq_security.htm'}
+URLFetchSession = partial(URLFetch, session=session,
+							headers=headers)
+
 NSE_SYMBOL_COUNT_URL = 'http://www.nseindia.com/marketinfo/sym_map/symbolCount.jsp'
 
-URLFetchSession = partial(URLFetch, session=session)
+
 
 """
 ---------------------------------EQUITY--------------------------------------
@@ -41,6 +47,7 @@ symbolCount=get_symbol_count(SBIN)
 series="EQ"
 fromDate="dd-mm-yyyy"
 toDate="dd-mm-yyyy"
+dd = equity_history_url(symbol='SBIN', series="EQ", fromDate="01-01-2017", toDate="01-01-2017")
 """
 equity_history_url = partial(equity_history_url_full,
                              dataType='PRICEVOLUMEDELIVERABLE',
