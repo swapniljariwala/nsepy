@@ -137,4 +137,12 @@ http://www.nseindia.com/content/historical/DERIVATIVES/2015/NOV/fo18NOV2015bhav.
 derivative_price_list_url = URLFetchSession(url="http://www.nseindia.com/content/historical/DERIVATIVES/%s/%s/fo%sbhav.csv.zip")
 
 
+"""
+--------------------------CURRENCY---------------------------------------
+"""
+"""
+fromDate dd-mm-yyyy (from date)
+toDate dd-mm-yyyy (to date)
+"""
+rbi_rate_history_url = "https://www.nseindia.com/products/dynaContent/derivatives/currency/fxRbiRateHist.jsp?&fromDate=%s&toDate=%s"
 
