@@ -144,5 +144,5 @@ derivative_price_list_url = URLFetchSession(url="http://www.nseindia.com/content
 fromDate dd-mm-yyyy (from date)
 toDate dd-mm-yyyy (to date)
 """
-rbi_rate_history_url = "https://www.nseindia.com/products/dynaContent/derivatives/currency/fxRbiRateHist.jsp?&fromDate=%s&toDate=%s"
+rbi_rate_history_url = URLFetchSession("https://www.nseindia.com/products/dynaContent/derivatives/currency/fxRbiRateHist.jsp")
 

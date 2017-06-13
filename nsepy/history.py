@@ -349,11 +349,7 @@ def get_rbi_ref_history_quanta(start, end):
         Returns:
             pandas.DataFrame : A pandas dataframe object 
     """
-    if symbol in DERIVATIVE_TO_INDEX:
-        index_name = DERIVATIVE_TO_INDEX[symbol]
-    else:
-        index_name = symbol
-    resp = index_pe_history_url(fromDate=start.strftime('%d-%m-%Y'),
+    resp = rbi_rate_history_url(fromDate=start.strftime('%d-%m-%Y'),
                                 toDate=end.strftime('%d-%m-%Y'))
     
     bs = BeautifulSoup(resp.text, 'lxml')
