@@ -36,8 +36,8 @@ Get the price history of stocks and NSE indices directly in pandas dataframe::
 	from datetime import date
 	"""
 		get_history argument list
-				symbol (str): Symbol for stock (SBIN, RELIANCE etc.), index (NIFTY, BANKNIFTY etc) or any security (Index names "NIFTY 50", "INDIAVIX" etc.
-				start (datetime.date): start date 
+		    symbol (str): Symbol for stock (SBIN, RELIANCE etc.), index (NIFTY, BANKNIFTY etc) or any security (Index names "NIFTY 50", "INDIAVIX" etc.
+		    start (datetime.date): start date 
 	            end (datetime.date): end date
 	            index (boolean): False by default, True if its an index, index futures or options and also for INDIAVIX
 	            futures (boolean): False by default, True for index and stock futures only (should not be set to True with option_type specified)
@@ -56,11 +56,11 @@ Get the price history of stocks and NSE indices directly in pandas dataframe::
 	"""	Index price history
 		symbol can take these values (These indexes have derivatives as well)
 		"NIFTY" or "NIFTY 50",
-	    "BANKNIFTY" or "NIFTY BANK",
-	    "NIFTYINFRA" or "NIFTY INFRA",
-	    "NIFTYIT" or "NIFTY IT",
-	    "NIFTYMID50" or "NIFTY MIDCAP 50",
-	    "NIFTYPSE" or "NIFTY PSE"
+	        "BANKNIFTY" or "NIFTY BANK",
+	        "NIFTYINFRA" or "NIFTY INFRA",
+	        "NIFTYIT" or "NIFTY IT",
+	        "NIFTYMID50" or "NIFTY MIDCAP 50",
+	        "NIFTYPSE" or "NIFTY PSE"
 		In addition to these there are many indices
 		For full list refer- http://www.nseindia.com/products/content/equities/indices/historical_index_data.htm
 	"""
@@ -72,22 +72,23 @@ Get the price history of stocks and NSE indices directly in pandas dataframe::
 	
 	#Futures and Options historical data
 	nifty_fut = get_history(symbol="NIFTY", 
-							start=date(2015,1,1), 
-							end=date(2015,1,10),
-							index=True,
-							futures=True, expiry_date=date(2015,1,29))
+				start=date(2015,1,1), 
+				end=date(2015,1,10),
+				index=True,
+				futures=True,
+				expiry_date=date(2015,1,29))
 							
 	stock_opt = get_history(symbol="SBIN",
-							start=date(2015,1,1), 
-							end=date(2015,1,10),
-							option_type="CE",
-							strike_price=300,
-							expiry_date=date(2015,1,29))
+				start=date(2015,1,1), 
+				end=date(2015,1,10),
+				option_type="CE",
+				strike_price=300,
+				expiry_date=date(2015,1,29))
 	
 	#Index P/E ratio history
 	nifty_pe = get_index_pe_history(symbol="NIFTY",
-									start=date(2015,1,1), 
-									end=date(2015,1,10))
+					start=date(2015,1,1), 
+					end=date(2015,1,10))
 
 Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)
 
