@@ -127,10 +127,10 @@ Please write about your projects in blogs, quora answers and other forums, so th
 
 ### Raising issues, bugs, enhancement requests
 
-For quick resolution please raise issues both [https://github.com/swapniljariwala/nsepy/issues](here on issue page) as well as on [https://stackoverflow.com/](Stackoverflow.com). I'll try my best to address the issues quickly on github as and when I get notified, but raising it on stackoverflow will provide you access to a larger group and someone else might solve your problem before I do.
+For quick resolution please raise issues both [here on issue page](https://github.com/swapniljariwala/nsepy/issues) as well as on [Stackoverflow](https://stackoverflow.com/). I'll try my best to address the issues quickly on github as and when I get notified, but raising it on stackoverflow will provide you access to a larger group and someone else might solve your problem before I do.
 
 ### Submit patches
 
-If you have fixed an issue or added a new feature, please fork this repository, make your changes and submit a pull request. [https://code.tutsplus.com/tutorials/how-to-collaborate-on-github--net-34267](Here's good article on how to do this.) 
+If you have fixed an issue or added a new feature, please fork this repository, make your changes and submit a pull request. [Here's good article on how to do this.](https://code.tutsplus.com/tutorials/how-to-collaborate-on-github--net-34267) 
 
 Looking forward for healthy participation from community.
