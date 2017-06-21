@@ -121,14 +121,16 @@ There are multiple ways in which you can contribute-
 
 ### Write about your project
 
-I'm putting about 1 Hr per week on NSEpy as hobby and I will continue to do so. but as this effort is just not enough, NSEpy at the moment is short of good documentation. there are still lot of good functionalities not documented yet :( , so till we complete the documentation, I'll need community support.
+I'm putting about 1 Hr per week on NSEpy as hobby and I will continue to do so. but as this effort is just not enough, NSEpy at the moment is short of good documentation. There are lot of features in NSEpy still not documented :( , so till we complete the documentation, I'll need support from the community.
 
-If you write about your projects in your blogs, quora answers and other forums, people will find working examples and it will help them in their projects.
+Please write about your projects in blogs, quora answers and other forums, so that people find working examples to get started.
 
-### Raising issues, bugs
+### Raising issues, bugs, enhancement requests
 
-I you find that something is not working, for quick resolution please raise it both [https://github.com/swapniljariwala/nsepy/issues](here on issue page) as well as on [https://stackoverflow.com/](Stackoverflow.com). I'll try my best to address the issues quickly on github as and when I get notified, but raising it on stackoverflow will provide you access to larger group of people and someone else might solve your problem before I do.
+For quick resolution please raise issues both [https://github.com/swapniljariwala/nsepy/issues](here on issue page) as well as on [https://stackoverflow.com/](Stackoverflow.com). I'll try my best to address the issues quickly on github as and when I get notified, but raising it on stackoverflow will provide you access to a larger group and someone else might solve your problem before I do.
 
 ### Submit patches
 
-If you have fixed an issue or added a new feature, please fork this repository, make your changes and submit a pull request. [https://code.tutsplus.com/tutorials/how-to-collaborate-on-github--net-34267](Here's good article on how to do this.) Looking forward for healthy participation from community.
+If you have fixed an issue or added a new feature, please fork this repository, make your changes and submit a pull request. [https://code.tutsplus.com/tutorials/how-to-collaborate-on-github--net-34267](Here's good article on how to do this.) 
+
+Looking forward for healthy participation from community.
