@@ -116,28 +116,19 @@ Date
 ```
 
 
-Below functions still work but these will be depricated soon
-```python
-from nsepy.archives import get_price_history
-from nsepy import indices
-from datetime import date
-#Stock price history
-sbin = get_price_history(stock = 'SBIN',
-                        start = date(2015,1,1), 
-                        end = date(2015,1,10))
-sbin[[ 'VWAP', 'Turnover']].plot(secondary_y='Turnover')
-#Index price history
-nifty = indices.archives.get_price_history(index = "NIFTY 50", 
-                                            start = date(2015,9,1), 
-                                            end = date(2015,9,24))
-nifty[['Close', 'Turnover']].plot(secondary_y='Turnover')
-#Index P/E ratio history
-nifty_pe = indices.archives.get_pe_history(index = "NIFTY 50", 
-                                            start = date(2015,9,1), 
-                                            end = date(2015,9,24))
-nifty_pe['Index'] = nifty['Close']
-nifty_pe[['Index', 'P/E']].plot(secondary_y='P/E')
-```
-To do-
-* Support for live data
+## How can I contribute?
+There are multiple ways in which you can contribute-
 
+### Write about your project
+
+I'm putting about 1 Hr per week on NSEpy as hobby and I will continue to do so. but as this effort is just not enough, NSEpy at the moment is short of good documentation. there are still lot of good functionalities not documented yet :( , so till we complete the documentation, I'll need community support.
+
+If you write about your projects in your blogs, quora answers and other forums, people will find working examples and it will help them in their projects.
+
+### Raising issues, bugs
+
+I you find that something is not working, for quick resolution please raise it both [https://github.com/swapniljariwala/nsepy/issues](here on issue page) as well as on [https://stackoverflow.com/](Stackoverflow.com). I'll try my best to address the issues quickly on github as and when I get notified, but raising it on stackoverflow will provide you access to larger group of people and someone else might solve your problem before I do.
+
+### Submit patches
+
+If you have fixed an issue or added a new feature, please fork this repository, make your changes and submit a pull request. [https://code.tutsplus.com/tutorials/how-to-collaborate-on-github--net-34267](Here's good article on how to do this.) Looking forward for healthy participation from community.
