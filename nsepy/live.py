@@ -10,6 +10,8 @@ import json
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
 
 
+eq_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol={}&illiquid=0&smeFlag=0&itpFlag=0"
+derivative_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying={}&instrument={}&expiry={}&type={}&strike={}"
 
 def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=None, strike=None):
     """
@@ -22,8 +24,10 @@ def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=Non
 
     if instrument:
         expiry_str = "%02d%s%d"%(expiry.day, months[expiry.month][0:3].upper(), expiry.year)
-        res = quote_derivative_url(symbol, instrument, expiry_str, option_type, strike)
-
-    res = quote_eq_url(symbol, series)
+        quote_derivative_url.session.headers.update({'Referer': eq_quote_referer.format(symbol)})
+        res = quote_derivative_url(symbol, instrument, expiry_str, option_type, "{:0.2f}".format(strike))
+    else:
+        quote_eq_url.session.headers.update({'Referer': eq_quote_referer.format(symbol)})
+        res = quote_eq_url(symbol, series)
 
     return json.loads(res.text)['data'][0]
