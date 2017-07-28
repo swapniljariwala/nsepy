@@ -30,4 +30,17 @@ def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=Non
         quote_eq_url.session.headers.update({'Referer': eq_quote_referer.format(symbol)})
         res = quote_eq_url(symbol, series)
 
-    return json.loads(res.text)['data'][0]
+    d =  json.loads(res.text)['data'][0]
+    res = {}
+    for k in d.keys():
+        v = d[k]
+        try:
+            v_ = None
+            if v.find('.') > 0:
+                v_ = float(v.strip().replace(',', ''))
+            else:
+                v_ = int(v.strip().replace(',', ''))
+        except:
+            v_ = v
+        res[k] = v_
+    return res
