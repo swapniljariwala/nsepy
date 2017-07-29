@@ -58,3 +58,6 @@ target/
 *.csv
 *.png
 zip.zip
+
+# vim
+*.swp
