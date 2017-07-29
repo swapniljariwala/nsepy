@@ -9,13 +9,17 @@ from distutils.core import setup
 setup(
   name = 'nsepy',
   packages = ['nsepy', 'nsepy.derivatives', 'nsepy.indices', 'nsepy.debt'], # this must be the same as the name above
-  version = '0.4',
+  version = '0.5',
   description = 'Library to download financial data in pandas dataframe',
   author = 'Swapnil Jariwala',
   author_email = 'sjerry4u@gmail.com',
   url = 'https://github.com/swapniljariwala/nsepy', # use the URL to the github repo
+  entry_points='''
+    [console_scripts]
+    nsecli=nsepy.cli:cli
+  ''',
   download_url = 'https://github.com/swapniljariwala/nsepy/archive/v0.4.tar.gz', # I'll explain this in a second
   install_requires = ['beautifulsoup4', 'requests', 'numpy', 'pandas', 'six', 'click'],
   keywords = ['testing', 'logging', 'example'], # arbitrary keywords
   classifiers = [],
-) 
+)
