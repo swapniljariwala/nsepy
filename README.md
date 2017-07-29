@@ -1,9 +1,11 @@
-# NSEpy 0.3
+# NSEpy 0.6
 Python Library to get publicly available data on NSE website ie. stock quotes, historical data, live indices 
 
 Release Notes
 * Added support for derivative data. (Probably only API for indian derivative and India VIX data as Yahoo API has no support for derivatives)
+* Support for RBI reference rates for USD
 * Unified and simplified API for all (Equity, Index, Derivative, Volatility Indexes-INDIAVIX)
+* Support for live quotes from NSE
 * Compatible and Tested with Python 2.7 and 3.4
 
 ## Libraries Required
@@ -23,20 +25,6 @@ For Windows systems you can install Anaconda, this will cover many dependancies 
 
 Get the price history of stocks and NSE indices directly in pandas dataframe-
 ```python
-from nsepy import get_history, get_index_pe_history
-from datetime import date
-"""
-	get_history argument list
-	    symbol (str): Symbol for stock (SBIN, RELIANCE etc.), index (NIFTY, BANKNIFTY etc) or any security (Index names "NIFTY 50", "INDIAVIX" etc.
-	    start (datetime.date): start date 
-            end (datetime.date): end date
-            index (boolean): False by default, True if its an index, index futures or options and also for INDIAVIX
-            futures (boolean): False by default, True for index and stock futures only (should not be set to True with option_type specified)
-            expiry_date (datetime.date): Expiry date for derivatives, Compulsory parameter for futures and options
-            option_type (str): It takes "CE", "PE", "CA", "PA" for European and American calls and puts
-            strike_price (int): Strike price, Compulsory parameter for options
-            series (str): Defaults to "EQ", but can be "BE" etc (refer NSE website for details)
-"""
 
 #Stock history
 sbin = get_history(symbol='SBIN',
