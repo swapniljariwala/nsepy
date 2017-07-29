@@ -131,12 +131,9 @@ def get_history(symbol, start, end, index=False, futures=False, option_type="",
         t1.join()
         t2.join()
         return pd.concat((t1.result, t2.result))
-        
     else:
         return get_history_quanta(**kwargs) 
-        
-    
-    
+
 def get_history_quanta(**kwargs):
     url, params, schema, headers, scaling = validate_params(**kwargs)
     df = url_to_df(url=url,
@@ -144,9 +141,6 @@ def get_history_quanta(**kwargs):
                    schema=schema,
                    headers=headers, scaling=scaling)
     return df
-
-
-    
 
 def url_to_df(url, params, schema, headers, scaling={}):
     resp = url(**params)
@@ -158,10 +152,9 @@ def url_to_df(url, params, schema, headers, scaling={}):
     for key, val in six.iteritems(scaling):
         df[key] = val * df[key]
     return df
-                    
+
 def validate_params(symbol, start, end, index=False, futures=False, option_type="",
                     expiry_date = None, strike_price="", series='EQ'):
-					
     """
 		symbol = "SBIN" (stock name, index name and VIX)
 		start = date(yyyy,mm,dd)
