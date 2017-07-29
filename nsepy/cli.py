@@ -51,6 +51,8 @@ def history(symbol, start, end, series, file_name, index, futures, expiry, optio
     df = get_history(symbol, sd, ed, index, futures, option_type,
                         exd, strike_price, series)
     click.echo(df.head())
+    if not file_name:
+        file_name = symbol + '.' + format
     if format == 'csv':
         df.to_csv(file_name)
     else:
@@ -78,6 +80,10 @@ def pehistory(symbol, start, end, format, file_name):
         return
     df = get_index_pe_history(symbol, sd, ed)
     click.echo(df.head())
+    
+    if not file_name:
+        file_name = symbol + '.' + format
+
     if format == 'csv':
         df.to_csv(file_name)
     else:
