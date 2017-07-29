@@ -28,79 +28,206 @@ Here's a simple example to get historical stock data for the month of January 20
 >>> data = get_history(symbol="SBIN", start=start, end=end)
 >>> data[['Close']].plot()
 
+Fetching Price History
+------------------------
+Function `get_history` fetches the price history of stocks/indices/derivatives and returns a pandas dataframe.
 
-Get the price history of stocks and NSE indices directly in pandas dataframe::
-
-    from nsepy import get_history, get_index_pe_history
-    from datetime import date
-
-    # Stock history
-    sbin = get_history(symbol='SBIN',
-                        start=date(2015,1,1), 
-                        end=date(2015,1,10))
-    # Example plot of Close price and Turnover
-    sbin[[ 'Close', 'Turnover']].plot(secondary_y='Turnover')
-	
-    # Index price history (Set index=True)
-    nifty = get_history(symbol="NIFTY NEXT 50",
-                        start=date(2015,1,1), 
-                        end=date(2015,1,10),
-                        index=True)
+Stock price history
+~~~~~~~~~~~~~~~~~~~
+::
     
-    # Index Futures (Similarly for stock futures, set index=False)
-    nifty_fut = get_history(symbol="NIFTY", 
-                start=date(2015,1,1), 
-                end=date(2015,1,10),
-                index=True,
-                futures=True,
-                expiry_date=date(2015,1,29))
+    from datetime import date
+    from nsepy import get_history
+    sbin = get_history(symbol='SBIN',
+                       start=date(2015,1,1), 
+                       end=date(2015,1,10))
 
+Executed on ipython console::
+    
+    In [1]: sbin
+    Out[1]:     Symbol Series  Prev Close    Open    High     Low   Last   Close  \
+    Date                                                                          
+    2015-01-01   SBIN     EQ      311.85  312.45  315.00  310.70  314.0  314.00   
+    2015-01-02   SBIN     EQ      314.00  314.35  318.30  314.35  315.6  315.25   
+    2015-01-05   SBIN     EQ      315.25  316.25  316.80  312.10  312.8  312.75   
+    2015-01-06   SBIN     EQ      312.75  310.00  311.10  298.70  299.9  299.90   
+    2015-01-07   SBIN     EQ      299.90  300.00  302.55  295.15  301.4  300.15   
+
+                  VWAP    Volume      Turnover  Trades  Deliverable Volume  \
+    Date                                                                     
+    2015-01-01  313.67   6138488  1.925489e+14   58688             1877677   
+    2015-01-02  316.80   9935094  3.147389e+14   79553             4221685   
+    2015-01-05  313.84   9136716  2.867432e+14   88236             3845173   
+    2015-01-06  305.14  15329257  4.677601e+14  169268             7424847   
+    2015-01-07  299.95  15046745  4.513243e+14  147185             5631400   
+
+                %Deliverble  
+    Date                     
+    2015-01-01       0.3059  
+    2015-01-02       0.4249  
+    2015-01-05       0.4208  
+    2015-01-06       0.4844  
+    2015-01-07       0.3743  
+
+
+Stock futures price history
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Set `futures=True` and provide `expiry_date` of the contract (Refer :ref:`get_expiry_date`) ::
+    
+    from datetime import date
+    from nsepy import get_history
     # Stock options (Similarly for index options, set index = True)
     stock_opt = get_history(symbol="SBIN",
-                start=date(2015,1,1), 
-                end=date(2015,1,10),
-                option_type="CE",
-                strike_price=300,
-                expiry_date=date(2015,1,29))
-	
-    # Index P/E ratio history
-    nifty_pe = get_index_pe_history(symbol="NIFTY",
-                    start=date(2015,1,1), 
-                    end=date(2015,1,10))
+                            start=date(2015,1,1), 
+                            end=date(2015,1,10),
+                            futures=True,
+                            expiry_date=date(2015,1,29))
 
-Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)
+Please refer to Note on :ref:`zero_values_in_derivatives`.
+                            
+When executed the above code on ipython console::
 
->>> nifty_fut
->>>     	Symbol      Expiry     Open    High      Low    Close     Last  
-    Date                                                                        
-    2015-01-01  NIFTY  2015-01-29  8320.00  8356.0  8295.20  8343.80  8347.05   
-    2015-01-02  NIFTY  2015-01-29  8352.25  8470.9  8352.25  8458.40  8468.00   
-    2015-01-05  NIFTY  2015-01-29  8452.35  8492.0  8406.00  8422.85  8423.85   
-    2015-01-06  NIFTY  2015-01-29  8422.00  8422.0  8000.00  8157.90  8150.30   
-    2015-01-07  NIFTY  2015-01-29  8150.00  8184.0  8096.00  8141.85  8154.00   
-    2015-01-08  NIFTY  2015-01-29  8209.00  8274.9  8193.10  8257.25  8255.00   
-    2015-01-09  NIFTY  2015-01-29  8306.35  8334.0  8205.00  8315.50  8311.60   
-                Settle Price  Number of Contracts      Turnover  Open Interest  
+    In [38]: stock_opt
+    Out[38]: 
+               Symbol      Expiry    Open    High     Low   Close    Last  \
+    Date                                                                    
+    2015-01-01   SBIN  2015-01-29  315.10  317.95  313.40  316.65  317.00   
+    2015-01-02   SBIN  2015-01-29  317.50  320.95  317.10  317.75  318.30   
+    2015-01-05   SBIN  2015-01-29  318.00  318.75  314.10  315.00  315.05   
+    2015-01-06   SBIN  2015-01-29  312.95  312.95  300.10  301.30  301.10   
+    2015-01-07   SBIN  2015-01-29  301.95  304.55  297.35  302.25  303.50   
+    2015-01-08   SBIN  2015-01-29  306.50  308.40  303.70  306.65  307.00   
+    2015-01-09   SBIN  2015-01-29  306.75  309.25  301.05  304.75  304.15   
+
+                Settle Price  Number of Contracts      Turnover  Open Interest  \
     Date                                                                         
-    2015-01-01       8343.80               152053  3.165350e+10       21140550   
-    2015-01-02       8458.40               384440  8.105711e+10       21427925   
-    2015-01-05       8422.85               362889  7.661895e+10       20698500   
-    2015-01-06       8157.90               807830  1.663583e+11       19157775   
-    2015-01-07       8141.85               513814  1.046381e+11       18716025   
-    2015-01-08       8257.25               409705  8.433153e+10       17798500   
-    2015-01-09       8315.50               596384  1.234251e+11       17111350   
+    2015-01-01        316.65                14720  5.821172e+09       55480000   
+    2015-01-02        317.75                22525  8.988242e+09       55087500   
+    2015-01-05        315.00                17455  6.898723e+09       55718750   
+    2015-01-06        301.30                29338  1.126715e+10       56701250   
+    2015-01-07        302.25                28489  1.074823e+10       58036250   
+    2015-01-08        306.65                20120  7.702653e+09       57287500   
+    2015-01-09        304.75                18961  7.247211e+09       57035000   
+
                 Change in OI  Underlying  
     Date                                  
-    2015-01-01        -28675     8284.00  
-    2015-01-02        287375     8395.45  
-    2015-01-05       -729425     8378.40  
-    2015-01-06      -1540725     8127.35  
-    2015-01-07       -441750     8102.10  
-    2015-01-08       -917525     8234.60  
-    2015-01-09       -687150     8284.50  
+    2015-01-01        358750      314.00  
+    2015-01-02       -392500      315.25  
+    2015-01-05        631250      312.75  
+    2015-01-06        982500      299.90  
+    2015-01-07       1335000      300.15  
+    2015-01-08       -748750      304.85  
+    2015-01-09       -252500      303.20
+
+
+Stock options price history
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For stock options, specify- 
+
+* `option_type` as "CE" for call and as "PE" for put option
+* `strike_price` - the strike price of the contract
+* `expiry_date` - expiry date of the contract, refer:ref:`get_expiry_date`. ::
+    
+    # Stock options (Similarly for index options, set index = True)
+    stock_opt = get_history(symbol="SBIN",
+                            start=date(2015,1,1), 
+                            end=date(2015,1,10),
+                            option_type="CE",
+                            strike_price=300,
+                            expiry_date=date(2015,1,29))
+
+Index price history
+~~~~~~~~~~~~~~~~~~~
+There are currently 50+ indices maintained by NSE. You can get historical data for all of them.::
+Usage-
+
+* `symbol` - Name of the index in capital `(Refer this page for list of indices) <https://www.nseindia.com/products/content/equities/indices/historical_index_data.htm>`_
+* `index` - Set this True for all index related operations ::
+                          
+    # NIFTY Next 50 index
+    nifty_next50 = get_history(symbol="NIFTY NEXT 50",
+                                start=date(2015,1,1), 
+                                end=date(2015,1,10),
+                                index=True)
+    # NIFTY50 Equal wight index (random index from the list)
+    nifty_eq_wt = get_history(symbol="NIFTY50 EQUAL WEIGHT",
+                                start=date(2017,6,1), 
+                                end=date(2017,6,10),
+                                index=True)
+You will observe a lot of NaN values for many indeces like 'NIFTY50 Equal wight index', In those cases just use 'Close' values 
+
+Index futures price history
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Out of the 60+ indices, only 7 indeces are available for derivative. (`List available here. <https://www.nseindia.com/products/content/derivatives/equities/fo_underlying_home.htm>`_)
+Usage-
+
+* `index` - Set True
+* `futures` - Set True
+* `expiry_date` - Expiry date of the contract. refer:ref:`get_expiry_date`. ::
+
+    nifty_fut = get_history(symbol="NIFTY", 
+                            start=date(2015,1,1), 
+                            end=date(2015,1,10),
+                            index=True,
+                            futures=True,
+                            expiry_date=date(2015,1,29))
+
+Index futures price history
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Usage-
+
+* `index` - Set True
+* `option_type` as "CE" for call and as "PE" for put option
+* `strike_price` - the strike price of the contract
+* `expiry_date` - expiry date of the contract, refer:ref:`get_expiry_date`. ::
+                            
+	get_history(symbol="NIFTY", 
+                            start=date(2015,1,1), 
+                            end=date(2015,1,10),
+                            index=True,
+                            option_type='CE',
+                            strike_price=8200,
+                            expiry_date=date(2015,1,29))
 
 
 
+.. _zero_values_in_derivatives:
+
+Missing or zero values in derivative data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ Although `NSE specifies <https://www.nseindia.com/products/content/derivatives/equities/contract_specifitns.htm>`_ a trading cycle of three months, most stock futures will not be traded for whole three months, rather they will be active only in the month of expiry, So you may get 0 values for days when no contracts were traded. Please deal with this situation carefully in your logic.
+
+.. _get_expiry_date:
+    
+Fetching Expiry Dates
+---------------------
+Fetch expiry date for a year and month.::
+
+    from nsepy.derivatives import get_expiry_date
+    expiry = get_expiry_date(2015,1)
+
+Use this function with `get_history`::
+
+    stock_opt = get_history(symbol="SBIN",
+                                start=date(2015,1,1), 
+                                end=date(2015,1,10),
+                                futures=True,
+                                expiry_date=get_expiry_date(2015,1))
+
+
+Index P/E ratio history
+-----------------------
+::
+
+    # Index P/E ratio history
+    from nsepy import get_index_pe_history
+    nifty_pe = get_index_pe_history(symbol="NIFTY",
+                                    start=date(2015,1,1), 
+                                    end=date(2015,1,10))
+
+
+                                
 Contents:
 
 .. toctree::
