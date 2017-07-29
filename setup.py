@@ -9,7 +9,7 @@ from distutils.core import setup
 setup(
   name = 'nsepy',
   packages = ['nsepy', 'nsepy.derivatives', 'nsepy.indices', 'nsepy.debt'], # this must be the same as the name above
-  version = '0.5',
+  version = '0.6',
   description = 'Library to download financial data in pandas dataframe',
   author = 'Swapnil Jariwala',
   author_email = 'sjerry4u@gmail.com',
