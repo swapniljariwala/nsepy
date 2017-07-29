@@ -4,6 +4,7 @@ Python Library to get publicly available data on NSE website ie. stock quotes, h
 Release Notes
 * Added support for derivative data. (Probably only API for indian derivative and India VIX data as Yahoo API has no support for derivatives)
 * Support for RBI reference rates for USD
+* Download data thru simple cli
 * Unified and simplified API for all (Equity, Index, Derivative, Volatility Indexes-INDIAVIX)
 * Support for live quotes from NSE
 * Compatible and Tested with Python 2.7 and 3.4
