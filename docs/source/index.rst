@@ -23,9 +23,7 @@ Here's a simple example to get historical stock data for the month of January 20
 
 >>> from nsepy import get_history
 >>> from datetime import date
->>> start = date(2015,1,1)
->>> end = date(2015,1,31)
->>> data = get_history(symbol="SBIN", start=start, end=end)
+>>> data = get_history(symbol="SBIN", start=date(2015,1,1), end=date(2015,1,31))
 >>> data[['Close']].plot()
 
 Fetching Price History
@@ -165,7 +163,7 @@ Usage-
 * `futures` - Set True
 * `expiry_date` - Expiry date of the contract. refer:ref:`get_expiry_date`. ::
 
-    nifty_fut = get_history(symbol="NIFTY", 
+    nifty_opt = get_history(symbol="NIFTY", 
                             start=date(2015,1,1), 
                             end=date(2015,1,10),
                             index=True,
@@ -181,7 +179,7 @@ Usage-
 * `strike_price` - the strike price of the contract
 * `expiry_date` - expiry date of the contract, refer:ref:`get_expiry_date`. ::
                             
-	get_history(symbol="NIFTY", 
+	nifty_fut = get_history(symbol="NIFTY", 
                             start=date(2015,1,1), 
                             end=date(2015,1,10),
                             index=True,
@@ -189,6 +187,15 @@ Usage-
                             strike_price=8200,
                             expiry_date=date(2015,1,29))
 
+
+India VIX price history
+~~~~~~~~~~~~~~~~~~~~~~~
+India VIX is a volatility index which gives a measurement of market volatility based on NIFTY options contract. This servers as important parameter in option pricing. ::
+                            
+	vix = get_history(symbol="INDIAVIX", 
+                    start=date(2015,1,1), 
+                    end=date(2015,1,10),
+                    index=True)
 
 
 .. _zero_values_in_derivatives:
@@ -202,10 +209,14 @@ Missing or zero values in derivative data
     
 Fetching Expiry Dates
 ---------------------
-Fetch expiry date for a year and month.::
+Fetch expiry date of all derivative contracts for a perticular month and year. 
+Usage-
+
+* month - Month of contract expiry starting from 1 for January and 12 for December
+* year - Year of the contract expiry ::
 
     from nsepy.derivatives import get_expiry_date
-    expiry = get_expiry_date(2015,1)
+    expiry = get_expiry_date(year=2015, month=1)
 
 Use this function with `get_history`::
 
@@ -216,9 +227,9 @@ Use this function with `get_history`::
                                 expiry_date=get_expiry_date(2015,1))
 
 
-Index P/E ratio history
+Index P/E Ratio History
 -----------------------
-::
+P/E ratio of a security helps to estimate if the security is over-priced or under-priced. NSE offers historical P/E ratio for 30+ thematic and sectoral indices, we can use this data to determine which sectors are over-priced or under-priced and further make investment decisions. ::
 
     # Index P/E ratio history
     from nsepy import get_index_pe_history
@@ -226,6 +237,32 @@ Index P/E ratio history
                                     start=date(2015,1,1), 
                                     end=date(2015,1,10))
 
+
+RBI Reference Rates
+-------------------
+USD, GBP, EURO, YEN to INR rbi reference rates::
+
+    from nsepy import get_rbi_ref_history
+    rbi_ref = get_rbi_ref_history(date(2015,1,1), date(2015,1,10))
+
+
+Daily Bhav Copy
+---------------
+Download daily bhav copy, which is nothing but OHLC prices of all the traded stocks ::
+    
+    prices = get_price_list(dt=date(2015,1,1))
+
+Command Line Interface
+----------------------
+NSEpy offers a simple to use, easy to remember command line interface, This method is useful when you just want the data for further processed in Excel, R or any other tool which supports CSV format.
+Basic Use, Fetch stock price history ::
+    
+$ nsecli history --symbol SBIN -s 2017-01-01 -e 2017-01-31 -o output.csv
+
+This will save price history of State Bank of India for the month of January 2017 in output.csv
+
+    
+    
 
                                 
 Contents:
