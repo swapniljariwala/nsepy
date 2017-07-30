@@ -75,7 +75,7 @@ Set `futures=True` and provide `expiry_date` of the contract (Refer :ref:`get_ex
     from datetime import date
     from nsepy import get_history
     # Stock options (Similarly for index options, set index = True)
-    stock_opt = get_history(symbol="SBIN",
+    stock_fut = get_history(symbol="SBIN",
                             start=date(2015,1,1), 
                             end=date(2015,1,10),
                             futures=True,
@@ -277,26 +277,13 @@ This will save price history of State Bank of India for the month of January 201
       --series TEXT              Default series - EQ
 
       --index / --no-index       --index if security is index else --no-index
-
-      --futures / --no-futures   --futures for futures derivative else --no-futures
-
-      --expiry TEXT              Expiry date in yyyy-mm-dd
-
-      --opt-type [CE|PE|CA|PA|]  Option type, 
-                                    CE - European call, 
-                                    PE - European put, 
-                                    CA - American call,
-                                    PA - American put, 
-                                    (Leave blank for futures derivatives and non-derivative securities)
-
-      --strike TEXT              Strike price for option derivatives
-
-      -f, --format [csv|pkl]     Default output format is csv,
-                                    csv - to save as csv
-                                    pkl - to save as Pickel 
                                     
       --help                     Show this message and exit.
 
+
+Similar to stocks you can get Index data, just by adding --index flag - ::
+
+    $ nsecli history --symbol "NIFTY 100" -s 2017-07-01 -e 2017-07-27 -o output.csv --index
     
     
 
