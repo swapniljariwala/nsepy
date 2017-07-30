@@ -284,8 +284,9 @@ This will save price history of State Bank of India for the month of January 201
 Similar to stocks you can get Index data, just by adding --index flag - ::
 
     $ nsecli history --symbol "NIFTY 100" -s 2017-07-01 -e 2017-07-27 -o output.csv --index
-    
-    
+
+
+
 
                                 
 Contents:
