@@ -248,7 +248,7 @@ USD, GBP, EURO, YEN to INR rbi reference rates::
 
 Daily Bhav Copy
 ---------------
-Download daily bhav copy, which is nothing but OHLC prices of all the traded stocks ::
+Download daily bhav copy, which is nothing but OHLC prices of all the traded stocks on a particular day::
 
     from nsepy.history import get_price_list    
     prices = get_price_list(dt=date(2015,1,1))
