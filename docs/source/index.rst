@@ -170,7 +170,7 @@ Usage-
                             futures=True,
                             expiry_date=date(2015,1,29))
 
-Index futures price history
+Index options price history
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Usage-
 
