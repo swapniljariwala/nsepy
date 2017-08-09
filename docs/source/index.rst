@@ -163,7 +163,7 @@ Usage-
 * `futures` - Set True
 * `expiry_date` - Expiry date of the contract. refer:ref:`get_expiry_date`. ::
 
-    nifty_opt = get_history(symbol="NIFTY", 
+    nifty_fut = get_history(symbol="NIFTY", 
                             start=date(2015,1,1), 
                             end=date(2015,1,10),
                             index=True,
@@ -179,7 +179,7 @@ Usage-
 * `strike_price` - the strike price of the contract
 * `expiry_date` - expiry date of the contract, refer:ref:`get_expiry_date`. ::
                             
-	nifty_fut = get_history(symbol="NIFTY", 
+    nifty_opt = get_history(symbol="NIFTY", 
                             start=date(2015,1,1), 
                             end=date(2015,1,10),
                             index=True,
