@@ -32,7 +32,7 @@ import shlex
 extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
-    'sphinxcontrib.disqus',
+    #'sphinxcontrib.disqus',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
