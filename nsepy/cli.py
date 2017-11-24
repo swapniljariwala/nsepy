@@ -40,7 +40,7 @@ def history(symbol, start, end, series, file_name, index, futures, expiry, optio
         return
 
     if expiry:
-        exd = datetime.strptime(end, "%Y-%m-%d").date()
+        exd = datetime.strptime(expiry, "%Y-%m-%d").date()
     else:
         exd = None
     if strike:
@@ -57,7 +57,7 @@ def history(symbol, start, end, series, file_name, index, futures, expiry, optio
         df.to_csv(file_name)
     else:
         df.to_pickle(file_name)
-    print 'Saved to: {}'.format(file_name)
+    click.secho('Saved to: {}'.format(file_name), fg='green', nl=True)
 
 @click.command()
 @click.option('--symbol', '-S',  help='Index code')
@@ -88,7 +88,8 @@ def pehistory(symbol, start, end, format, file_name):
         df.to_csv(file_name)
     else:
         df.to_pickle(file_name)
-    print 'Saved to: {}'.format(file_name)
+    click.secho('Saved to: {}'.format(file_name) , fg='green', nl=True)
+
 
 cli.add_command(history)
 cli.add_command(pehistory)
