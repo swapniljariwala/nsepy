@@ -12,6 +12,7 @@ from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
 
 eq_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol={}&illiquid=0&smeFlag=0&itpFlag=0"
 derivative_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying={}&instrument={}&expiry={}&type={}&strike={}"
+option_chain_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbolCode=-9999&symbol=NIFTY&symbol=BANKNIFTY&instrument=OPTIDX&date=-&segmentLink=17&segmentLink=17"
 
 def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=None, strike=None):
     """
@@ -45,3 +46,13 @@ def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=Non
             v_ = v
         res[k] = v_
     return res
+
+def get_option_chain(symbol, instrument=None, expiry=None):
+
+    if expiry:
+        expiry_str = "%02d%s%d"%(expiry.day, months[expiry.month][0:3].upper(), expiry.year)
+    else:
+        expiry_str = "-"
+    option_chain_url.session.headers.update({'Referer': option_chain_referer})
+    r = option_chain_url(symbol, instrument, expiry_str)
+
