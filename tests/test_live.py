@@ -1,6 +1,6 @@
 import datetime
 import unittest
-import urlparse
+#import urlparse
 import json
 import requests
 import six
@@ -15,6 +15,7 @@ from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
                            ParseTables, StrDate, unzip_str,
                            ThreadReturns, URLFetch)
+from nsepy import get_expiry_date
 
 class TestLiveUrls(unittest.TestCase):
     def setUp(self):
@@ -39,10 +40,19 @@ class TestLiveUrls(unittest.TestCase):
         4. type (CE/PE for options, - for futures
         5. strike (strike price upto two decimal places
         """
-
-        q = get_quote(symbol='SBIN', instrument='FUTSTK', expiry=datetime.date(2016,12,29))
-        comp_name = q['companyName']
-        self.assertEqual(comp_name, "State Bank of India")
+        n = datetime.datetime.now()
+        exp = get_expiry_date(n.year, n.month)
+        
+        if n.date() > exp:
+            try:
+                exp = get_expiry_date(n.year, n.month + 1)
+            except:
+                exp = get_expiry_date(n.year + 1, 1)
+        
+        
+        q = get_quote(symbol='SBIN', instrument='FUTSTK', expiry=exp)
+        comp_name = q['instrumentType']
+        self.assertEqual(comp_name, "FUTSTK")
 
 
 

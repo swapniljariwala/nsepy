@@ -95,7 +95,7 @@ def get_expiry_date(year, month, index=True, stock=False, vix=False, recursion=0
             
         else: pass
     
-    print("building dictionary")
+    #print("building dictionary")
 
     build_dt_dict()
     return get_expiry_date(year, month, index, stock, vix, recursion=recursion+1)
