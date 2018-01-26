@@ -8,12 +8,19 @@ from nsepy.commons import *
 import ast
 import json
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
+from nsepy.commons import conditional_decorator, market_status
+
+try:
+    from functools import lru_cache
+except ImportError:
+    from backports.functools_lru_cache import lru_cache
 
 
 eq_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol={}&illiquid=0&smeFlag=0&itpFlag=0"
 derivative_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying={}&instrument={}&expiry={}&type={}&strike={}"
 option_chain_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbolCode=-9999&symbol=NIFTY&symbol=BANKNIFTY&instrument=OPTIDX&date=-&segmentLink=17&segmentLink=17"
 
+@conditional_decorator(lru_cache(), not market_status())
 def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=None, strike=None):
     """
     1. Underlying security (stock symbol or index name)

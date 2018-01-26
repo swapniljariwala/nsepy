@@ -5,8 +5,10 @@ Created on Sun Nov 15 23:12:26 2015
 @author: jerry
 """
 import requests
+import csv
 from nsepy.constants import NSE_INDICES, INDEX_DERIVATIVES, DERIVATIVE_TO_INDEX
 import datetime
+from dateutil.parser import parse
 from functools import partial
 try:
     import pandas as pd
@@ -19,6 +21,15 @@ import six
 import sys
 import numpy as np
 import six
+from bs4 import BeautifulSoup
+if six.PY3:
+    from urllib.request import build_opener, HTTPCookieProcessor, Request
+    from http.cookiejar import CookieJar
+    from functools import lru_cache
+else:
+    from urllib2 import HTTPCookieProcessor, Request, build_opener
+    from cookielib import CookieJar
+    from backports.functools_lru_cache import lru_cache
 import re
 import sys
 
@@ -209,3 +220,130 @@ def js_adaptor(buffer):
     buffer = re.sub('none', 'None', buffer)
     buffer = re.sub('NaN', '"NaN"', buffer)
     return buffer
+
+
+
+class NseHolidays():
+    """
+    Contains methods to parse and extract data about the holidays of NSE
+    """
+
+    def get_holiday_list(self):
+        """
+        Cleans the holiday list
+        """
+        holiday_list = self.__parse_holiday_list__()
+        clean_holiday_list = []
+        for item in holiday_list:
+            individual_data = []
+            # Each row is separated by commas.
+            reader = csv.reader(item, delimiter=',')
+            for row in reader:
+                individual_data.append(row)
+            clean_holiday_list.append(individual_data[:2])
+        previous = 0
+        holiday_list = []
+        # These are all the holidays excluding saturdays and sundays
+        todays_date = datetime.datetime.now().date()
+        for  series in clean_holiday_list:
+            # We wish to extract only the trading holidays.
+            # The serial number resets after trading holidays i.e when it moves to clearing holidays
+            if previous < int(series[0][0]):
+                # Convert to datetime format
+                parsed_date = parse(series[1][0])
+                if todays_date <= parsed_date.date():
+                    holiday_list.append(parsed_date.date())
+                previous += 1
+
+        # We will now extract the saturdays and sundays
+        date = todays_date
+        date += datetime.timedelta(days=6-date.weekday())
+        diff = date - datetime.timedelta(days=1)
+        while date.year == todays_date.year:
+            holiday_list.append(diff)
+            holiday_list.append(date)
+            date += datetime.timedelta(days=7)
+            diff += datetime.timedelta(days=7)
+
+        # This is the final holiday list from the current time.
+        return holiday_list
+
+    @lru_cache(maxsize=2)
+    def __parse_holiday_list__(self):
+        """
+        :Returns: a list of all the holidays with the serial number, date and holiday name
+        """
+
+        # TODO: clean this. There has to be a reusable way to read urls and retreive reponses from
+        # them
+        def __read_url__(url, headers):
+            """
+            Reads the url, processes it and returns a StringIO object to aid reading
+            :Parameters:
+            url: str
+                the url to request and read from
+            headers: dict
+                The right set of headers for requesting from http://nseindia.com
+            :returns: _io.StringIO object of the response
+            """
+            cookie_jar = CookieJar()
+            opener =  build_opener(HTTPCookieProcessor(cookie_jar))
+            request = Request(url, None, headers)
+            response = opener.open(request)
+
+            if response is not None:
+                return byte_adaptor(response)
+            else:
+                raise Exception('No response received')
+        # Parse the holiday url and extract useful details
+        headers = {'Accept': '*/*',
+                   'Accept-Language': 'en-US,en;q=0.5',
+                   'Host': 'nseindia.com',
+                   'Referer': "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=INFY&illiquid=0&smeFlag=0&itpFlag=0",
+                   'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
+                   'X-Requested-With': 'XMLHttpRequest'
+                   }
+        holiday_url = 'https://www.nseindia.com/products/content/equities/equities/mrkt_timing_holidays.htm'
+        res = __read_url__(holiday_url, headers)
+        res = res.read()
+
+        soup = BeautifulSoup(res, 'html.parser')
+        holiday_list = []
+        # The data is stored in tables. Extract only the tabular data
+        for row in soup.find_all('tr', recursive=False):
+            record = [td.text.replace(',', '') for td in row.find_all('td')]
+            holiday_list.append(record)
+
+        return holiday_list
+
+def conditional_decorator(decorator, condition):
+    def res_decorator(f):
+        if not condition:
+            return f
+        return decorator(f)
+    return res_decorator
+
+def market_status():
+    """
+    Checks whether the market is open or not
+    :returns: bool variable indicating status of market. True -> Open, False -> Closed
+    """
+    nse_holidays = NseHolidays()
+    holiday_list = nse_holidays.get_holiday_list()
+
+    # Check if today is a holiday according to the holiday list.
+    if datetime.datetime.now().date() in holiday_list:
+        return False
+
+    current_time = datetime.datetime.now().time()
+    # Check if the current time is in the time bracket in which NSE operates.
+    # The market opens at 9:15 am
+    start_time = datetime.datetime.now().time().replace(hour=9, minute=15, second=0, microsecond=0)
+    # And ends at 3:30 = 15:30
+    end_time = datetime.datetime.now().time().replace(hour=15, minute=30, second=0, microsecond=0)
+
+    if current_time > start_time and current_time < end_time:
+        return True
+
+    # In case the above condition does not satisfy, the default value (False) is returned
+    return False
