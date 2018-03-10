@@ -17,6 +17,7 @@ Release Notes
 - numpy 
 - scipy
 - pandas
+- lxml
 
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 
