@@ -113,11 +113,17 @@ def get_history(symbol, start, end, index=False, futures=False, option_type="",
                         2. If there's an Invalid value in option_type, valid values-'CE' or 'PE' or 'CA' or 'CE'
                         3. If both futures='True' and option_type='CE' or 'PE'
     """
-    frame = inspect.currentframe()
-    args, _, _, kwargs = inspect.getargvalues(frame)
-    del(kwargs['frame'])
-    start = kwargs['start']
-    end = kwargs['end']
+    kwargs = {
+        'symbol': symbol,
+        'start': start,
+        'end': end,
+        'index': index,
+        'futures': futures,
+        'option_type': option_type,
+        'expiry_date': expiry_date,
+        'strike_price': strike_price,
+        'series': series
+    }
     if (end - start) > timedelta(130):
         kwargs1 = dict(kwargs)
         kwargs2 = dict(kwargs)
@@ -168,9 +174,11 @@ def validate_params(symbol, start, end, index=False, futures=False, option_type=
     """
 
     params = {}
-
     if start > end:
-        raise ValueError('Please check start and end dates')
+        end, start = start, end
+        return validate_params(symbol, start, end, index, futures, option_type,
+                    expiry_date, strike_price, series)
+        # raise ValueError('Please check start and end dates')
     
     
     if (futures and not option_type) or (not futures and option_type): #EXOR
