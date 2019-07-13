@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 from tests import htmls
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
-from nsepy.live import get_quote
+from nsepy.live import get_quote, get_holidays_list
 import nsepy.urls as urls
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
@@ -96,3 +96,21 @@ class TestLiveUrls(unittest.TestCase):
                       expiry=exp, option_type="CE", strike=11000)
         comp_name = q['instrumentType']
         self.assertEqual(comp_name, "OPTIDX")
+
+    def test_get_holiday_list(self):
+        """
+        Check holiday list for first quarter for 2019 against the expected data
+        -----------------------------------------------------------
+        Date               Day Of the Week             Description
+        ------------------------------------------------------------
+        2019-03-04          Monday           Mahashivratri
+        2019-03-21        Thursday                    Holi
+        """
+        fromdate = datetime.date(2019, 1, 1)
+        todate = datetime.date(2019, 3, 31)
+        lstholiday = get_holidays_list(fromdate, todate)
+        self.assertEqual(len(lstholiday), 2)
+        self.assertFalse(
+            lstholiday[lstholiday['Description'] == "Mahashivratri"].empty)
+        self.assertFalse(
+            lstholiday[lstholiday['Day Of the Week'] == "Thursday"].empty)

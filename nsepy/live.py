@@ -8,7 +8,7 @@ from nsepy.commons import *
 import ast
 import json
 from bs4 import BeautifulSoup
-from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
+from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, holiday_list_url
 
 OPTIONS_CHAIN_SCHEMA = [str, int, int, int, float, float, float, int, float, float, int,
                         float,
@@ -82,3 +82,29 @@ def get_option_chain_table(symbol, instrument=None, expiry=None):
                      schema=OPTIONS_CHAIN_SCHEMA,
                      headers=OPTIONS_CHAIN_HEADERS, index=OPTIONS_CHAIN_INDEX)
     return tp.get_df()
+
+
+def get_holidays_list(fromDate,
+                      toDate):
+    """This is the function to get exchange holiday list between 2 dates.
+        Args:
+            fromDate (datetime.date): start date
+            toDate (datetime.date): end date
+        Returns:
+            pandas.DataFrame : A pandas dataframe object
+        Raises:
+            ValueError:
+                        1. From Date param is greater than To Date param
+    """
+    if fromDate > toDate:
+        raise ValueError('Please check start and end dates')
+
+    holidayscrape = holiday_list_url(fromDate.strftime("%d-%b-%Y"),toDate.strftime("%d-%b-%Y"))
+    html_soup = BeautifulSoup(holidayscrape.text, 'lxml')
+    sptable = html_soup.find("table")
+    tp = ParseTables(soup=sptable,
+                     schema=[str,StrDate.default_format(format="%d-%b-%Y"),str,str],
+                     headers=["Market Segment", "Date", "Day Of the Week", "Description"], index="Date")
+    dfret = tp.get_df()
+    dfret = dfret.drop(["Market Segment"],axis=1)
+    return dfret
