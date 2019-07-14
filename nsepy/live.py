@@ -4,6 +4,7 @@ Created on Fri Dec 18 21:51:41 2015
 
 @author: SW274998
 """
+import pdb
 from nsepy.commons import *
 import ast
 import json
@@ -31,7 +32,6 @@ def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=Non
     4. type (CE/PE for options, - for futures
     5. strike (strike price upto two decimal places
     """
-
     if instrument:
         expiry_str = "%02d%s%d" % (
             expiry.day, months[expiry.month][0:3].upper(), expiry.year)
@@ -45,7 +45,10 @@ def get_quote(symbol, series='EQ', instrument=None, expiry=None, option_type=Non
             {'Referer': eq_quote_referer.format(symbol)})
         res = quote_eq_url(symbol, series)
 
-    d = json.loads(res.text)['data'][0]
+    html_soup = BeautifulSoup(res.text, 'lxml')
+    hresponseDiv = html_soup.find("div", {"id": "responseDiv"})
+    d = json.loads(hresponseDiv.get_text())
+    #d = json.loads(res.text)['data'][0]
     res = {}
     for k in d.keys():
         v = d[k]
@@ -99,12 +102,14 @@ def get_holidays_list(fromDate,
     if fromDate > toDate:
         raise ValueError('Please check start and end dates')
 
-    holidayscrape = holiday_list_url(fromDate.strftime("%d-%b-%Y"),toDate.strftime("%d-%b-%Y"))
+    holidayscrape = holiday_list_url(fromDate.strftime(
+        "%d-%b-%Y"), toDate.strftime("%d-%b-%Y"))
     html_soup = BeautifulSoup(holidayscrape.text, 'lxml')
     sptable = html_soup.find("table")
     tp = ParseTables(soup=sptable,
-                     schema=[str,StrDate.default_format(format="%d-%b-%Y"),str,str],
+                     schema=[str, StrDate.default_format(
+                         format="%d-%b-%Y"), str, str],
                      headers=["Market Segment", "Date", "Day Of the Week", "Description"], index="Date")
     dfret = tp.get_df()
-    dfret = dfret.drop(["Market Segment"],axis=1)
+    dfret = dfret.drop(["Market Segment"], axis=1)
     return dfret
