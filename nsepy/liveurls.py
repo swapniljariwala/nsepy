@@ -48,5 +48,11 @@ option_chain_url = URLFetch(
 3. date
 """
 
+futures_chain_url = URLFetch(
+    url='https://www.nseindia.com/live_market/dynaContent/live_watch/fomwatchsymbol.jsp?key=%s&Fut_Opt=Futures')
+"""
+1. symbol
+"""
+
 holiday_list_url = URLFetch(url='https://www.nseindia.com/global/content/market_timings_holidays/market_timings_holidays.jsp?pageName=0&dateRange=&fromDate=%s&toDate=%s&tabActive=trading&load=false',
                             headers=headers)

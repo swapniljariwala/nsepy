@@ -8,8 +8,8 @@ import six
 from bs4 import BeautifulSoup
 
 from tests import htmls
-from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url
-from nsepy.live import get_quote, get_holidays_list
+from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url
+from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list
 import nsepy.urls as urls
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
@@ -29,7 +29,7 @@ class TestLiveUrls(unittest.TestCase):
 
     def test_get_quote_eq(self):
         q = get_quote(symbol='SBIN')
-        comp_name = q['companyName']
+        comp_name = q['data'][0]['companyName']
         self.assertEqual(comp_name, "State Bank of India")
 
     def test_get_quote_stock_der(self):
@@ -54,13 +54,13 @@ class TestLiveUrls(unittest.TestCase):
         self.assertEqual(len(stexp), 1)
         exp = min([x for x in stexp if x > n.date()])
         q = get_quote(symbol='SBIN', instrument='FUTSTK', expiry=exp)
-        comp_name = q['instrumentType']
+        comp_name = q['data'][0]['instrumentType']
         self.assertEqual(comp_name, "FUTSTK")
 
         exp = min([x for x in stexp if x > n.date()])
         q = get_quote(symbol='SBIN', instrument='OPTSTK',
                       expiry=exp, option_type="CE", strike=300)
-        comp_name = q['instrumentType']
+        comp_name = q['data'][0]['instrumentType']
         self.assertEqual(comp_name, "OPTSTK")
 
     def test_get_quote_index_der(self):
@@ -88,14 +88,28 @@ class TestLiveUrls(unittest.TestCase):
 
         exp = max([x for x in stexp if x > n.date()])
         q = get_quote(symbol='NIFTY', instrument='FUTIDX', expiry=exp)
-        comp_name = q['instrumentType']
+        comp_name = q['data'][0]['instrumentType']
         self.assertEqual(comp_name, "FUTIDX")
 
         exp = min([x for x in stexp if x > n.date()])
         q = get_quote(symbol='NIFTY', instrument='OPTIDX',
                       expiry=exp, option_type="CE", strike=11000)
-        comp_name = q['instrumentType']
+        comp_name = q['data'][0]['instrumentType']
         self.assertEqual(comp_name, "OPTIDX")
+
+    def test_get_futures_chain(self):
+        """
+        1. Underlying security (stock symbol or index name)
+        """
+        n = datetime.datetime.now()
+        dftable = get_futures_chain_table('NIFTY')
+
+        # Atleast 3 expiry sets should be open
+        self.assertGreaterEqual(len(dftable), 3)
+
+        (dtnear, dtnext, dtfar) = dftable.index.tolist()
+        self.assertLess(dtnear, dtnext)
+        self.assertLess(dtnext, dtfar)
 
     def test_get_holiday_list(self):
         """

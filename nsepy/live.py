@@ -9,7 +9,8 @@ from nsepy.commons import *
 import ast
 import json
 from bs4 import BeautifulSoup
-from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, holiday_list_url
+from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url, holiday_list_url
+
 
 OPTIONS_CHAIN_SCHEMA = [str, int, int, int, float, float, float, int, float, float, int,
                         float,
@@ -18,6 +19,13 @@ OPTIONS_CHAIN_HEADERS = ["Call Chart", "Call OI", "Call Chng in OI", "Call Volum
                          "Strike Price",
                          "Put Bid Qty", "Put Bid Price", "Put Ask Price", "Put Ask Qty", "Put Net Chng", "Put LTP", "Put IV", "Put Volume", "Put Chng in OI", "Put OI", "Put Chart"]
 OPTIONS_CHAIN_INDEX = "Strike Price"
+
+FUTURES_SCHEMA = [str, str, StrDate.default_format(
+    format="%d%b%Y"), str, str, float, float, float, float, float, int, float, float]
+FUTURES_HEADERS = ["Instrument", "Underlying", "Expiry Date", "Option Type", "Strike Price", "Open Price", "High Price", "Low Price", "Prev. Close", "Last Price", "Volume",
+                   "Turnover", "Underlying Value"]
+FUTURES_INDEX = "Expiry Date"
+
 
 eq_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol={}&illiquid=0&smeFlag=0&itpFlag=0"
 derivative_quote_referer = "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying={}&instrument={}&expiry={}&type={}&strike={}"
@@ -84,6 +92,20 @@ def get_option_chain_table(symbol, instrument=None, expiry=None):
     tp = ParseTables(soup=sptable,
                      schema=OPTIONS_CHAIN_SCHEMA,
                      headers=OPTIONS_CHAIN_HEADERS, index=OPTIONS_CHAIN_INDEX)
+    return tp.get_df()
+
+
+def get_futures_chain(symbol):
+    r = futures_chain_url(symbol)
+    return r
+
+
+def get_futures_chain_table(symbol):
+    futuresscrape = get_futures_chain(symbol)
+    html_soup = BeautifulSoup(futuresscrape.text, 'html.parser')
+    spdiv = html_soup.find("div", {"id": "tab26Content"})
+    sptable = spdiv.find("table")
+    tp = ParseTables(soup=sptable, schema=FUTURES_SCHEMA,headers=FUTURES_HEADERS,index=FUTURES_INDEX)
     return tp.get_df()
 
 
