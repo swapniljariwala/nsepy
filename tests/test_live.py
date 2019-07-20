@@ -1,6 +1,5 @@
 import datetime
 import unittest
-#import urlparse
 import json
 import requests
 import six
@@ -9,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from tests import htmls
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url
-from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list
+from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list, isworkingday, nextworkingday, previousworkingday
 import nsepy.urls as urls
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
@@ -128,3 +127,11 @@ class TestLiveUrls(unittest.TestCase):
             lstholiday[lstholiday['Description'] == "Mahashivratri"].empty)
         self.assertFalse(
             lstholiday[lstholiday['Day Of the Week'] == "Thursday"].empty)
+
+    def test_working_day(self):
+        # shivratri
+        shivratri = datetime.date(2019, 3, 4)
+        self.assertFalse(isworkingday(shivratri))
+        self.assertTrue(nextworkingday(shivratri), datetime.date(2019, 3, 5))
+        self.assertTrue(previousworkingday(shivratri),
+                        datetime.date(2019, 3, 1))

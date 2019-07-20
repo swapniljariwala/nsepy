@@ -5,6 +5,7 @@ Created on Fri Dec 18 21:51:41 2015
 @author: SW274998
 """
 import pdb
+import dateutil.relativedelta
 from nsepy.commons import *
 import ast
 import json
@@ -105,7 +106,8 @@ def get_futures_chain_table(symbol):
     html_soup = BeautifulSoup(futuresscrape.text, 'html.parser')
     spdiv = html_soup.find("div", {"id": "tab26Content"})
     sptable = spdiv.find("table")
-    tp = ParseTables(soup=sptable, schema=FUTURES_SCHEMA,headers=FUTURES_HEADERS,index=FUTURES_INDEX)
+    tp = ParseTables(soup=sptable, schema=FUTURES_SCHEMA,
+                     headers=FUTURES_HEADERS, index=FUTURES_INDEX)
     return tp.get_df()
 
 
@@ -135,3 +137,51 @@ def get_holidays_list(fromDate,
     dfret = tp.get_df()
     dfret = dfret.drop(["Market Segment"], axis=1)
     return dfret
+
+
+def isworkingday(dt):
+    """This is the function to check if a given date is a working day
+        Args:
+            dt (datetime.date): Date to Check
+        Returns:
+            bool 
+    """
+    weekday = dt.isoweekday()
+    if weekday in (6, 7):
+        return False
+    else:
+        lsholiday = get_holidays_list(dt, dt)
+        # pdb.set_trace()
+        if dt in lsholiday.index:
+            return False
+
+    return True
+
+
+def nextworkingday(dt):
+    """This is the function to get the next working day after the given date
+        Args:
+            dt (datetime.date): Date to Check
+        Returns:
+            dt (datetime.date): Nearest working day after the given date
+    """
+    dttmp = dt
+    while True:
+        dttmp = dttmp + dateutil.relativedelta.relativedelta(days=1)
+        if isworkingday(dttmp):
+            return dttmp
+
+
+def previousworkingday(dt):
+    """This is the function to get the last working day before the given date
+        Args:
+            dt (datetime.date): Date to Check
+        Returns:
+            dt (datetime.date): Nearest working day before the given date
+    """
+
+    dttmp = dt
+    while True:
+        dttmp = dttmp - dateutil.relativedelta.relativedelta(days=1)
+        if isworkingday(dttmp):
+            return dttmp
