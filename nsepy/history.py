@@ -350,6 +350,7 @@ def get_delivery_position(dt, segment='EQ'):
     # Trade Date <19-JUL-2019>,Settlement Type <N>
 
     # Skip the initial lines till we get to the actual data
+
     df = pd.read_csv(fp, names=["RECORD TYPE", "SR NO", "SYMBOL", "SEGMENT", "TRADE VOLUME", "TOTDELQTY", "PCT DEL TO TRADE"],
                      header=None, skiprows=4,
                      usecols=["SYMBOL", "SEGMENT", "TRADE VOLUME",
