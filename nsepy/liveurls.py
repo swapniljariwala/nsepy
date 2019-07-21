@@ -57,6 +57,3 @@ futures_chain_url = URLFetch(
 """
 holiday_list_url = URLFetch(url='https://www.nseindia.com/global/content/market_timings_holidays/market_timings_holidays.jsp?pageName=0&dateRange=&fromDate=%s&toDate=%s&tabActive=trading&load=false',
                             headers=headers)
-
-equity_symbol_list_url = URLFetch(
-    url='https://www.nseindia.com/content/equities/EQUITY_L.csv')

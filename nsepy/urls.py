@@ -120,6 +120,9 @@ toDate = 'dd-Mmm-yyyy'
 index_vix_history_url = URLFetchSession(
     url='http://www.nseindia.com/products/dynaContent/equities/indices/hist_vix_data.jsp')
 
+equity_symbol_list_url = URLFetchSession(
+    url='https://www.nseindia.com/content/equities/EQUITY_L.csv')
+
 """
 --------------------------DERIVATIVES---------------------------------------
 """

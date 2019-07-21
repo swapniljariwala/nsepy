@@ -11,7 +11,7 @@ import ast
 import json
 import io
 from bs4 import BeautifulSoup
-from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url, holiday_list_url, equity_symbol_list_url
+from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url, holiday_list_url
 
 
 OPTIONS_CHAIN_SCHEMA = [str, int, int, int, float, float, float, int, float, float, int,
@@ -110,12 +110,6 @@ def get_futures_chain_table(symbol):
     tp = ParseTables(soup=sptable, schema=FUTURES_SCHEMA,
                      headers=FUTURES_HEADERS, index=FUTURES_INDEX)
     return tp.get_df()
-
-
-def get_symbol_list():
-    res = equity_symbol_list_url()
-    df = pd.read_csv(io.StringIO(res.content.decode('utf-8')))
-    return df
 
 
 def get_holidays_list(fromDate,
