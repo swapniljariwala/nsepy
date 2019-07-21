@@ -8,13 +8,14 @@ from bs4 import BeautifulSoup
 
 from tests import htmls
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url
-from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list, isworkingday, nextworkingday, previousworkingday
+from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list, isworkingday, nextworkingday, previousworkingday, get_symbol_list
 import nsepy.urls as urls
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
                            ParseTables, StrDate, unzip_str,
                            ThreadReturns, URLFetch)
 from nsepy import get_expiry_date
+import pdb
 
 
 class TestLiveUrls(unittest.TestCase):
@@ -135,3 +136,14 @@ class TestLiveUrls(unittest.TestCase):
         self.assertTrue(nextworkingday(shivratri), datetime.date(2019, 3, 5))
         self.assertTrue(previousworkingday(shivratri),
                         datetime.date(2019, 3, 1))
+
+    def test_symbol_list(self):
+        df = get_symbol_list()
+        # Check popular names are in the list
+        _ril = df["SYMBOL"] == "RELIANCE"
+        # Expect 1 row
+        self.assertEqual(df[_ril].shape[0], 1)
+
+        _sbi = df["SYMBOL"] == "SBIN"
+        # Check company matches the expected value
+        self.assertEqual(df[_sbi]["NAME OF COMPANY"], "State Bank of India1")

@@ -42,6 +42,7 @@ quote_derivative_url = URLFetch(
 """
 option_chain_url = URLFetch(
     url='https://www.nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?segmentLink=17&symbol=%s&instrument=%s&date=%s')
+
 """
 1. symbol
 2. instrument
@@ -50,9 +51,12 @@ option_chain_url = URLFetch(
 
 futures_chain_url = URLFetch(
     url='https://www.nseindia.com/live_market/dynaContent/live_watch/fomwatchsymbol.jsp?key=%s&Fut_Opt=Futures')
+
 """
 1. symbol
 """
-
 holiday_list_url = URLFetch(url='https://www.nseindia.com/global/content/market_timings_holidays/market_timings_holidays.jsp?pageName=0&dateRange=&fromDate=%s&toDate=%s&tabActive=trading&load=false',
                             headers=headers)
+
+equity_symbol_list_url = URLFetch(
+    url='https://www.nseindia.com/content/equities/EQUITY_L.csv')
