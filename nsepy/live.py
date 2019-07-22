@@ -186,3 +186,21 @@ def previousworkingday(dt):
         dttmp = dttmp - dateutil.relativedelta.relativedelta(days=1)
         if isworkingday(dttmp):
             return dttmp
+
+
+def getworkingdays(dtfrom, dtto):
+    # pdb.set_trace()
+    dfholiday = get_holidays_list(dtfrom, dtto)
+    stalldays = set()
+    stweekends = set()
+
+    for i in range((dtto - dtfrom).days + 1):
+        dt = dtfrom + datetime.timedelta(days=i)
+        stalldays.add(dt)
+
+        if dt.isoweekday() in (6, 7):
+            stweekends.add(dt)
+
+    # pdb.set_trace()
+    stworking = (stalldays - stweekends) - set(dfholiday.index.values)
+    return sorted(stworking)

@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from tests import htmls
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url
-from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list, isworkingday, nextworkingday, previousworkingday
+from nsepy.live import get_quote, get_futures_chain_table, get_holidays_list, isworkingday, nextworkingday, previousworkingday, getworkingdays
 import nsepy.urls as urls
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
@@ -135,3 +135,17 @@ class TestLiveUrls(unittest.TestCase):
         self.assertTrue(nextworkingday(shivratri), datetime.date(2019, 3, 5))
         self.assertTrue(previousworkingday(shivratri),
                         datetime.date(2019, 3, 1))
+
+    def test_working_day(self):
+        # 20 to 28th aug
+        independenceday = datetime.date(2019, 8, 15)
+        workingdays = getworkingdays(datetime.date(
+            2019, 8, 13), datetime.date(2019, 8, 17))
+        self.assertFalse(independenceday in workingdays)
+        self.assertEqual(len(workingdays), 3)
+
+        # working days in March 2019
+        # 31 day month with 2 holidays
+        workingdays = getworkingdays(datetime.date(
+            2019, 3, 1), datetime.date(2019, 3, 31))
+        self.assertEqual(len(workingdays), 19)
