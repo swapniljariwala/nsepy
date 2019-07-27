@@ -310,7 +310,7 @@ def get_index_pe_history_quanta(symbol, start, end):
     return df
 
 
-def get_price_list(dt, segment='EQ'):
+def get_price_list(dt, series='EQ'):
     MMM = dt.strftime("%b").upper()
     yyyy = dt.strftime("%Y")
 
@@ -324,7 +324,7 @@ def get_price_list(dt, segment='EQ'):
     fp = six.StringIO(txt)
     df = pd.read_csv(fp)
     del df['Unnamed: 13']
-    return df
+    return df[df['SERIES'] == series]
 
 
 """
