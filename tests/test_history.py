@@ -4,7 +4,7 @@ Created on Tue Nov 24 21:57:53 2015
 
 @author: Swapnil Jariwala
 """
-from nsepy.history import validate_params, get_price_list
+from nsepy.history import validate_params, get_price_list, get_indices_price_list
 from nsepy.urls import get_symbol_count
 from nsepy import urls
 from nsepy import history
@@ -110,6 +110,14 @@ class TestHistory(unittest.TestCase):
         dfpln1 = get_price_list(testdate, 'N1')
         bond = dfpln1[dfpln1['SYMBOL'] == testsymbol].squeeze()
         self.assertEqual(bond['CLOSE'], 5085.00)
+
+    def test_get_indices_price_list(self):
+        testdate = date(2019, 8, 2)
+
+        # Check closing for index
+        dfplidx = get_indices_price_list(testdate)
+        idxname = dfplidx[dfplidx['NAME'] == 'Nifty 100'].squeeze()
+        self.assertEqual(idxname['CLOSE'], 11100.45)
 
 
 if __name__ == '__main__':

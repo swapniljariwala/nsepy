@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import six
 import inspect
+import io
 import pdb
 
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
@@ -359,6 +360,30 @@ def get_delivery_position(dt, segment='EQ'):
     flsegment = df['SEGMENT'] == segment
     df = df[flsegment]
 
+    return df
+
+
+"""
+Get Price range for all Indices
+"""
+
+
+def get_indices_price_list(dt):
+    res = index_daily_snapshot_url(dt.strftime("%d%m%Y"))
+    df = pd.read_csv(io.StringIO(res.content.decode('utf-8')))
+    df = df.rename(columns={"Index Name": "NAME",
+                            "Index Date": "TIMESTAMP",
+                            "Open Index Value": "OPEN",
+                            "High Index Value": "HIGH",
+                            "Low Index Value": "LOW",
+                            "Closing Index Value": "CLOSE",
+                            "Points Change": "CHANGE",
+                            "Change(%)": "CHANGEPCT",
+                            "Volume": "TOTTRDQTY",
+                            "Turnover (Rs. Cr.)": "TOTTRDVAL",
+                            "P/E": "PE",
+                            "P/B": "PB",
+                            "Div Yield": "DIVYIELD"})
     return df
 
 
