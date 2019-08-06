@@ -73,6 +73,10 @@ INDEX_PE_SCHEMA = [dd_mmm_yyyy,
                    float, float, float]
 INDEX_PE_HEADERS = ['Date', 'P/E', 'P/B', 'Div Yield']
 
+INDEX_TRI_SCHEMA = [dd_mmm_yyyy,
+                   float]
+INDEX_TRI_HEADERS = ['Date', 'Total Returns Index']
+
 RBI_REF_RATE_SCHEMA = [dd_mmm_yyyy, float, float, float, float]
 RBI_REF_RATE_HEADERS = ['Date', '1 USD', '1 GBP', '1 EURO', '100 YEN'] 
 
@@ -283,7 +287,7 @@ def get_index_pe_history_quanta(symbol, start, end):
         index_name = DERIVATIVE_TO_INDEX[symbol]
     else:
         index_name = symbol
-    resp = index_pe_history_url(indexName=index_name, 
+    resp = index_pe_history_url(indexName=index_name,
                                 fromDate=start.strftime('%d-%m-%Y'),
                                 toDate=end.strftime('%d-%m-%Y'))
     
@@ -294,6 +298,54 @@ def get_index_pe_history_quanta(symbol, start, end):
     df = tp.get_df()
     return df
 
+
+def get_total_returns_index_history(symbol, start, end):
+    frame = inspect.currentframe()
+    args, _, _, kwargs = inspect.getargvalues(frame)
+    del (kwargs['frame'])
+    start = kwargs['start']
+    end = kwargs['end']
+    if (end - start) > timedelta(130):
+        kwargs1 = dict(kwargs)
+        kwargs2 = dict(kwargs)
+        kwargs1['end'] = start + timedelta(130)
+        kwargs2['start'] = kwargs1['end'] + timedelta(1)
+        t1 = ThreadReturns(target=get_total_returns_index_history, kwargs=kwargs1)
+        t2 = ThreadReturns(target=get_total_returns_index_history, kwargs=kwargs2)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        return pd.concat((t1.result, t2.result))
+    else:
+        return get_total_returns_index_history_quanta(**kwargs)
+
+
+def get_total_returns_index_history_quanta(symbol, start, end):
+    """This function will fetch the total returns index for a given index
+
+            Args:
+                symbol (str): Symbol for index
+                start (datetime.date): start date
+                end (datetime.date): end date
+
+            Returns:
+                pandas.DataFrame : A pandas dataframe object
+        """
+    if symbol in DERIVATIVE_TO_INDEX:
+        index_name = DERIVATIVE_TO_INDEX[symbol]
+    else:
+        index_name = symbol
+    resp = index_tri_history_url(indexType=index_name,
+                                 fromDate=start.strftime('%d-%m-%Y'),
+                                 toDate=end.strftime('%d-%m-%Y'))
+
+    bs = BeautifulSoup(resp.text, 'lxml')
+    tp = ParseTables(soup=bs,
+                     schema=INDEX_TRI_SCHEMA,
+                     headers=INDEX_TRI_HEADERS, index="Date")
+    df = tp.get_df()
+    return df
 
 
 def get_price_list(dt, segment='EQ'):
