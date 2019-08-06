@@ -86,8 +86,8 @@ index_history_url = URLFetchSession(url = 'http://www.nseindia.com/products/dyna
 """
 index_daily_snapshot_url = URLFetchSession(url='http://www.nseindia.com/content/indices/ind_close_all_%s.csv')
 """
-indexType=NIFTY%2050&fromDate=02-11-2015&toDate=19-11-2015&yield1=undefined&yield2=undefined&yield3=undefined&yield4=all
-indexType = Index name
+indexName=NIFTY%2050&fromDate=02-11-2015&toDate=19-11-2015&yield1=undefined&yield2=undefined&yield3=undefined&yield4=all
+indexName = Index name
 fromDate = from date dd-mm-yyyy
 toDate = to Date dd-mm-yyyy
 """
@@ -99,8 +99,8 @@ index_pe_history_url = partial(
                             yield4="all")
 
 """
-indexName=NIFTY%2050&fromDate=02-11-2015&toDate=19-11-2015
-indexName = Index name
+indexType=NIFTY%2050&fromDate=02-11-2015&toDate=19-11-2015
+indexType = Index name
 fromDate = from date dd-mm-yyyy
 toDate = to Date dd-mm-yyyy
 """
