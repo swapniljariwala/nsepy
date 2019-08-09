@@ -296,7 +296,10 @@ def get_index_pe_history_quanta(symbol, start, end):
                      schema=INDEX_PE_SCHEMA,
                      headers=INDEX_PE_HEADERS, index="Date")
     df = tp.get_df()
-    return df
+    if df.empty and (end - start).days < 6:
+        return get_index_pe_history_quanta(symbol, start, end + timedelta(days=1))
+    else:
+        return df
 
 
 def get_total_returns_index_history(symbol, start, end):
@@ -345,7 +348,10 @@ def get_total_returns_index_history_quanta(symbol, start, end):
                      schema=INDEX_TRI_SCHEMA,
                      headers=INDEX_TRI_HEADERS, index="Date")
     df = tp.get_df()
-    return df
+    if df.empty and (end - start).days < 6:
+        return get_total_returns_index_history_quanta(symbol, start, end + timedelta(days=1))
+    else:
+        return df
 
 
 def get_price_list(dt, segment='EQ'):
