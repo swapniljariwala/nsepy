@@ -286,7 +286,7 @@ def get_index_pe_history_quanta(symbol, start, end):
     if symbol in DERIVATIVE_TO_INDEX:
         index_name = DERIVATIVE_TO_INDEX[symbol]
     else:
-        index_name = symbol
+        index_name = symbol.upper()
     resp = index_pe_history_url(indexName=index_name,
                                 fromDate=start.strftime('%d-%m-%Y'),
                                 toDate=end.strftime('%d-%m-%Y'))
@@ -338,7 +338,7 @@ def get_total_returns_index_history_quanta(symbol, start, end):
     if symbol in DERIVATIVE_TO_INDEX:
         index_name = DERIVATIVE_TO_INDEX[symbol]
     else:
-        index_name = symbol
+        index_name = symbol.upper()
     resp = index_tri_history_url(indexType=index_name,
                                  fromDate=start.strftime('%d-%m-%Y'),
                                  toDate=end.strftime('%d-%m-%Y'))
