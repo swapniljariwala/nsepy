@@ -37,7 +37,12 @@ def build_dt_dict():
 
         if s:
             dt = datetime.datetime.strptime(s.group(1), "%d-%m-%Y").date()
-
+            # Start Kludge
+            # The list on NSE portal for expiry date has a wrong entry for 20 Sep 2019
+            # Handle this oulier use case by ignoring this date and skpping it for processing
+            if dt == datetime.datetime(2019, 9, 20).date():
+                continue
+            # End Kludge
             if line.find('indxExpryDt') > -1:
                 try:
                     existing_date = try_to_get_expiry_date(
