@@ -309,7 +309,10 @@ def get_price_list(dt, segment='EQ'):
     txt =  unzip_str(res.content)
     fp = six.StringIO(txt)
     df = pd.read_csv(fp)
-    del df['Unnamed: 13']
+    if dt>date(2012,1,1):
+        del df['Unnamed: 13']
+    else:
+        del df['Unnamed: 11']
     return df
 
 def get_rbi_ref_history(start, end):
