@@ -124,7 +124,7 @@ equity_symbol_list_url = URLFetchSession(
     url='https://www.nseindia.com/content/equities/EQUITY_L.csv')
 
 index_constituents_url = URLFetchSession(
-    "https://nseindia.com/content/indices/ind_%slist.csv")
+    "https://www.nseindia.com/content/indices/ind_%slist.csv")
 
 """
 --------------------------DERIVATIVES---------------------------------------
