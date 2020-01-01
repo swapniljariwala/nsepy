@@ -41,7 +41,7 @@ quote_derivative_url = URLFetch(
 3. expiry date (ddMMMyyyy) where dd is not padded with zero when date is single digit
 """
 option_chain_url = URLFetch(
-    url='https://www.nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?segmentLink=17&symbol=%s&instrument=%s&date=%s')
+    url='https://www.nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?segmentLink=17&symbol=%s&instrument=%s&date=%s', headers=headers)
 
 """
 1. symbol
@@ -50,7 +50,7 @@ option_chain_url = URLFetch(
 """
 
 futures_chain_url = URLFetch(
-    url='https://www.nseindia.com/live_market/dynaContent/live_watch/fomwatchsymbol.jsp?key=%s&Fut_Opt=Futures')
+    url='https://www.nseindia.com/live_market/dynaContent/live_watch/fomwatchsymbol.jsp?key=%s&Fut_Opt=Futures', headers=headers)
 
 """
 1. symbol

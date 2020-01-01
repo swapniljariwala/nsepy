@@ -34,10 +34,10 @@ class TestLiveUrls(unittest.TestCase):
         self.assertEqual(d['data'][0]['symbol'], 'SBIN')
 
     def test_quote_derivative_url(self):
-        resp = quote_derivative_url("NIFTY", "FUTIDX", "26SEP2019", '-', '-')
+        resp = quote_derivative_url("NIFTY", "FUTIDX", "30JAN2020", '-', '-')
         html_soup = BeautifulSoup(resp.text, 'lxml')
         hresponseDiv = html_soup.find("div", {"id": "responseDiv"})
-        d = json.loads(hresponseDiv.get_text())
+        d = json.loads(hresponseDiv.get_text().strip())
         self.assertEqual(d['data'][0]['underlying'], 'NIFTY')
 
     def test_option_chain_url(self):
@@ -47,7 +47,7 @@ class TestLiveUrls(unittest.TestCase):
             3. expiry date (ddMMMyyyy) where dd is not padded with zero when date is single digit
         """
 
-        resp = option_chain_url('SBIN', 'OPTSTK', '26SEP2019')
+        resp = option_chain_url('SBIN', 'OPTSTK', '30JAN2020')
         self.assertGreaterEqual(resp.text.find('Open Interest'), 0)
 
     def test_futures_chain_url(self):

@@ -12,9 +12,18 @@ from nsepy.constants import symbol_count, symbol_list
 
 
 session = Session()
-headers = {
-    'Host': 'www.nseindia.com',
-    'Referer': 'https://www.nseindia.com/products/content/equities/equities/eq_security.htm'}
+# headers = {
+    # 'Host': 'www.nseindia.com',
+    # 'Referer': 'https://www.nseindia.com/products/content/equities/equities/eq_security.htm'}
+
+headers = {'Accept': '*/*',
+           'Accept-Encoding': 'gzip, deflate, sdch, br',
+           'Accept-Language': 'en-GB,en-US;q=0.8,en;q=0.6',
+           'Connection': 'keep-alive',
+           'Host': 'www.nseindia.com',
+           'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+           'X-Requested-With': 'XMLHttpRequest'}
+
 URLFetchSession = partial(URLFetch, session=session,
                           headers=headers)
 
@@ -129,10 +138,8 @@ index_constituents_url = URLFetchSession(
 """
 --------------------------DERIVATIVES---------------------------------------
 """
-
 derivative_expiry_dates_url = URLFetchSession(
     url='http://www.nseindia.com/products/resources/js/foExp.js')
-
 
 """
 instrumentType=FUTIDX
@@ -148,7 +155,10 @@ symbolCount=
 """
 derivative_history_url = partial(
     URLFetchSession(
-        url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?'),
+        url='http://www.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?',
+        headers = {**headers, **{'Referer': 'https://www.nseindia.com/products/content/derivatives/equities/historical_fo.htm'}}
+        #headers = (lambda a,b: a.update(b) or a)(headers.copy(),{'Referer': 'https://www.nseindia.com/products/content/derivatives/equities/historical_fo.htm'})
+        ),
     segmentLink=9,
     symbolCount='')
 """

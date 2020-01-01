@@ -4,7 +4,7 @@ Created on Thu Nov 19 20:52:33 2015
 
 @author: SW274998
 """
-
+import pdb
 from nsepy.commons import (is_index, is_index_derivative,
                            NSE_INDICES, INDEX_DERIVATIVES,
                            ParseTables, StrDate, unzip_str,
@@ -48,8 +48,7 @@ class TestUrls(unittest.TestCase):
         self.assertGreaterEqual(resp.text.find(txt), 0, resp.text)
 
     def test_price_list_url(self):
-        date_str = "11-19-2015"
-        resp = price_list_url('2015', 'NOV', '19NOV2015')
+        resp = price_list_url('2019', 'DEC', '31DEC2019')
         csv = unzip_str(resp.content)
         self.assertGreaterEqual(csv.find('SBIN'), 0)
 
@@ -89,12 +88,12 @@ class TestUrls(unittest.TestCase):
     def test_derivative_history_url(self):
         resp = derivative_history_url(instrumentType="FUTIDX",
                                       symbol="NIFTY",
-                                      expiryDate="26-11-2015",
+                                      expiryDate="26-12-2019",
                                       optionType="select",
                                       strikePrice='',
                                       dateRange='',
-                                      fromDate='01-Nov-2015',
-                                      toDate="19-Nov-2015")
+                                      fromDate='25-Dec-2019',
+                                      toDate="26-Dec-2019")
         self.assertGreaterEqual(resp.text.find('NIFTY'), 0)
         self.assertGreaterEqual(resp.text.find('Expiry'), 0)
 
