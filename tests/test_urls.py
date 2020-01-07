@@ -67,6 +67,14 @@ class TestUrls(unittest.TestCase):
         self.assertGreaterEqual(resp.text.find('High'), 0)
         self.assertGreaterEqual(resp.text.find('Low'), 0)
 
+    def test_index_daily_snapshot_url(self):
+        resp = index_daily_snapshot_url("06012020")
+        csv = str(resp.content)
+        self.assertGreaterEqual(csv.find('Nifty 50'), 0)
+        self.assertGreaterEqual(csv.find('Nifty IT'), 0)
+        self.assertGreaterEqual(csv.find('Nifty Bank'), 0)
+        self.assertGreaterEqual(csv.find('Nifty Next 50'), 0)
+
     def test_index_pe_history_url(self):
         resp = index_pe_history_url(fromDate="01-01-2015",
                                     toDate="10-01-2015",
