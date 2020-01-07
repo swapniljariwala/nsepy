@@ -1,6 +1,7 @@
 import datetime
 import unittest
 import json
+import pdb
 import requests
 import six
 
@@ -126,7 +127,7 @@ class TestLiveUrls(unittest.TestCase):
         self.assertFalse(
             lstholiday[lstholiday['Description'] == "Mahashivratri"].empty)
         self.assertFalse(
-            lstholiday[lstholiday['Day Of the Week'] == "Thursday"].empty)
+            lstholiday[lstholiday['Day'] == "Thursday"].empty)
 
     def test_working_day(self):
         # shivratri

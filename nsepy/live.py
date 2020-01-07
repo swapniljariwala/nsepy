@@ -128,13 +128,13 @@ def get_holidays_list(fromDate,
         raise ValueError('Please check start and end dates')
 
     holidayscrape = holiday_list_url(fromDate.strftime(
-        "%d-%b-%Y"), toDate.strftime("%d-%b-%Y"))
+        "%d-%m-%Y"), toDate.strftime("%d-%m-%Y"))
     html_soup = BeautifulSoup(holidayscrape.text, 'lxml')
     sptable = html_soup.find("table")
     tp = ParseTables(soup=sptable,
                      schema=[str, StrDate.default_format(
                          format="%d-%b-%Y"), str, str],
-                     headers=["Market Segment", "Date", "Day Of the Week", "Description"], index="Date")
+                     headers=["Market Segment", "Date", "Day", "Description"], index="Date")
     dfret = tp.get_df()
     dfret = dfret.drop(["Market Segment"], axis=1)
     return dfret
