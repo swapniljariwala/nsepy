@@ -150,3 +150,9 @@ class TestLiveUrls(unittest.TestCase):
         workingdays = getworkingdays(datetime.date(
             2019, 3, 1), datetime.date(2019, 3, 31))
         self.assertEqual(len(workingdays), 19)
+
+        # working day for special dates on weekend
+        workingdays = getworkingdays(datetime.date(
+            2020, 1, 31), datetime.date(2020, 2, 3))
+        self.assertEqual(len(workingdays), 3)
+        
