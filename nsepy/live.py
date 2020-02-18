@@ -202,5 +202,23 @@ def getworkingdays(dtfrom, dtto):
             stweekends.add(dt)
 
     # pdb.set_trace()
+    stspecial  = set(
+      [datetime.date(2020,2,1) # Budget day
+      ]
+    )
+
+    #Remove special weekend working days from weekends set
+    stweekends -= stspecial
     stworking = (stalldays - stweekends) - set(dfholiday.index.values)
+    # stworking = (stalldays - stweekends) - set(dfholiday.index.values)
+
+    # #Special cases where market was open on weekends
+    # stspecial  = set(
+      # [datetime.date(2020,2,1) # Budget day
+      # ]
+    # )
+    # for dtspecial in stspecial:
+      # if (dtspecial >= dtfrom and dtspecial <= dtto):
+        # stworking.add(dtspecial)
+
     return sorted(stworking)
