@@ -133,7 +133,7 @@ index_tri_history_url = URLFetchSession(url='http://www1.nseindia.com/products/d
 
 
 """
-http://www.nseindia.com/products/dynaContent/equities/indices/hist_vix_data.jsp?&fromDate=01-Nov-2015&toDate=19-Nov-2015
+http://www1.nseindia.com/products/dynaContent/equities/indices/hist_vix_data.jsp?&fromDate=01-Nov-2015&toDate=19-Nov-2015
 fromDate = 'dd-Mmm-yyyy'
 toDate = 'dd-Mmm-yyyy'
 """
