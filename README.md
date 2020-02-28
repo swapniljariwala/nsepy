@@ -1,4 +1,6 @@
 # NSEpy 0.6
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fswapniljariwala%2Fnsepy.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fswapniljariwala%2Fnsepy?ref=badge_shield)
+
 Python Library to get publicly available data on NSE website ie. stock quotes, historical data, live indices.
 
 Detailed documentation here - http://nsepy.readthedocs.io/en/latest/
@@ -126,3 +128,7 @@ For quick resolution please raise issues both [here on issue page](https://githu
 If you have fixed an issue or added a new feature, please fork this repository, make your changes and submit a pull request. [Here's good article on how to do this.](https://code.tutsplus.com/tutorials/how-to-collaborate-on-github--net-34267) 
 
 Looking forward for healthy participation from community.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fswapniljariwala%2Fnsepy.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fswapniljariwala%2Fnsepy?ref=badge_large)
