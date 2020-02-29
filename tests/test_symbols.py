@@ -1,5 +1,5 @@
 import unittest
-from nsepy.symbols import get_symbol_list, get_index_constituents_list
+from nsepy.symbols import get_symbol_list, get_index_constituents_list, get_index_name
 import pdb
 
 
@@ -33,3 +33,11 @@ class TestSymbols(unittest.TestCase):
         _oil = df["Symbol"] == "OIL"
         # Check company matches the expected value
         self.assertEqual(df[_oil].iloc[0].get('ISIN Code'), "INE274J01014")
+
+    def test_get_index_name(self):
+        self.assertEqual(get_index_name("NIFTY50"), "Nifty 50")
+        self.assertEqual(get_index_name("NIFTY200"), "Nifty 200")
+        self.assertEqual(get_index_name("NIFTYNEXT50"), "Nifty Next 50")
+        self.assertEqual(
+            get_index_name("NIFTYLARGEMIDCAP250"),
+            "Nifty LargeMidcap 250")
