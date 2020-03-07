@@ -23,9 +23,11 @@ For Windows systems you can install Anaconda, this will cover many dependancies 
 
 ## Installation
 Fresh installation 
+
 ```$pip install nsepy```
 
 Upgrade
+
 ```$pip install nsepy --upgrade```
 
 ## Usage
