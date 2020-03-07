@@ -22,8 +22,11 @@ Release Notes
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 
 ## Installation
-
+Fresh installation 
 ```$pip install nsepy```
+
+Upgrade
+```$pip install nsepy --upgrade```
 
 ## Usage
 

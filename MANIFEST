@@ -9,9 +9,8 @@ nsepy/history.py
 nsepy/live.py
 nsepy/liveurls.py
 nsepy/nselist.py
+nsepy/symbols.py
 nsepy/urls.py
 nsepy/debt/__init__.py
 nsepy/derivatives/__init__.py
 nsepy/derivatives/archives.py
-nsepy/indices/__init__.py
-nsepy/indices/archives.py
