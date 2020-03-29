@@ -287,12 +287,4 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 
-# disqus setup
-author = 'Swapnil Jariwala'
-copyright = '2017, Swapnil Jariwala'
-exclude_patterns = ['_build']
-master_doc = 'index'
-project = 'xerxys'
-release = '1.0'
-version = '1.0'
-disqus_shortname = 'xerxys'
+
