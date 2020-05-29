@@ -1,7 +1,7 @@
 alabaster==0.7.12
 autopep8==1.4.4
 Babel==2.7.0
-beautifulsoup4==4.7.1
+beautifulsoup4==4.9.1
 bs4==0.0.1
 certifi==2019.6.16
 chardet==3.0.4
