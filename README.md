@@ -1,7 +1,7 @@
 # NSEpy 0.8.
 Python Library to get publicly available data on NSE website ie. stock quotes, historical data, live indices.
 
-Detailed documentation here - http://nsepy.readthedocs.io/en/latest/
+Detailed documentation here - https://nsepy.xyz/
 
 Release Notes
 * Added support for derivative data. (Probably only API for indian derivative and India VIX data as Yahoo API has no support for derivatives)
