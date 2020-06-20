@@ -58,6 +58,7 @@ nifty = get_history(symbol="NIFTY",
 					index=True)
 nifty[['Close', 'Turnover']].plot(secondary_y='Turnover')
 
+
 ```
 Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)-
 ```
