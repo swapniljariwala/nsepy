@@ -8,7 +8,6 @@ Release Notes
 * Support for RBI reference rates for USD
 * Download data thru simple cli
 * Unified and simplified API for all (Equity, Index, Derivative, Volatility Indexes-INDIAVIX)
-* Support for live quotes from NSE
 * Compatible and Tested with Python 2.7 and 3.4
 
 ## Libraries Required
