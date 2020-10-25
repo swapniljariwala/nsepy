@@ -69,7 +69,10 @@ def build_dt_dict():
                         add_dt(vix_exp, dt)
                 except:
                     add_dt(vix_exp, dt)
-
+    # Start Kludge
+    # The list on NSE portal doesnt have entry for weekly expiry for 22 Oct 2020
+    # Handle this oulier and add the entry explicity
+    add_dt(idx_exp, datetime.datetime(2020, 10, 22).date())
 
 def is_valid_expiry(dt):
     # not a perfect logic :P
