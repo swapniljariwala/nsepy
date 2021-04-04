@@ -118,3 +118,13 @@ def get_expiry_date(year, month, index=True, stock=False, vix=False, recursion=0
 
     build_dt_dict()
     return get_expiry_date(year, month, index, stock, vix, recursion=recursion+1)
+
+def get_weekly_expiry(date_val):
+    y = date_val.year
+    m = date_val.month
+    w = get_week_of_month(date_val) - 1     # week number in a month -1 for 0 based indices 
+    
+    expiry = get_expiry_date(year=y, month=m)
+    expiry_list = sorted(list(expiry))
+    
+    return expiry_list[w]
