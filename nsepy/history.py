@@ -311,11 +311,41 @@ def get_index_pe_history_quanta(symbol, start, end):
     return df
 
 
-def get_price_list(dt, series='EQ'):
+def get_derivatives_price_list(dt, series):
+    
+    """
+    Downloads derivatives market bhavcopy
+    Args:
+        dt (datetime.date)
+        series (str) = FUTIDX, FUTSTK, OPTIDX or OPTSTK 
+    """
+    
     MMM = dt.strftime("%b").upper()
     yyyy = dt.strftime("%Y")
 
     """
+    Date format for the url:
+    1. YYYY
+    2. MMM
+    3. ddMMMyyyy
+    """
+    res = derivative_price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper())
+    txt = unzip_str(res.content)
+    fp = six.StringIO(txt)
+    df = pd.read_csv(fp)
+    df = df.drop([df.columns[-1]], axis=1)
+    return df[df['INSTRUMENT'] == series]
+
+
+def get_price_list(dt, series='EQ'):
+    
+    # Downloads cash market bhavcopy
+    
+    MMM = dt.strftime("%b").upper()
+    yyyy = dt.strftime("%Y")
+
+    """
+    Date format for the url:
     1. YYYY
     2. MMM
     3. ddMMMyyyy
@@ -324,9 +354,49 @@ def get_price_list(dt, series='EQ'):
     txt = unzip_str(res.content)
     fp = six.StringIO(txt)
     df = pd.read_csv(fp)
-    del df['Unnamed: 13']
+    df = df.drop([df.columns[-1]], axis=1)
     return df[df['SERIES'] == series]
 
+
+def get_participant_wise_oi(dt):
+    
+    """
+    1. dt (datetime.date)
+    """
+    res = daily_fno_participant_wise_oi_url(dt.strftime("%d%m%Y"))
+    df = pd.read_csv(io.StringIO(res.content.decode('utf-8')))
+    df.columns = df.iloc[0,:]
+    df = df.drop(index=[0,5],axis=0)
+    df = df.reset_index(drop=True,inplace=False)
+    return df
+
+def get_historical_oi(tickerid, start, end):
+    
+    """
+    Gets historical Futures Open Interest
+    
+    1. tickerid(str): instrument name
+    2. start (datetime.date): start date
+    3. end (datetime.date): end date
+    """
+
+    historical_oi = pd.DataFrame(columns = ['Date', 'Symbol', 'Futures OI'])
+
+    while start <= end:
+
+        try:
+            prices = get_derivatives_price_list(dt=start, series='FUTSTK')
+            prices = prices[['SYMBOL','EXPIRY_DT','OPEN_INT','TIMESTAMP']]
+            ticker_data = prices[prices['SYMBOL'] == tickerid]
+            historical_oi = historical_oi.append({'Date':ticker_data.values[0][3],
+                                  'Symbol':ticker_data.values[0][0],
+                                  'Futures OI':ticker_data['OPEN_INT'].sum()}, ignore_index=True)
+            #print(f"Downloaded data for {start}")
+        except:
+            pass
+        start += timedelta(days=1)
+    
+    return historical_oi
 
 """
 Get Trade and Delivery Volume for each stock
