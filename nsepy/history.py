@@ -329,12 +329,15 @@ def get_derivatives_price_list(dt, series):
     2. MMM
     3. ddMMMyyyy
     """
-    res = derivative_price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper())
-    txt = unzip_str(res.content)
-    fp = six.StringIO(txt)
-    df = pd.read_csv(fp)
-    df = df.drop([df.columns[-1]], axis=1)
-    return df[df['INSTRUMENT'] == series]
+    try:
+        res = derivative_price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper())
+        txt = unzip_str(res.content)
+        fp = six.StringIO(txt)
+        df = pd.read_csv(fp)
+        df = df.drop([df.columns[-1]], axis=1)
+        return df[df['INSTRUMENT'] == series]
+    except:
+        pass
 
 
 def get_price_list(dt, series='EQ'):
@@ -350,12 +353,16 @@ def get_price_list(dt, series='EQ'):
     2. MMM
     3. ddMMMyyyy
     """
-    res = price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper())
-    txt = unzip_str(res.content)
-    fp = six.StringIO(txt)
-    df = pd.read_csv(fp)
-    df = df.drop([df.columns[-1]], axis=1)
-    return df[df['SERIES'] == series]
+    try:
+        res = price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper())
+        txt = unzip_str(res.content)
+        fp = six.StringIO(txt)
+        df = pd.read_csv(fp)
+        df = df.drop([df.columns[-1]], axis=1)
+        return df[df['SERIES'] == series]
+    except:
+        pass
+        
 
 
 def get_participant_wise_oi(dt):
@@ -364,12 +371,18 @@ def get_participant_wise_oi(dt):
     1. dt (datetime.date)
     """
     res = daily_fno_participant_wise_oi_url(dt.strftime("%d%m%Y"))
-    df = pd.read_csv(io.StringIO(res.content.decode('utf-8')))
-    df.columns = df.iloc[0,:]
-    df = df.drop(index=[0,5],axis=0)
-    df = df.reset_index(drop=True,inplace=False)
-    return df
-
+    
+    if res.status_code == 404:
+        print("Failed to fetch data. Check date. ")
+        return None
+    else:
+        df = pd.read_csv(io.StringIO(res.content.decode('utf-8')))
+        df.columns = df.iloc[0,:]
+        df = df.drop(index=[0,5],axis=0)
+        df = df.reset_index(drop=True,inplace=False)
+        return df
+    
+      
 def get_historical_oi(tickerid, start, end):
     
     """
