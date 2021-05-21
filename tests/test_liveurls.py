@@ -1,6 +1,7 @@
 import datetime
 import unittest
 import json
+import pdb
 import requests
 import six
 
@@ -34,11 +35,11 @@ class TestLiveUrls(unittest.TestCase):
         self.assertEqual(d['data'][0]['symbol'], 'SBIN')
 
     def test_quote_derivative_url(self):
-        resp = quote_derivative_url("NIFTY", "FUTIDX", "30JAN2020", '-', '-')
+        resp = quote_derivative_url("NIFTY", "FUTIDX", "26AUG2021", '-', '-')
         html_soup = BeautifulSoup(resp.text, 'lxml')
         hresponseDiv = html_soup.find("div", {"id": "responseDiv"})
         d = json.loads(hresponseDiv.get_text().strip())
-        self.assertEqual(d['data'][0]['underlying'], 'NIFTY')
+        self.assertEqual(d['companyName'], 'Nifty 50')
 
     def test_option_chain_url(self):
         """
@@ -46,7 +47,6 @@ class TestLiveUrls(unittest.TestCase):
             2. instrument (FUTSTK, OPTSTK, FUTIDX, OPTIDX)
             3. expiry date (ddMMMyyyy) where dd is not padded with zero when date is single digit
         """
-
         resp = option_chain_url('SBIN', 'OPTSTK', '30JAN2020')
         self.assertGreaterEqual(resp.text.find('Open Interest'), 0)
 
