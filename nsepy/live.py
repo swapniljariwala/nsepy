@@ -10,7 +10,9 @@ from nsepy.commons import *
 import ast
 import json
 import io
+import pandas as pd
 from bs4 import BeautifulSoup
+import pkg_resources
 from nsepy.liveurls import quote_eq_url, quote_derivative_url, option_chain_url, futures_chain_url, holiday_list_url
 
 
@@ -127,16 +129,21 @@ def get_holidays_list(fromDate,
     if fromDate > toDate:
         raise ValueError('Please check start and end dates')
 
-    holidayscrape = holiday_list_url(fromDate.strftime(
-        "%d-%m-%Y"), toDate.strftime("%d-%m-%Y"))
-    html_soup = BeautifulSoup(holidayscrape.text, 'lxml')
-    sptable = html_soup.find("table")
-    tp = ParseTables(soup=sptable,
-                     schema=[str, StrDate.default_format(
-                         format="%d-%b-%Y"), str, str],
-                     headers=["Market Segment", "Date", "Day", "Description"], index="Date")
-    dfret = tp.get_df()
-    dfret = dfret.drop(["Market Segment"], axis=1)
+    # holidayscrape = holiday_list_url(fromDate.strftime(
+        # "%d-%m-%Y"), toDate.strftime("%d-%m-%Y"))
+    # html_soup = BeautifulSoup(holidayscrape.text, 'lxml')
+    # sptable = html_soup.find("table")
+    # tp = ParseTables(soup=sptable,
+                     # schema=[str, StrDate.default_format(
+                         # format="%d-%b-%Y"), str, str],
+                     # headers=["Market Segment", "Date", "Day", "Description"], index="Date")
+    # dfret = tp.get_df()
+    strmholiday = pkg_resources.resource_stream(__name__, 'resources/holiday.csv')
+    dfdata = pd.read_csv(strmholiday,parse_dates=['Date'])
+    dfret = dfdata.drop(["Market Segment"], axis=1)
+    dfret['Date'] = dfret['Date'].dt.date
+    dfret = dfret.set_index('Date')
+    dfret = dfret.loc[fromDate:toDate]
     return dfret
 
 
