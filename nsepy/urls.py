@@ -72,6 +72,21 @@ equity_history_url = partial(equity_history_url_full,
 price_list_url = URLFetchSession(
     url='https://www1.nseindia.com/content/historical/EQUITIES/%s/%s/cm%sbhav.csv.zip')
 
+'''
+
+
+'''
+price_list_url_curr = URLFetchSession(
+    url='https://www1.nseindia.com/archives/cd/bhav/CD_Bhavcopy%s%s%s.zip')
+
+'''
+1. YYYY
+2. MMM
+3. ddMMMyyyy
+'''
+price_list_url_fo = URLFetchSession(
+    url='https://www1.nseindia.com/content/historical/DERIVATIVES/%s/%s/fo%sbhav.csv.zip')
+
 """
 1. ddmmyyyy
 """

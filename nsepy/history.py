@@ -16,6 +16,7 @@ import six
 import inspect
 import io
 import pdb
+import os
 
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
@@ -329,7 +330,7 @@ def get_price_list(dt, series='EQ'):
 
 
 """
-Get Trade and Delivery Volume for each stock
+Get Trade and Delivery Volume for each stock (cash/spot). (aka EQ Bhav copy)
 """
 
 
@@ -361,6 +362,54 @@ def get_delivery_position(dt, segment='EQ'):
     df = df[flsegment]
 
     return df
+
+"""
+Get Trade and Open Interest for each stock futures and options. (aka FO Bhav copy)
+"""
+
+def get_price_list_fo(dt, series='FO'):
+    MMM = dt.strftime("%b").upper()
+    yyyy = dt.strftime("%Y")
+
+    """
+    1. YYYY
+    2. MMM
+    3. ddMMMyyyy
+    """
+    res = price_list_url_fo(yyyy, MMM, dt.strftime("%d%b%Y").upper())
+    txt = unzip_str(res.content)
+    fp = six.StringIO(txt)
+    df = pd.read_csv(fp)
+    # del df['Unnamed: 13']
+    return df
+
+"""
+Get Trade and Open Interest for each stock futures and options. (aka FO Bhav copy)
+"""
+
+def get_price_list_curr(dt, path=None):
+
+    day = str(dt.day).zfill(2)
+    month = str(dt.month).zfill(2)
+    year = dt.strftime("%Y")[-2:]
+
+    """
+    1. YYYY
+    2. MMM
+    3. ddMMMyyyy
+    """
+    res = price_list_url_curr(day,month,year)
+    z = zipfile.ZipFile(io.BytesIO(res.content))
+    # z.namelist()
+
+    if not os.path.exists(path+day+month+year):
+        os.mkdir(path+day+month+year)
+        z.extractall(path+day+month+year)
+
+    else:
+        print("Exists")
+
+
 
 
 """
