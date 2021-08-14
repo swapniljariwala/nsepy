@@ -13,6 +13,7 @@ from nsepy.commons import *
 from nsepy.constants import *
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
+from simpledbf import Dbf5
 import pandas as pd
 import six
 import inspect
@@ -389,7 +390,7 @@ def get_price_list_fo(dt, series='FO'):
 Get Trade and Open Interest for each currency futures and options. (a.k.a Currency Bhav copy)
 """
 
-def get_price_list_curr(dt, path=None):
+def get_price_list_curr(dt):
     # import ipdb; ipdb.set_trace()
     day = str(dt.day).zfill(2)
     month = str(dt.month).zfill(2)
@@ -401,17 +402,21 @@ def get_price_list_curr(dt, path=None):
     3. yy
     """
     res = price_list_url_curr(day,month,year)
-    z = zipfile.ZipFile(io.BytesIO(res.content))
-    print(dt, z.namelist())
-    return None
+    zip_file = zipfile.ZipFile(io.BytesIO(res.content))
+    zip_file_contents = sorted(zip_file.namelist())
 
-    if not os.path.exists(path+day+month+year):
-        os.mkdir(path+day+month+year)
-        z.extractall(path+day+month+year)
+    currency_futures_filename = [x for x in zip_file_contents if "FO" in x.upper()][0]
+    currency_options_filename = [x for x in zip_file_contents if "op" in x.upper()][0]
 
-    else:
-        print("Exists")
+    if currency_futures_filename.endswith(".dbf"):
+        currency_futures_df = Dbf5(zip_file.open(currency_futures_filename)).to_dataframe()
+        currency_options_df = Dbf5(zip_file.open(currency_options_filename)).to_dataframe()
 
+    elif currency_futures_filename.endswith(".csv"):
+        currency_futures_df = pd.read_csv(zip_file.open(currency_futures_filename))
+        currency_options_df = pd.read_csv(zip_file.open(currency_options_filename))
+    
+    return (currency_futures_df, currency_options_df)
 
 
 
