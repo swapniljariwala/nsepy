@@ -112,7 +112,7 @@ class TestHistory(unittest.TestCase):
         self.assertEqual(fut['CLOSE'], 2286.4)
 
         fut = dfplfo[(dfplfo['SYMBOL'] == 'HDFCBANK') & (dfplfo['EXPIRY_DT'] == '29-Aug-2019') & (dfplfo['OPTION_TYP'] == 'PE') & (dfplfo['STRIKE_PR'] == 2300) ].squeeze()
-        self.assertEqual(fut['CLOSE'], 45.5)
+        self.assertEqual(fut['CLOSE'], 52.75)
 
         ## Check Currency Futures and Options
         currfo, currop = get_currency_derivatives_price_list(testdate)
