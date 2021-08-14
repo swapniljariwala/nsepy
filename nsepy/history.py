@@ -6,8 +6,6 @@ Created on Tue Nov 24 21:25:54 2015
 """
 
 from nsepy.urls import *
-from urls import *
-
 import six
 from nsepy.commons import *
 from nsepy.constants import *
