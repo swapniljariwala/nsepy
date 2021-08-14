@@ -406,7 +406,7 @@ def get_price_list_curr(dt):
     zip_file_contents = sorted(zip_file.namelist())
 
     currency_futures_filename = [x for x in zip_file_contents if "FO" in x.upper()][0]
-    currency_options_filename = [x for x in zip_file_contents if "op" in x.upper()][0]
+    currency_options_filename = [x for x in zip_file_contents if "OP" in x.upper()][0]
 
     if currency_futures_filename.endswith(".dbf"):
         currency_futures_df = Dbf5(zip_file.open(currency_futures_filename)).to_dataframe()
@@ -417,7 +417,6 @@ def get_price_list_curr(dt):
         currency_options_df = pd.read_csv(zip_file.open(currency_options_filename))
     
     return (currency_futures_df, currency_options_df)
-
 
 
 """
