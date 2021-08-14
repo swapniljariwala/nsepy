@@ -18,6 +18,7 @@ import inspect
 import io
 import pdb
 import os
+import shutil
 
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
@@ -368,7 +369,7 @@ def get_delivery_position(dt, segment='EQ'):
 Get Trade and Open Interest for each stock futures and options. (a.k.a FO Bhav copy)
 """
 
-def get_price_list_fo(dt, series='FO'):
+def get_derivatives_price_list(dt):
     MMM = dt.strftime("%b").upper()
     yyyy = dt.strftime("%Y")
 
@@ -381,15 +382,19 @@ def get_price_list_fo(dt, series='FO'):
     txt = unzip_str(res.content)
     fp = six.StringIO(txt)
     df = pd.read_csv(fp)
-    # del df['Unnamed: 13']
     return df
 
 """
 Get Trade and Open Interest for each currency futures and options. (a.k.a Currency Bhav copy)
 """
 
-def get_price_list_curr(dt):
-    # import ipdb; ipdb.set_trace()
+def get_currency_derivatives_price_list(dt):
+    '''
+    Returns:
+        1. pandas.DataFrame : Currency futures price list pandas dataframe object
+        2. pandas.DataFrame : Currency options price list pandas dataframe object
+    '''
+
     day = str(dt.day).zfill(2)
     month = str(dt.month).zfill(2)
     year = dt.strftime("%Y")[-2:]
@@ -407,8 +412,14 @@ def get_price_list_curr(dt):
     currency_options_filename = [x for x in zip_file_contents if "OP" in x.upper()][0]
 
     if currency_futures_filename.endswith(".dbf"):
-        currency_futures_df = Dbf5(zip_file.open(currency_futures_filename)).to_dataframe()
-        currency_options_df = Dbf5(zip_file.open(currency_options_filename)).to_dataframe()
+        # Extracting .dbf file in nsepy directory and deleting it after reading
+        zip_file_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "zip_cache")
+        os.mkdir(zip_file_dir) if not os.path.exists(zip_file_dir) else 0
+        zip_file.extractall(zip_file_dir)
+
+        currency_futures_df = Dbf5(os.path.join(zip_file_dir, currency_futures_filename)).to_dataframe()
+        currency_options_df = Dbf5(os.path.join(zip_file_dir, currency_options_filename)).to_dataframe()
+        shutil.rmtree(zip_file_dir)
 
     elif currency_futures_filename.endswith(".csv"):
         currency_futures_df = pd.read_csv(zip_file.open(currency_futures_filename))
@@ -481,17 +492,4 @@ def get_rbi_ref_history_quanta(start, end):
                      headers=RBI_REF_RATE_HEADERS, index="Date")
     df = tp.get_df()
     return df
-
-if __name__ == "__main__":
-    from datetime import timedelta
-    start_ = date(2010, 1, 1)
-    while start_ < date(2021,8,1):
-        try:
-            get_price_list_curr(start_)
-        
-        except:
-            print(start_, "NA")
-        
-        start_ += timedelta(days=1)
-    
 

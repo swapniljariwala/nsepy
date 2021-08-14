@@ -4,7 +4,7 @@ Created on Tue Nov 24 21:57:53 2015
 
 @author: Swapnil Jariwala
 """
-from nsepy.history import validate_params, get_price_list, get_indices_price_list
+from nsepy.history import validate_params, get_price_list, get_indices_price_list, get_currency_derivatives_price_list, get_derivatives_price_list
 from nsepy.urls import get_symbol_count
 from nsepy import urls
 from nsepy import history
@@ -105,6 +105,22 @@ class TestHistory(unittest.TestCase):
         dfpleq = get_price_list(testdate, 'EQ')
         stk = dfpleq[dfpleq['SYMBOL'] == 'IDFCFIRSTB'].squeeze()
         self.assertEqual(stk['CLOSE'], 42.35)
+
+        # Check Stock Futures and Options
+        dfplfo = get_derivatives_price_list(testdate)
+        fut = dfplfo[(dfplfo['SYMBOL'] == 'HDFCBANK') & (dfplfo['EXPIRY_DT'] == '29-Aug-2019') & (dfplfo['OPTION_TYP'] == 'XX')].squeeze()
+        self.assertEqual(fut['CLOSE'], 2286.4)
+
+        fut = dfplfo[(dfplfo['SYMBOL'] == 'HDFCBANK') & (dfplfo['EXPIRY_DT'] == '29-Aug-2019') & (dfplfo['OPTION_TYP'] == 'PE') & (dfplfo['STRIKE_PR'] == 2300) ].squeeze()
+        self.assertEqual(fut['CLOSE'], 45.5)
+
+        ## Check Currency Futures and Options
+        currfo, currop = get_currency_derivatives_price_list(testdate)
+        currfo = currfo[(currfo['CONTRACT_D'] == 'FUTCUREURINR29-JUL-2019')].squeeze()
+        self.assertEqual(currfo['CLOSE_PRIC'], 76.7725)
+
+        currop = currop[(currop['CONTRACT_D'] == 'OPTCURUSDINR26-JUL-2019PE69')].squeeze()
+        self.assertEqual(currfo['CLOSE_PRIC'], 0.0025)
 
         # Check Bond
         dfpln1 = get_price_list(testdate, 'N1')
