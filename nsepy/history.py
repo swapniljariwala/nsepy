@@ -6,6 +6,8 @@ Created on Tue Nov 24 21:25:54 2015
 """
 
 from nsepy.urls import *
+from urls import *
+
 import six
 from nsepy.commons import *
 from nsepy.constants import *
@@ -330,7 +332,7 @@ def get_price_list(dt, series='EQ'):
 
 
 """
-Get Trade and Delivery Volume for each stock (cash/spot). (aka EQ Bhav copy)
+Get Trade and Delivery Volume for each stock (cash/spot). (a.k.a EQ Bhav copy)
 """
 
 
@@ -364,7 +366,7 @@ def get_delivery_position(dt, segment='EQ'):
     return df
 
 """
-Get Trade and Open Interest for each stock futures and options. (aka FO Bhav copy)
+Get Trade and Open Interest for each stock futures and options. (a.k.a FO Bhav copy)
 """
 
 def get_price_list_fo(dt, series='FO'):
@@ -384,23 +386,24 @@ def get_price_list_fo(dt, series='FO'):
     return df
 
 """
-Get Trade and Open Interest for each stock futures and options. (aka FO Bhav copy)
+Get Trade and Open Interest for each currency futures and options. (a.k.a Currency Bhav copy)
 """
 
 def get_price_list_curr(dt, path=None):
-
+    # import ipdb; ipdb.set_trace()
     day = str(dt.day).zfill(2)
     month = str(dt.month).zfill(2)
     year = dt.strftime("%Y")[-2:]
 
     """
-    1. YYYY
-    2. MMM
-    3. ddMMMyyyy
+    1. dd
+    2. MM
+    3. yy
     """
     res = price_list_url_curr(day,month,year)
     z = zipfile.ZipFile(io.BytesIO(res.content))
-    # z.namelist()
+    print(dt, z.namelist())
+    return None
 
     if not os.path.exists(path+day+month+year):
         os.mkdir(path+day+month+year)
@@ -476,3 +479,17 @@ def get_rbi_ref_history_quanta(start, end):
                      headers=RBI_REF_RATE_HEADERS, index="Date")
     df = tp.get_df()
     return df
+
+if __name__ == "__main__":
+    from datetime import timedelta
+    start_ = date(2010, 1, 1)
+    while start_ < date(2021,8,1):
+        try:
+            get_price_list_curr(start_)
+        
+        except:
+            print(start_, "NA")
+        
+        start_ += timedelta(days=1)
+    
+

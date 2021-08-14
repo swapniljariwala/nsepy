@@ -73,8 +73,9 @@ price_list_url = URLFetchSession(
     url='https://www1.nseindia.com/content/historical/EQUITIES/%s/%s/cm%sbhav.csv.zip')
 
 '''
-
-
+1. dd
+2. mm
+3. yy
 '''
 price_list_url_curr = URLFetchSession(
     url='https://www1.nseindia.com/archives/cd/bhav/CD_Bhavcopy%s%s%s.zip')
