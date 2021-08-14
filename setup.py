@@ -19,7 +19,7 @@ setup(
     nsecli=nsepy.cli:cli
   ''',
   download_url = 'https://github.com/swapniljariwala/nsepy/archive/nsepy-v0.8.zip', 
-  install_requires = ['beautifulsoup4', 'requests', 'numpy', 'pandas', 'six', 'click', 'lxml'],
+  install_requires = ['beautifulsoup4', 'requests', 'numpy', 'pandas', 'six', 'click', 'lxml', 'simpledbf'],
   keywords = ['testing', 'logging', 'example'], # arbitrary keywords
   classifiers = [],
 )

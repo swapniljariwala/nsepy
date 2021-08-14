@@ -11,11 +11,14 @@ from nsepy.commons import *
 from nsepy.constants import *
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
+from simpledbf import Dbf5
 import pandas as pd
 import six
 import inspect
 import io
 import pdb
+import os
+import shutil
 
 dd_mmm_yyyy = StrDate.default_format(format="%d-%b-%Y")
 dd_mm_yyyy = StrDate.default_format(format="%d-%m-%Y")
@@ -329,7 +332,7 @@ def get_price_list(dt, series='EQ'):
 
 
 """
-Get Trade and Delivery Volume for each stock
+Get Trade and Delivery Volume for each stock (cash/spot). (a.k.a EQ Bhav copy)
 """
 
 
@@ -361,6 +364,68 @@ def get_delivery_position(dt, segment='EQ'):
     df = df[flsegment]
 
     return df
+
+"""
+Get Trade and Open Interest for each stock futures and options. (a.k.a FO Bhav copy)
+"""
+
+def get_derivatives_price_list(dt):
+    MMM = dt.strftime("%b").upper()
+    yyyy = dt.strftime("%Y")
+
+    """
+    1. YYYY
+    2. MMM
+    3. ddMMMyyyy
+    """
+    res = price_list_url_fo(yyyy, MMM, dt.strftime("%d%b%Y").upper())
+    txt = unzip_str(res.content)
+    fp = six.StringIO(txt)
+    df = pd.read_csv(fp)
+    return df
+
+"""
+Get Trade and Open Interest for each currency futures and options. (a.k.a Currency Bhav copy)
+"""
+
+def get_currency_derivatives_price_list(dt):
+    '''
+    Returns:
+        1. pandas.DataFrame : Currency futures price list pandas dataframe object
+        2. pandas.DataFrame : Currency options price list pandas dataframe object
+    '''
+
+    day = str(dt.day).zfill(2)
+    month = str(dt.month).zfill(2)
+    year = dt.strftime("%Y")[-2:]
+
+    """
+    1. dd
+    2. MM
+    3. yy
+    """
+    res = price_list_url_curr(day,month,year)
+    zip_file = zipfile.ZipFile(io.BytesIO(res.content))
+    zip_file_contents = sorted(zip_file.namelist())
+
+    currency_futures_filename = [x for x in zip_file_contents if "FO" in x.upper()][0]
+    currency_options_filename = [x for x in zip_file_contents if "OP" in x.upper()][0]
+
+    if currency_futures_filename.endswith(".dbf"):
+        # Extracting .dbf file in nsepy directory and deleting it after reading
+        zip_file_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "zip_cache")
+        os.mkdir(zip_file_dir) if not os.path.exists(zip_file_dir) else 0
+        zip_file.extractall(zip_file_dir)
+
+        currency_futures_df = Dbf5(os.path.join(zip_file_dir, currency_futures_filename)).to_dataframe()
+        currency_options_df = Dbf5(os.path.join(zip_file_dir, currency_options_filename)).to_dataframe()
+        shutil.rmtree(zip_file_dir)
+
+    elif currency_futures_filename.endswith(".csv"):
+        currency_futures_df = pd.read_csv(zip_file.open(currency_futures_filename))
+        currency_options_df = pd.read_csv(zip_file.open(currency_options_filename))
+    
+    return (currency_futures_df, currency_options_df)
 
 
 """
@@ -427,3 +492,4 @@ def get_rbi_ref_history_quanta(start, end):
                      headers=RBI_REF_RATE_HEADERS, index="Date")
     df = tp.get_df()
     return df
+
