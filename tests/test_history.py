@@ -120,7 +120,7 @@ class TestHistory(unittest.TestCase):
         self.assertEqual(currfo['CLOSE_PRIC'], 76.7725)
 
         currop = currop[(currop['CONTRACT_D'] == 'OPTCURUSDINR26-JUL-2019PE69')].squeeze()
-        self.assertEqual(currfo['CLOSE_PRIC'], 0.0025)
+        self.assertEqual(currop['CLOSE_PRIC'], 0.0025)
 
         # Check Bond
         dfpln1 = get_price_list(testdate, 'N1')
