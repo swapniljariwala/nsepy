@@ -107,7 +107,7 @@ index_history_url = URLFetchSession(
 1. ddmmyyyy
 """
 index_daily_snapshot_url = URLFetchSession(
-    url='https://archives.nseindia.com/content/indices/ind_close_all_%s.csv')
+    url='https://www1.nseindia.com/content/indices/ind_close_all_%s.csv')
 
 """
 indexName=NIFTY%2050&fromDate=02-11-2015&toDate=19-11-2015&yield1=undefined&yield2=undefined&yield3=undefined&yield4=all
