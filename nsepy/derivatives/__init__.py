@@ -42,15 +42,15 @@ def build_dt_dict():
             # Handle these oulier use cases by ignoring this date and skpping it for processing
             if dt == datetime.datetime(2019, 9, 20).date():
                 continue
-            if dt == datetime.datetime(2021, 11, 23).date():
-                continue
             if dt == datetime.datetime(2021, 11, 2).date():
                 continue
             if dt == datetime.datetime(2021, 11, 9).date():
                 continue
-            if dt == datetime.datetime(2021, 11, 30).date():
-                continue
             if dt == datetime.datetime(2021, 11, 16).date():
+                continue
+            if dt == datetime.datetime(2021, 11, 23).date():
+                continue
+            if dt == datetime.datetime(2021, 11, 30).date():
                 continue
             # End Kludge
             if line.find('indxExpryDt') > -1:
