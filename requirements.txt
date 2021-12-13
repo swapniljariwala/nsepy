@@ -1,6 +1,6 @@
 beautifulsoup4==4.7.1
 Click==7.0
-lxml==4.3.4
+lxml==4.6.5
 numpy==1.16.4
 pandas==0.24.2
 requests==2.22.0
