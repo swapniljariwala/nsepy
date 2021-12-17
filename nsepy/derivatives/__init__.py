@@ -52,6 +52,10 @@ def build_dt_dict():
                 continue
             if dt == datetime.datetime(2021, 11, 30).date():
                 continue
+            if dt == datetime.datetime(2021, 12, 7).date():
+                continue
+            if dt == datetime.datetime(2021, 12, 14).date():
+                continue
             # End Kludge
             if line.find('indxExpryDt') > -1:
                 try:
