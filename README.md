@@ -1,14 +1,13 @@
-# NSEpy 0.6
+# NSEpy 0.8
 Python Library to get publicly available data on NSE website ie. stock quotes, historical data, live indices.
 
-Detailed documentation here - http://nsepy.readthedocs.io/en/latest/
+Detailed documentation here - https://nsepy.xyz/
 
 Release Notes
 * Added support for derivative data. (Probably only API for indian derivative and India VIX data as Yahoo API has no support for derivatives)
 * Support for RBI reference rates for USD
 * Download data thru simple cli
 * Unified and simplified API for all (Equity, Index, Derivative, Volatility Indexes-INDIAVIX)
-* Support for live quotes from NSE
 * Compatible and Tested with Python 2.7 and 3.4
 
 ## Libraries Required
@@ -22,8 +21,13 @@ Release Notes
 For Windows systems you can install Anaconda, this will cover many dependancies (You'll have to install requests and beautifulsoup additionally though)
 
 ## Installation
+Fresh installation 
 
 ```$pip install nsepy```
+
+Upgrade
+
+```$pip install nsepy --upgrade```
 
 ## Usage
 
@@ -53,24 +57,7 @@ nifty = get_history(symbol="NIFTY",
 					index=True)
 nifty[['Close', 'Turnover']].plot(secondary_y='Turnover')
 
-#Futures and Options historical data
-nifty_fut = get_history(symbol="NIFTY", 
-			start=date(2015,1,1), 
-			end=date(2015,1,10),
-			index=True,
-			futures=True, expiry_date=date(2015,1,29))
-						
-stock_opt = get_history(symbol="SBIN",
-			start=date(2015,1,1), 
-			end=date(2015,1,10),
-			option_type="CE",
-			strike_price=300,
-			expiry_date=date(2015,1,29))
 
-#Index P/E ratio history
-nifty_pe = get_index_pe_history(symbol="NIFTY",
-				start=date(2015,1,1), 
-				end=date(2015,1,10))
 ```
 Sample contents of the one of the dataframe (I'm using Anaconda and Spyder)-
 ```
