@@ -93,7 +93,7 @@ class TestLiveUrls(unittest.TestCase):
 
         exp = min([x for x in stexp if x > n.date()])
         q = get_quote(symbol='NIFTY', instrument='OPTIDX',
-                      expiry=exp, option_type="CE", strike=15000)
+                      expiry=exp, option_type="CE", strike=17000)
         comp_name = q['data'][0]['instrumentType']
         self.assertEqual(comp_name, "OPTIDX")
 

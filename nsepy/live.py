@@ -111,7 +111,7 @@ def get_futures_chain_table(symbol):
     sptable = spdiv.find("table")
     tp = ParseTables(soup=sptable, schema=FUTURES_SCHEMA,
                      headers=FUTURES_HEADERS, index=FUTURES_INDEX)
-    return tp.get_df()
+    return tp.get_df().sort_index()
 
 
 def get_holidays_list(fromDate,
@@ -194,6 +194,18 @@ def previousworkingday(dt):
         if isworkingday(dttmp):
             return dttmp
 
+def nearestworkingday(dt):
+    """This is the function to get nearest working day.
+        Args:
+            dt (datetime.date): Date to Check
+        Returns:
+            dt (datetime.date): Nearest working day on or before the given date
+    """
+    if isworkingday (dt):
+      return dt
+    else:
+      return previousworkingday(dt)
+    
 
 def getworkingdays(dtfrom, dtto):
     # pdb.set_trace()
