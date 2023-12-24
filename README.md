@@ -14,11 +14,11 @@ Here are some alternatives and related libraries which are based on new NSE's we
 
 Supports both live and historical data. It is fast as NSEPy it is using threading for downloading data like NSEPy. 
 
-## [NSEDownload](https://github.com/NSEDownload/NSEDownload)
+### [NSEDownload](https://github.com/NSEDownload/NSEDownload)
 
 You can download stock and index history only. Expected to be fast as it uses threading. 
 
-## [nsepython](https://github.com/aeron7/nsepython/tree/master)
+### [nsepython](https://github.com/aeron7/nsepython/tree/master)
 
 Cool logo, Supports live as well as historial data. I felt it to be a bit slow for historical data as it is single threaded.
 
