@@ -1,4 +1,30 @@
 # NSEpy 0.8
+
+## Deprecation notice
+
+> [!CAUTION]
+> Thanks a lot for your support, but I am unable to maintain this library. NSE's old website is also getting deprecated which means NSEPy will cease to work someday when NSE shuts down the old website.
+
+## What do you do next?
+
+Here are some alternatives and related libraries which are based on new NSE's website -
+
+
+### [jugaad-data]([Title](https://github.com/jugaad-py/jugaad-data))
+
+Supports both live and historical data. It is fast as NSEPy it is using threading for downloading data like NSEPy. 
+
+## [NSEDownload](https://github.com/NSEDownload/NSEDownload)
+
+You can download stock and index history only. Expected to be fast as it uses threading. 
+
+## [nsepython](https://github.com/aeron7/nsepython/tree/master)
+
+Cool logo, Supports live as well as historial data. I felt it to be a bit slow for historical data as it is single threaded.
+
+
+
+
 Python Library to get publicly available data on NSE website ie. stock quotes, historical data, live indices.
 
 Detailed documentation here - https://nsepy-xyz.web.app
