@@ -10,7 +10,7 @@
 Here are some alternatives and related libraries which are based on new NSE's website -
 
 
-### [jugaad-data]([Title](https://github.com/jugaad-py/jugaad-data))
+### [jugaad-data](https://github.com/jugaad-py/jugaad-data)
 
 Supports both live and historical data. It is fast as NSEPy it is using threading for downloading data like NSEPy. 
 
