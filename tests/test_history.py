@@ -9,6 +9,7 @@ from nsepy.urls import get_symbol_count
 from nsepy import urls
 from nsepy import history
 from nsepy.nselist import nse_to_icici
+from nsepy import get_expiry_date
 import unittest
 from datetime import date
 import six
@@ -19,7 +20,18 @@ class TestHistory(unittest.TestCase):
     def setUp(self):
         self.start = date(2015, 1, 1)
         self.end = date(2015, 1, 10)
-
+    
+    def test_expiry_date_list(self):
+        n = date(2021, 11, 1)
+        idxexp = get_expiry_date(n.year, n.month, index=True, stock=False)
+        self.assertEqual(len(idxexp), 4)
+        self.assertIn( date(2021, 11, 3),idxexp)
+        self.assertIn( date(2021, 11, 11),idxexp)
+        self.assertIn( date(2021, 11, 18),idxexp)
+        self.assertIn( date(2021, 11, 25),idxexp)
+        
+        self.assertNotIn( date(2021, 11, 23),idxexp)
+        
     def test_validate_params(self):
         # test stock history param validation
         (url, params, schema,

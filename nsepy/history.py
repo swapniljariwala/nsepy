@@ -324,7 +324,10 @@ def get_price_list(dt, series='EQ'):
     txt = unzip_str(res.content)
     fp = six.StringIO(txt)
     df = pd.read_csv(fp)
-    del df['Unnamed: 13']
+    
+    #Delete column Unnamed: 13 if exits
+    if 'Unnamed: 13' in df.columns :
+      df = df.drop(columns=['Unnamed: 13'])
     return df[df['SERIES'] == series]
 
 
