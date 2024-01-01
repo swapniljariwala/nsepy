@@ -6,6 +6,7 @@ Created on Tue Nov 24 21:25:54 2015
 """
 
 from nsepy.urls import *
+from nsepy.derivatives import get_expiry_date
 import six
 from nsepy.commons import *
 from nsepy.constants import *
@@ -312,10 +313,14 @@ def get_index_pe_history_quanta(symbol, start, end):
 
 
 def get_price_list(dt, series='EQ'):
+    
+    # Downloads cash market bhavcopy
+    
     MMM = dt.strftime("%b").upper()
     yyyy = dt.strftime("%Y")
 
     """
+    Date format for the url:
     1. YYYY
     2. MMM
     3. ddMMMyyyy
@@ -324,14 +329,95 @@ def get_price_list(dt, series='EQ'):
     txt = unzip_str(res.content)
     fp = six.StringIO(txt)
     df = pd.read_csv(fp)
-    del df['Unnamed: 13']
+    df = df.drop([df.columns[-1]], axis=1)
     return df[df['SERIES'] == series]
+ 
+"""
+Get FII/DII Data
+"""
+
+def get_participant_wise_OI(dt):
+    
+    """
+    1. dt (datetime.date)
+    """
+    res = daily_fno_participant_wise_oi_url(dt.strftime("%d%m%Y"))
+    
+    if res.status_code == 404:
+        print("Failed to fetch data. Check date. ")
+        return None
+    else:
+        df = pd.read_csv(io.StringIO(res.content.decode('utf-8')))
+        df.columns = df.iloc[0,:]
+        df = df.drop(index=[0,5],axis=0)
+        df = df.reset_index(drop=True,inplace=False)
+        return df
+
+"""
+Get Derivatives Segment Bhavcopy
+"""
+
+def get_derivatives_price_list(dt, series):
+    
+    """
+    Downloads derivatives market bhavcopy
+    Args:
+        dt (datetime.date)
+        series (str) = FUTIDX, FUTSTK, OPTIDX or OPTSTK 
+    """
+    
+    MMM = dt.strftime("%b").upper()
+    yyyy = dt.strftime("%Y")
+    """
+    Date format for the url:
+    1. YYYY
+     2. MMM
+     3. ddMMMyyyy
+     """
+    try:
+        res = derivative_price_list_url(yyyy, MMM, dt.strftime("%d%b%Y").upper())
+        txt = unzip_str(res.content)
+        fp = six.StringIO(txt)
+        df = pd.read_csv(fp)
+        df = df.drop([df.columns[-1]], axis=1)
+        return df[df['INSTRUMENT'] == series]
+    except:
+        pass
+
+"""
+Get historical OI (three expiry months combined)
+"""
+
+def get_historical_OI(tickerid, start, end):
+
+    """
+    Gets historical Futures Open Interest
+    
+    1. tickerid(str): instrument name
+    2. start (datetime.date): start date
+    3. end (datetime.date): end date
+    """
+    historical_oi = pd.DataFrame(columns = ['Date', 'Symbol', 'Futures OI','Change in OI'])
+    while start <= end:
+        try:
+            prices = get_derivatives_price_list(dt=start, series='FUTSTK')
+            prices = prices[['SYMBOL','EXPIRY_DT','OPEN_INT','CHG_IN_OI','TIMESTAMP']]
+            ticker_data = prices[prices['SYMBOL'] == tickerid]
+            historical_oi = historical_oi.append({'Date':ticker_data.values[0][4],
+                                  'Symbol':ticker_data.values[0][0],
+                                  'Futures OI':ticker_data['OPEN_INT'].sum(),
+                                  'Change in OI':ticker_data['CHG_IN_OI'].sum()}, ignore_index=True)
+            #print(f"Downloaded data for {start}")
+        except:
+            pass
+        start += timedelta(days=1)
+    
+    return historical_oi
 
 
 """
 Get Trade and Delivery Volume for each stock
 """
-
 
 def get_delivery_position(dt, segment='EQ'):
     MMM = dt.strftime("%b").upper()

@@ -73,6 +73,13 @@ price_list_url = URLFetchSession(
     url='https://www1.nseindia.com/content/historical/EQUITIES/%s/%s/cm%sbhav.csv.zip')
 
 """
+ 1. ddmmyyyy
+"""
+
+daily_fno_participant_wise_oi_url = URLFetchSession(
+    url='https://www1.nseindia.com/content/nsccl/fao_participant_oi_%s.csv')
+
+"""
 1. ddmmyyyy
 """
 daily_volatility_url = URLFetchSession(
